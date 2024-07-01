@@ -4,6 +4,8 @@ using GameHopper.Models;
 
 namespace GameHopper.Controllers;
 
+// first commit
+
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
