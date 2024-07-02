@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameHopper.Areas.Identity.Data;
 
-public class EventDbContext : IdentityDbContext<IdentityUser>
+public class ArtworkDbContext : IdentityDbContext<IdentityUser>
 {
-    public EventDbContext(DbContextOptions<EventDbContext> options)
+    public ArtworkDbContext(DbContextOptions<ArtworkDbContext> options)
         : base(options)
     {
     }
@@ -18,9 +18,4 @@ public class EventDbContext : IdentityDbContext<IdentityUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
-}
-
-
-public class IdentityDbContext<T1, T2>
-{
 }
