@@ -56,7 +56,7 @@ public class GameDbContext
                 .hasforeignkey(i => i.GameId);
             
             modelBuilder.Entity<Image>()
-                .HasOne(u => u.User))
+                .HasOne(u => u.User)
                 .withMany(a => a. Images)
                 .hasforeignkey(ui => ui.UserId);
             
