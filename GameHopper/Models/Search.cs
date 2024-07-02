@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace GameHopper;
+namespace GameHopper.Models;
 
 public class Search
 {
