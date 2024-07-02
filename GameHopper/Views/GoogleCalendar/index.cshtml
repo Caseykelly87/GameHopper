@@ -1,0 +1,9 @@
+@model IList<Google.Apis.Calendar.v3.Data.Event>
+
+<h2>Upcoming Events</h2>
+<ul>
+@foreach (var eventItem in Model)
+{
+    <li>@eventItem.Summary (@eventItem.Start.DateTime ?? @eventItem.Start.Date)</li>
+}
+</ul>
