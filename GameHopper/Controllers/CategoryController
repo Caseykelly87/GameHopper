@@ -12,11 +12,11 @@ using GameHopper.Data;
 
 namespace GameHopper.Controllers
 {
-    public class TagController : Controller
+    public class CategoryController : Controller
     {
         private GameDbContext context;
 
-        public TagController(GameDbContext dbContext)
+        public CategoryController(GameDbContext dbContext)
         {
             context = dbContext;
         }
@@ -24,17 +24,10 @@ namespace GameHopper.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
-            List<Tag> tags = context.Tags.ToList();
-            return View(tags);
+            List<> categories = context.Categories.ToList();
+            return View(categories);
         }
 
-        [HttpGet]
-        public IActionResult Add()
-        {
-            Tag tag = new Tag();
-            return View(tag);
-        }
-
-       
-     }
+        
+    }
 }
