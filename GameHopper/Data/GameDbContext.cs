@@ -1,15 +1,19 @@
 ﻿using System.Reflection;
 using GameHopper.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
+
 
 namespace GameHopper;
 
-public class GameDbContext
+public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
 
         public DbSet<Game>? Games { get; set; }
 
-        public DbSet<GameMaster>? GameMaster { get; set; }
+        public DbSet<GameMaster>? GameMasters { get; set; }
 
         public DbSet<Player>? Players { get; set; }
 
@@ -25,6 +29,7 @@ public class GameDbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Game>()
                 .HasOne(c => c.Category)
                 .WithMany(g => g.Games);
@@ -39,15 +44,14 @@ public class GameDbContext
             
             modelBuilder.Entity<Game>()
                 .HasMany(t => t.Tags)
-                .WithMany(g => g.Games);
-                
-            modelBuilder.Entity<Category>()
-                .HasMany(t => t.Tags)
-                .WithMany(c => c.Categories);
+                .WithMany(g => g.Games); 
+            // modelBuilder.Entity<Category>()
+            //     .HasMany(t => t.Tags)
+            //     .WithMany(c => c.Categories);
             
             modelBuilder.Entity<GameMaster>()
                 .HasMany(o => o.CreatedGames)
-                .Withone(g => g.GameMaster)
+                .WithOne(g => g.GameMaster)
                 .hasforeignkey(g. => g.GMasterId);
             
             modelBuilder.Entity<Game>()
@@ -58,11 +62,10 @@ public class GameDbContext
             modelBuilder.Entity<Image>()
                 .HasOne(u => u.User)
                 .withMany(a => a. Images)
-                .hasforeignkey(ui => ui.UserId);
-            
-            }
+                .HasForeignKey(ui => ui.UserId); 
+    
+        }
     }
 
-public class Category
-{
-}
+
+

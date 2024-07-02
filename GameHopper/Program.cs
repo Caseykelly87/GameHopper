@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using GameHopper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,7 @@ options.Password.RequiredLength = 10;
 options.Password.RequireNonAlphanumeric = false;
 options.Password.RequireUppercase = true;
 options.Password.RequireLowercase = false;
-}).AddEntityFrameworkStores<GameHopper.Data.GameDbContext>();
+}).AddEntityFrameworkStores<GameDbContext>();
 
 
 
@@ -43,6 +44,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
 
 app.MapRazorPages();
 app.MapControllers();

@@ -1,8 +1,10 @@
+using System.Security.Policy;
 using GameHopper.Models;
 
 public class GameMaster : User
 {
     public ICollection<CreatedGames> CreatedGames { get; set; }
+    
     public GameMaster(string name, int Id) : base(name, Id)
     {
     }
