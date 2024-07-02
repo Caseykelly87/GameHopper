@@ -4,7 +4,7 @@ namespace GameHopper;
 
 public class SearchController : Controller;
 {
-    public Category category { get; set; }
+    public List<Category> categories { get; set; }
     public Tag tag { get; set; }
     public string location { get; set; }   ////////////placeholder
      
