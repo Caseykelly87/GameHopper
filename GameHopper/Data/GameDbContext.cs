@@ -21,7 +21,7 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
 
         public DbSet<Tag>? Tags { get; set; }
 
-        public DbSet<Image>? Images { get; set; }
+        // public DbSet<Image>? Images { get; set; }
 
         public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
         {
@@ -45,9 +45,9 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
             modelBuilder.Entity<Game>()
                 .HasMany(t => t.Tags)
                 .WithMany(g => g.Games); 
-            // modelBuilder.Entity<Category>()
-            //     .HasMany(t => t.Tags)
-            //     .WithMany(c => c.Categories);
+            modelBuilder.Entity<Category>()
+                .HasMany(t => t.Tags)
+                .WithMany(c => c.Categories);
             
             modelBuilder.Entity<GameMaster>()
                 .HasMany(o => o.CreatedGames)

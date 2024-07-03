@@ -1,5 +1,7 @@
 using GameHopper.Models;
 namespace GameHopper.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 
 public class Game
