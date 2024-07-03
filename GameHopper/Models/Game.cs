@@ -12,8 +12,3 @@ public class Game
     public GameMaster? GameMaster { get; internal set; }
 }
 
-public class Category
-{
-    public ICollection<Game>? Games { get; set; }
-    public ICollection<Tag>? Tags { get; set; }
-}
