@@ -9,6 +9,9 @@ namespace GameHopper.Models
 
         public string Name { get; set; }
 
+        public ICollection<Game> LinkedGames { get; set; }
+        public ICollection<Category> Categories { get; set; }
+
 
         [Required(ErrorMessage = "Tag name is required")]
         [StringLength(25, MinimumLength = 2, ErrorMessage = "Tag name must be between 2 and 25 characters")]
