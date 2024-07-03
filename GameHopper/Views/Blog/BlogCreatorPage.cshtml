@@ -1,0 +1,17 @@
+@* HTML Editor that sends content to Blog Controller *@
+<link href="node_modules/froala-editor/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="node_modules/froala-editor/js/froala_editor.pkgd.min.js"></script>
+
+<div>
+
+    <form action="BlogCreatorPage" method="POST">
+        <br/>
+        <textarea name="blogcontent" id = "myBlogEditor"></textarea>
+        <button class="btn btn-secondary">Submit</button>
+    </form>
+
+    <script>
+        var editor = new FroalaEditor('#myBlogEditor')
+    </script>
+
+</div>
