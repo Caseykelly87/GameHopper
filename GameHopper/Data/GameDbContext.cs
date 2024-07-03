@@ -30,39 +30,41 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            
             modelBuilder.Entity<Game>()
                 .HasOne(c => c.Category)
                 .WithMany(g => g.Games);
             
             modelBuilder.Entity<Game>()
                 .HasOne(m => m.GameMaster)
-                .WithMany(g => g.Games);
+                .WithMany(g => g.CreatedGames);
 
             modelBuilder.Entity<Game>()
-                .HasMany(u => u.Users)
-                .WithMany(g => g.Games);
+                .HasMany(p => p.Players)
+                .WithMany(g => g.CurrentGames);
             
             modelBuilder.Entity<Game>()
                 .HasMany(t => t.Tags)
-                .WithMany(g => g.Games); 
+                .WithMany(g => g.LinkedGames);
+
             modelBuilder.Entity<Category>()
                 .HasMany(t => t.Tags)
                 .WithMany(c => c.Categories);
             
-            modelBuilder.Entity<GameMaster>()
-                .HasMany(o => o.CreatedGames)
-                .WithOne(g => g.GameMaster)
-                .hasforeignkey(g. => g.GMasterId);
+            // modelBuilder.Entity<GameMaster>()
+            //     .HasMany(o => o.CreatedGames)
+            //     .WithOne(g => g.GameMaster)
+            //     .hasforeignkey(g. => g.GMasterId);
             
-            modelBuilder.Entity<Game>()
-                .HasMany(p => p.Players)
-                .withMany(g => g.Games)
-                .hasforeignkey(i => i.GameId);
+            // modelBuilder.Entity<Game>()
+            //     .HasMany(p => p.Players)
+            //     .withMany(g => g.Games)
+            //     .hasforeignkey(i => i.GameId);
             
-            modelBuilder.Entity<Image>()
-                .HasOne(u => u.User)
-                .withMany(a => a. Images)
-                .HasForeignKey(ui => ui.UserId); 
+            // modelBuilder.Entity<Image>()
+            //     .HasOne(u => u.User)
+            //     .withMany(a => a. Images)
+            //     .HasForeignKey(ui => ui.UserId); 
     
         }
     }

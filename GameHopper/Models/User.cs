@@ -6,9 +6,10 @@ public abstract class User
 {
     public string Name { get; set; }
     public int Id { get; set;}
+    public ICollection<Game> CurrentGames { get; set; }
 
         public User(string name,int Id)
-{
+    {
             Name = name;
     }
 
@@ -18,7 +19,7 @@ public abstract class User
     }
     public class GameMaster : User
 {
-    public ICollection<CreatedGames> CreatedGames { get; set; }
+    public ICollection<Game> CreatedGames { get; set; }
     
     public GameMaster(string name, int Id) : base(name, Id)
     {
@@ -33,6 +34,7 @@ public class CreatedGames
 
 public class Player : User
 {
+    
     public Player(string name, int Id) : base(name, Id)
     {
     }
