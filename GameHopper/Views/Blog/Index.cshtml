@@ -1,0 +1,7 @@
+@model List<string>
+
+    <div>
+        @foreach(string post in @Model){
+            <div>@Html.Raw(@post)</div>
+        }
+    </div>

@@ -9,7 +9,8 @@ namespace GameHopper.Models
 
         public string Name { get; set; }
 
-
+        public ICollection<Game>? Games { get; set; }
+        public ICollection<Tag>? Tags { get; set; }
         public string CategoryName { get; set; }
 
         public ICollection<Category>? Categories { get; set; }
@@ -20,6 +21,7 @@ namespace GameHopper.Models
             Categories = new List<Category>();
         }
 
+    
         public Category()
         {
         }
