@@ -21,11 +21,20 @@ namespace Blog.Controllers {
         }
 
         [HttpPost]
-        public IActionResult BlogCreatorPage(string blogContent){
-            BlogEntry entry = new BlogEntry();
-            entry.Content = blogContent;
-            Posts.Add(entry);
-            entry.Id = Guid.NewGuid();
+        public IActionResult BlogCreatorPage(BlogEntry entry){
+            // New Article
+            if(entry.Id == Guid.Empty){
+            BlogEntry newEntry = new BlogEntry();
+            newEntry.Content = entry.Content;
+            newEntry.Id = Guid.NewGuid();
+            Posts.Add(newEntry);
+            } else {
+                // existing article
+              BlogEntry existingEntry = Posts.FirstOrDefault(x => x.Id == entry.Id);
+              existingEntry.Content = entry.Content;
+
+            }
+
             return RedirectToAction("Index");
         }
     }
