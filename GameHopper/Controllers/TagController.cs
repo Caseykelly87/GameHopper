@@ -14,21 +14,10 @@ namespace GameHopper.Controllers
         {
             context = dbContext;
         }
-
-        // GET: /<controller>/
         public IActionResult Index()
         {
             List<Tag> tags = context.Tags.ToList();
             return View(tags);
         }
-
-        [HttpGet]
-        public IActionResult Add()
-        {
-            Tag tag = new Tag();
-            return View(tag);
-        }
-
-       
      }
 }

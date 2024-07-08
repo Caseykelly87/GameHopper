@@ -32,15 +32,5 @@ namespace GameHopper.Models
             return Name;
         }
 
-        public override bool Equals(object? obj)
-        {
-            return obj is Tag @tag &&
-                    Id == @tag.Id;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id);
-        }
     }
 }

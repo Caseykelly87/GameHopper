@@ -1,27 +1,34 @@
+using System.Security.Policy;
+using GameHopper;
+using GameHopper.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
-namespace GameHopper.Controllers
+
+public class GameMaster : User
 {
-    public class GMController : Controller
-    {
-        public GMController gm = new();
+    private GameDbContext context;
 
-        // GET: User/Index
-        public ActionResult Index()
+        public GameMaster(GameDbContext dbContext)
         {
-            return View(gm);
+            context = dbContext;
         }
+    public ICollection<CreatedGames> CreatedGames { get; set; }
+    
+    public GameMaster(string name, int Id) : base(name, Id)
+    {
     }
+    
+}
 
-     public class PlayerController : Controller
+public class CreatedGames
+{
+}
+
+public class Player : User
+{
+    public Player(string name, int Id) : base(name, Id)
     {
-        public PlayerController player = new();
-
-        // GET: User/Index
-        public ActionResult Index()
-        {
-            return View(player);
-        }
     }
 }
 
