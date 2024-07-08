@@ -1,11 +1,19 @@
 using GameHopper.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameHopper;
 
 public class GameController : Controller {
-    
+
+    private GameDbContext context;
+
+        public GameController(GameDbContext dbContext)
+        {
+            context = dbContext;
+        }
+
     [HttpGet]
     public IActionResult Create()
     {
