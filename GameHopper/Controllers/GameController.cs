@@ -5,15 +5,16 @@ using Microsoft.Build.Framework;
 namespace GameHopper;
 
 public class GameController : Controller {
-
+    
     [HttpGet]
     public IActionResult Create()
     {
         return View();
     }
+
     public IActionResult Delete()
         {
-            ViewBag.games = DbContext.Games.ToList();
+            ViewBag.games = context.Games.ToList();
 
             return View();
         }
