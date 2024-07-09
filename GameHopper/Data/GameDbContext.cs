@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Blog.Models;
 using GameHopper.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -22,7 +23,7 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
         public DbSet<Tag>? Tags { get; set; }
 
         // public DbSet<Image>? Images { get; set; }
-
+        public DbSet<BlogEntry>? Blogs { get; set; }
         public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
         {
         }

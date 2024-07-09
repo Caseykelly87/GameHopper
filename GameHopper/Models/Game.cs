@@ -15,4 +15,5 @@ public class Game
     public Category? Category { get; set; }
     public GameMaster? GameMaster { get; internal set; }
 
+
 }

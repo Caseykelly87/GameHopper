@@ -1,19 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using Blog.Models;
 using System.Linq;
+using GameHopper;
+using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Controllers {
     public class BlogController : Controller {
+    private GameDbContext context;
 
-        static List<BlogEntry> Posts = new List<BlogEntry>();
+        public BlogController(GameDbContext dbContext)
+        {
+            context = dbContext;
+        }
 
         public IActionResult Index() {
-            return View("Index", Posts);
+            return View("Index", context.Blogs);
         }
 
         public IActionResult BlogCreatorPage(Guid id) {
             if(id != Guid.Empty) {
-                BlogEntry existingEntry = Posts.FirstOrDefault(x => x.Id == id);
+                BlogEntry existingEntry = context.Blogs.FirstOrDefault(x => x.Id == id);
 
                 return View(model: existingEntry);
             }
@@ -27,11 +34,11 @@ namespace Blog.Controllers {
             BlogEntry newEntry = new BlogEntry();
             newEntry.Content = entry.Content;
             newEntry.Id = Guid.NewGuid();
-            Posts.Add(newEntry);
+            context.Blogs.Add(newEntry);
             } else {
                 // existing article
-              BlogEntry existingEntry = Posts.FirstOrDefault(x => x.Id == entry.Id);
-              existingEntry.Content = entry.Content;
+            BlogEntry existingEntry = context.Blogs.FirstOrDefault(x => x.Id == entry.Id);
+            existingEntry.Content = entry.Content;
 
             }
 
