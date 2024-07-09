@@ -1,0 +1,77 @@
+@{
+    ViewData["Title"] = "Google Maps Integration";
+}
+
+<h2>Google Maps Integration</h2>
+
+<form asp-action="GetDirections" method="post" id="directions-form">
+    <div>
+        <label>Origin:</label>
+        <input id="origin-input" type="text" name="originAddress" placeholder="Enter Origin Address" />
+    </div>
+    <div>
+        <label>Destination:</label>
+        <input id="destination-input" type="text" name="destinationAddress" placeholder="Enter Destination Address" />
+    </div>
+    <button type="submit">Get Directions</button>
+</form>
+
+<div id="map" style="height: 500px; width: 100%;"></div>
+
+@section Scripts {
+    <script>
+        function gm_authFailure() { 
+            alert('Google Maps API authentication failure. Please check your API key and restrictions.');
+        }
+    </script>
+    <script src="https://maps.google    apis.com/maps/api/js?key=@ViewBag.ApiKey&libraries=places&callback=initMap&onerror=gm_authFailure" async defer></script>
+    <script>
+        let map, directionsService, directionsRenderer, originAutocomplete, destinationAutocomplete;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+                center: { lat: 37.7749, lng: -122.4194 } // Default to San Francisco
+            });
+
+            directionsService = new google.maps.DirectionsService();
+            directionsRenderer = new google.maps.DirectionsRenderer();
+            directionsRenderer.setMap(map);
+
+            originAutocomplete = new google.maps.places.Autocomplete(document.getElementById('origin-input'));
+            destinationAutocomplete = new google.maps.places.Autocomplete(document.getElementById('destination-input'));
+
+            document.getElementById('directions-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                calculateAndDisplayRoute();
+            });
+        }
+
+        function calculateAndDisplayRoute() {
+            const origin = originAutocomplete.getPlace();
+            const destination = destinationAutocomplete.getPlace();
+
+            if (!origin || !origin.geometry || !destination || !destination.geometry) {
+                alert("Please select valid locations.");
+                return;
+            }
+
+            directionsService.route(
+                {
+                    origin: { lat: origin.geometry.location.lat(), lng: origin.geometry.location.lng() },
+                    destination: { lat: destination.geometry.location.lat(), lng: destination.geometry.location.lng() },
+                    travelMode: 'DRIVING'
+                },
+                (result, status) => {
+                    if (status === 'OK') {
+                        directionsRenderer.setDirections(result);
+                    } else {
+                        alert('Directions request failed due to ' + status);
+                    }
+                }
+            );
+        }
+
+        window.onload = initMap;
+    </script>
+}
