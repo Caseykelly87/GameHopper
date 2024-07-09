@@ -14,10 +14,12 @@ public class GameController : Controller {
             context = dbContext;
         }
 
-    [HttpGet]
+    [HttpPost]
     public IActionResult Create()
     {
-        return View();
+        List<string> Game = new List<string>();
+        Game gamelisting = new Game();
+        return View(gamelisting);
     }
 
     public IActionResult Delete()
