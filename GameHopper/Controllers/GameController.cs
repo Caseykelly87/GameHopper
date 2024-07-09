@@ -11,36 +11,36 @@ public class GameController : Controller {
     {
         return View();
     }
-    public IActionResult Delete()
-        {
-            ViewBag.games = DbContext.Games.ToList();
+    // public IActionResult Delete()
+    //     {
+    //         ViewBag.games = DbContext.Games.ToList();
 
-            return View();
-        }
+    //         return View();
+    //     }
 
-        [HttpPost]
-        public IActionResult Delete(int[] gameIds)
-        {
-            string answer;
-            Console.WriteLine("Are you sure you want to delete your account?"); 
-            answer = Console.ReadLine();
+    //     [HttpPost]
+    //     public IActionResult Delete(int[] gameIds)
+    //     {
+    //         string answer;
+    //         Console.WriteLine("Are you sure you want to delete your account?"); 
+    //         answer = Console.ReadLine();
 
-            if (answer.ToLower().Equals("yes") || answer.ToLower().Equals("y") )
-            {
+    //         if (answer.ToLower().Equals("yes") || answer.ToLower().Equals("y") )
+    //         {
         
-        foreach (int gameId in gameIds)
-            {
-            Game theGame = context.Games.Find(gameIds);
-            context.Games.Remove(theGame);
-            }
+    //     foreach (int gameId in gameIds)
+    //         {
+    //         Game theGame = context.Games.Find(gameIds);
+    //         context.Games.Remove(theGame);
+    //         }
             
-            context.SaveChanges();
+    //         context.SaveChanges();
 
-            return View("/Home");
-            }
+    //         return View("/Home");
+    //         }
 
-            else{
-                return View("/Game");
-            }
-        }
+    //         else{
+    //             return View("/Game");
+    //         }
+    //     }
 }
