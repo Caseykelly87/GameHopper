@@ -30,8 +30,8 @@ namespace Blog.Controllers {
             Posts.Add(newEntry);
             } else {
                 // existing article
-              BlogEntry existingEntry = Posts.FirstOrDefault(x => x.Id == entry.Id);
-              existingEntry.Content = entry.Content;
+            BlogEntry? existingEntry = Posts.FirstOrDefault(x => x.Id == entry.Id);
+            existingEntry.Content = entry.Content;
 
             }
 
