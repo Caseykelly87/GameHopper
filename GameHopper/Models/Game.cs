@@ -15,7 +15,7 @@ public class Game
     public Category? Category { get; set; }
     public int? CategoryId { get; set; }
     public GameMaster? GameMaster { get; set; }
-    public int? GameMasterId { get; set; }
+    public string? GameMasterId { get; set; }
     public BlogEntry? Blog { get; set; }
 
     public string Description { get; set; }
