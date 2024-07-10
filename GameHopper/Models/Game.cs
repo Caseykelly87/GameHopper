@@ -13,6 +13,8 @@ public class Game
     public ICollection<Tag>? Tags { get; set; }
 
     public Category? Category { get; set; }
-    public GameMaster? GameMaster { get; internal set; }
+    public string? CategoryId { get; set; }
+    public GameMaster? GameMaster { get; set; }
+    public string? GameMasterId { get; set; }
 
 }
