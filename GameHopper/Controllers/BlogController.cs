@@ -50,10 +50,12 @@ namespace Blog.Controllers {
 
             
                 if(entry.Id == Guid.Empty){
-                 BlogEntry newEntry = new BlogEntry();
-                 newEntry.Content = entry.Content;
-                 newEntry.Id = Guid.NewGuid();
-                 context.Blogs.Add(newEntry);
+                    BlogEntry newEntry = new BlogEntry
+                    {
+                        Content = entry.Content,
+                        Id = Guid.NewGuid()
+                    };
+                    context.Blogs.Add(newEntry);
                  context.SaveChanges();
                 return RedirectToAction("Index");                   
                 }
