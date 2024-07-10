@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using Blog.Models;
-using GameHopper.Models;
+﻿using GameHopper.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,10 +25,6 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
         public DbSet<Request>? Requests { get; set; }
 
         public DbSet<BlogEntry>? Blogs { get; set; }
-
-        public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
-        {
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
