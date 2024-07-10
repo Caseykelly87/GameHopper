@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Blog.Models;
+
 using System.Linq;
 using GameHopper;
 using System;
 using Microsoft.EntityFrameworkCore;
+using GameHopper.Models;
 
 namespace Blog.Controllers {
     public class BlogController : Controller {
@@ -15,7 +16,9 @@ namespace Blog.Controllers {
         }
 
         public IActionResult Index() {
-            return View("Index", context.Blogs);
+             List<BlogEntry>? blogcontent = context.Blogs.ToList();
+
+            return View(blogcontent);
         }
 
         public IActionResult BlogCreatorPage(Guid id) {

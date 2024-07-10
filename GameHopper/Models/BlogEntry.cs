@@ -1,4 +1,4 @@
-namespace Blog.Models
+namespace GameHopper.Models
 {
     public class BlogEntry
     {

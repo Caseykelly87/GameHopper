@@ -13,12 +13,32 @@ public class GameController : Controller {
         {
             context = dbContext;
         }
-    [HttpPost]
-    public IActionResult Create()
+
+    public IActionResult Index() {
+        List<Game> games = context.Games.ToList();
+        return View(games);
+        }
+
+    // [HttpPost]
+    // public IActionResult Create()
+    // {
+    //     Game gamelisting = new Game();
+    //     context.Games.Add(gamelisting);
+    //     return View("Index");
+    // }
+ [HttpPost] 
+public IActionResult AddGame(Game newGame)
+{
+    if (ModelState.IsValid)
     {
-        Game gamelisting = new Game();
-        return View(gamelisting);
+        context.Games.Add(newGame);
+        context.SaveChanges();
+        return RedirectToAction("Index");
     }
+
+    return View(); // Return the view with validation errors if ModelState is not valid
+    }
+    
 
     public IActionResult Delete()
         {

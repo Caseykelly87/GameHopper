@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Blog.Models;
 using GameHopper.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,12 +10,15 @@ namespace GameHopper;
 
 public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
+    public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
+    {
+    }
 
         public DbSet<Game>? Games { get; set; }
 
         public DbSet<GameMaster>? GameMasters { get; set; }
 
-        public DbSet<Player>? Players { get; set; }
+        public DbSet<User>? Players { get; set; }
 
         public DbSet<Category>? Categories { get; set; }
 
@@ -24,9 +26,9 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
 
         // public DbSet<Image>? Images { get; set; }
         public DbSet<BlogEntry>? Blogs { get; set; }
-        public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
-        {
-        }
+        // public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
+        // {
+        // }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
