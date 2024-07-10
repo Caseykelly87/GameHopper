@@ -11,12 +11,7 @@ public class GameController : Controller {
 
         public GameController(GameDbContext dbContext)
         {
-            context = dbContext;d
-        }
-        [HttpGet]
-        public IActionResult RenderGamelistingForm(){
-        List<string> Game = new(context.Games());
-
+            context = dbContext;
         }
     [HttpPost]
     public IActionResult Create()

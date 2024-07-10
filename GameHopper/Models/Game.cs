@@ -15,5 +15,22 @@ public class Game
     public Category? Category { get; set; }
     public GameMaster? GameMaster { get; internal set; }
 
+    public string Description { get; set; }
+
+    public string Address { get; set; }
+
+    public string Address2 { get; set; }
+
+    public string State { get; set; }
+
+    public int Zip { get; set; }
+
+
+
+
+
+
+    
+
 
 }
