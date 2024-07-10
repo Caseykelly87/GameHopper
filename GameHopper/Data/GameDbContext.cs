@@ -9,22 +9,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameHopper;
 
-public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
+public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
 
         public DbSet<Game>? Games { get; set; }
 
-        public DbSet<GameMaster>? GameMasters { get; set; }
+        // public DbSet<GameMaster>? GameMasters { get; set; }
 
-        public DbSet<Player>? Players { get; set; }
+        // public DbSet<Player>? Players { get; set; }
 
         public DbSet<Category>? Categories { get; set; }
 
         public DbSet<Tag>? Tags { get; set; }
+        public DbSet<Request>? Requests { get; set; }
 
         public DbSet<BlogEntry>? Blogs { get; set; }
-
-        // public DbSet<Image>? Images { get; set; }
 
         public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
         {
