@@ -19,13 +19,13 @@ public class GameController : Controller {
         return View(games);
         }
 
-    // [HttpPost]
-    // public IActionResult Create()
-    // {
-    //     Game gamelisting = new Game();
-    //     context.Games.Add(gamelisting);
-    //     return View("Index");
-    // }
+  [HttpGet]
+[Route("game/addgame")]
+public IActionResult AddGame()
+{
+    return View();
+}
+
  [HttpPost] 
 public IActionResult AddGame(Game newGame)
 {

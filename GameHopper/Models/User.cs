@@ -6,7 +6,7 @@ namespace GameHopper.Models
 public abstract class User : IdentityUser
 {
     public string Name { get; set; }
-    public int Id { get; set;}
+    // public int Id { get; set;}
     public ICollection<Game> CurrentGames { get; set; }
 
         public User(string name)
