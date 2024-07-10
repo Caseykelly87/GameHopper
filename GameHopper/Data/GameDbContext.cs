@@ -11,6 +11,9 @@ namespace GameHopper;
 
 public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
+    public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
+    {
+    }
 
         public DbSet<Game>? Games { get; set; }
 
