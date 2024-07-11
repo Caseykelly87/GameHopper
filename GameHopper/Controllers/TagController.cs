@@ -19,5 +19,5 @@ namespace GameHopper.Controllers
             List<Tag> tags = context.Tags.ToList();
             return View(tags);
         }
-     }
+    }
 }

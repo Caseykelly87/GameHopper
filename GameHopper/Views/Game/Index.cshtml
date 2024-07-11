@@ -1,23 +1,22 @@
 @using GameHopper.Models;
 
-@model List<GameHopper.Models.BlogEntry>
+@model List<Game>
 
 @{
-    ViewData["Title"] = "Posts";
+    ViewData["Title"] = "Games";
     }
 
-<h2>Posts</h2>
+<h2>Listings</h2>
 <hr />
-    <div>
-        @foreach(BlogEntry post in @Model){
+   @* <div>
+        @foreach(Game listing in @Model){
             <div class = "card mb-2">
                 <div class = "card-body">
-                    @Html.Raw(@post.Content)
-                </div>
+                    
 
                 <div class = "card-footer">
                     @Html.ActionLink("Edit", "BlogCreatorPage", new {Id = @post.Id})
                 </div>
             </div>
-        }
-    </div>   
+        } 
+    </div>  *@

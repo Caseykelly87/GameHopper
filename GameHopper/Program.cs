@@ -27,7 +27,7 @@ options.Password.RequiredLength = 10;
 options.Password.RequireNonAlphanumeric = false;
 options.Password.RequireUppercase = true;
 options.Password.RequireLowercase = false;
-}).AddEntityFrameworkStores<GameDbContext>();
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<GameDbContext>();
 
 var app = builder.Build();
 
