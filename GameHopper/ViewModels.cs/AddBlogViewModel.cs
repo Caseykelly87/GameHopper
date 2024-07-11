@@ -2,7 +2,7 @@ using System;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using GameHopper.Models;
 
-namespace TechJobs6Persistent.ViewModels
+namespace GameHopper.ViewModels
 {
     public class AddBlogVM
     {

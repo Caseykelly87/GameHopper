@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameHopper;
+namespace GameHopper{
 
 public class GameController : Controller {
 
@@ -19,19 +19,19 @@ public class GameController : Controller {
         return View(games);
         }
 
-  [HttpGet]
+[HttpGet]
 [Route("game/addgame")]
 public IActionResult AddGame()
 {
     return View();
 }
 
- [HttpPost] 
-public IActionResult AddGame(Game newGame)
+[HttpPost] 
+public IActionResult AddGame(Game game)
 {
     if (ModelState.IsValid)
     {
-        context.Games.Add(newGame);
+        context.Games.Add(game);
         context.SaveChanges();
         return RedirectToAction("Index");
     }
@@ -72,4 +72,5 @@ public IActionResult AddGame(Game newGame)
                 return View("/Game");
             }
         }
+}
 }
