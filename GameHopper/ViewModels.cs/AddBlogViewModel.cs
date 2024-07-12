@@ -15,6 +15,11 @@ namespace GameHopper.ViewModels
         }
 
         public List<BlogEntry>? blogEntries { get; set; }
+        public Guid Id { get; set; }
+        public string Content { get; set; }
 
+        public AddBlogVM() {
+
+        }
     }
 }

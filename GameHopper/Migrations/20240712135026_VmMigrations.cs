@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GameHopper.Migrations
 {
     /// <inheritdoc />
-    public partial class initialMigration : Migration
+    public partial class VmMigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

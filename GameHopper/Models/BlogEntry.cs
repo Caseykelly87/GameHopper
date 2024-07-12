@@ -10,6 +10,7 @@ public class BlogEntry
 
     public int UserId { get; set; }
     public string Content {get; set;}
+    
 
     public BlogEntry()
     {

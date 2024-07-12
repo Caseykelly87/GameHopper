@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 public class UserController : Controller
 {
-         private GameDbContext context;
+        private GameDbContext context;
 
         public UserController(GameDbContext dbContext)
         {

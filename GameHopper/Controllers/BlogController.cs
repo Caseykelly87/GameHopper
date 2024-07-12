@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using GameHopper;
 using GameHopper.Models;
 using GameHopper.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace Blog.Controllers
 {
@@ -13,9 +14,10 @@ namespace Blog.Controllers
             context = dbContext;
         }
 
-        public IActionResult Index() {
-             List<BlogEntry>? blogcontent = context.Blogs.ToList();
-
+        public async Task<IActionResult> IndexAsync() {
+            List<BlogEntry>? blogcontent = context.Blogs.ToList();
+            
+            
             return View(blogcontent);
         }
 
@@ -35,13 +37,12 @@ namespace Blog.Controllers
                 AddBlogVM addBlog = new(existingEntry);
 
                 return View(model: existingEntry);
-            }
-           
+            }   
             return View();
         } 
 
         [HttpPost]
-        public IActionResult BlogCreatorPage(BlogEntry entry){
+        public IActionResult BlogCreatorPage(AddBlogVM entry){
             // New Article
             if (ModelState.IsValid) {
 
@@ -53,7 +54,7 @@ namespace Blog.Controllers
                         Id = Guid.NewGuid()
                     };
                     context.Blogs.Add(newEntry);
-                 context.SaveChanges();
+                context.SaveChanges();
                 return RedirectToAction("Index");                   
                 }
 
