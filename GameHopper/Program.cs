@@ -18,6 +18,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<GameDbContext>(dbContextOptions => dbContextOptions.UseMySql(connectionString, serverVersion));
 
+
 builder.Services.AddDefaultIdentity<IdentityUser>
 (options =>
 {
@@ -28,6 +29,7 @@ options.Password.RequireNonAlphanumeric = false;
 options.Password.RequireUppercase = true;
 options.Password.RequireLowercase = false;
 }).AddRoles<IdentityRole>().AddEntityFrameworkStores<GameDbContext>();
+
 
 var app = builder.Build();
 
@@ -53,5 +55,17 @@ app.MapControllers();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var roles = new[] {"Admin", "GameMaster", "Player"};
+
+    foreach (var role in roles){
+        if(!await roleManager.RoleExistsAsync(role));
+        await roleManager.CreateAsync(new IdentityRole(role));
+    }
+}
 
 app.Run();
