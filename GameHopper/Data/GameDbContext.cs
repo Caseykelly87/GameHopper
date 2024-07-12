@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameHopper;
 
-public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
+public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
 {
     public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
     {
@@ -52,14 +52,6 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
             //     .WithOne(b => b.Author)
             //     .HasForeignKey<BlogEntry>(b => b.AuthorId);
     
-        modelBuilder.Entity<User>()
-                .HasMany(u => u.CurrentGames)
-                .WithMany(g => g.Players)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UserGame",
-                    j => j.HasOne<Game>().WithMany().HasForeignKey("GameId"),
-                    j => j.HasOne<User>().WithMany().HasForeignKey("UserId"));
-
 
         }
     }
