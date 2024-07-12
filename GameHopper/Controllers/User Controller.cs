@@ -8,11 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 public class UserController : Controller
 {
+    
         private GameDbContext context;
+        private UserManager<User> _userManager;
 
-        public UserController(GameDbContext dbContext)
+        public UserController(GameDbContext dbContext, UserManager<User> userManager)
         {
             context = dbContext;
+            _userManager = userManager;
         }
     
 }

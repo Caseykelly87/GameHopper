@@ -42,16 +42,16 @@ namespace Blog.Controllers
         } 
 
         [HttpPost]
-        public IActionResult BlogCreatorPage(AddBlogVM entry){
+        public async Task<IActionResult> BlogCreatorPage(AddBlogVM entry){
             // New Article
             if (ModelState.IsValid) {
-
-            
+            var user = await context.Users.FindAsync(entry.Id);
                 if(entry.Id == Guid.Empty){
                     BlogEntry newEntry = new BlogEntry
                     {
                         Content = entry.Content,
-                        Id = Guid.NewGuid()
+                        Id = Guid.NewGuid(),
+                        UserId = user.Id
                     };
                     context.Blogs.Add(newEntry);
                 context.SaveChanges();

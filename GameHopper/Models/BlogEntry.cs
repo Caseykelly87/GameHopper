@@ -8,7 +8,7 @@ public class BlogEntry
 {
     public Guid Id { get; set; }
 
-    public int UserId { get; set; }
+    public string UserId { get; set; }
     public string Content {get; set;}
     
 
@@ -16,7 +16,7 @@ public class BlogEntry
     {
     }
 
-    public BlogEntry(Guid id, string content, int userid)
+    public BlogEntry(Guid id, string content, string userid)
     {
         Id = id;
         Content = content;
