@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameHopper;
 
-public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
 {
     public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
     {
@@ -15,16 +15,13 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
 
         public DbSet<Game>? Games { get; set; }
 
-        // public DbSet<GameMaster>? GameMasters { get; set; }
-
-        // public DbSet<Player>? Players { get; set; }
-
         public DbSet<Category>? Categories { get; set; }
 
         public DbSet<Tag>? Tags { get; set; }
         public DbSet<Request>? Requests { get; set; }
 
-        public DbSet<BlogEntry>? Blogs { get; set; }
+        public DbSet<BlogEntry>? Blog { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,9 +47,9 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
             .WithMany(p => p.CurrentGames)
             .UsingEntity(gp => gp.ToTable("GamePlayers"));
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<Player>()
                 .HasOne(u => u.Blog)
-                .WithOne(b => b.Player)
+                .WithOne(b => b.Author)
                 .HasForeignKey<BlogEntry>(b => b.AuthorId);
     
         }
