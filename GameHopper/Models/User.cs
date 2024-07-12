@@ -7,8 +7,8 @@ namespace GameHopper.Models
     {
         public string Name { get; set; }
         public string? ProfilePicture { get; set; }
-        public ICollection<Game>? CurrentGames { get; set; } = new List<Game>();
-        public ICollection<Request>? Requests { get; set; } = new List<Request>();
+        public ICollection<Game>? CurrentGames { get; set; }
+        public ICollection<Request>? Requests { get; set; }
         public BlogEntry? Blog { get; set; }
 
         

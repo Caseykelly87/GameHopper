@@ -4,7 +4,7 @@ namespace GameHopper;
 
 public class GameMaster : Player
     {
-        public ICollection<Game>? CreatedGames { get; set; } = new List<Game>();
+        public ICollection<Game>? CreatedGames { get; set; }
     
         public GameMaster(string name) : base(name)
         {
