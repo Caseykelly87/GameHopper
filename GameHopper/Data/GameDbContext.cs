@@ -15,10 +15,6 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
 
         public DbSet<Game>? Games { get; set; }
 
-        // public DbSet<GameMaster>? GameMasters { get; set; }
-
-        // public DbSet<Player>? Players { get; set; }
-
         public DbSet<Category>? Categories { get; set; }
 
         public DbSet<Tag>? Tags { get; set; }
@@ -49,6 +45,11 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
             .HasMany(g => g.Players)
             .WithMany(p => p.CurrentGames)
             .UsingEntity(gp => gp.ToTable("GamePlayers"));
+
+        // modelBuilder.Entity<Player>()
+        //     .HasOne(g => g.Blog)
+        //     .WithMany(gm => gm.Author)
+        //     .HasForeignKey(g => g.AuthorId);
     
         }
     }
