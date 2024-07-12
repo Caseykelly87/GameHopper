@@ -1,186 +1,224 @@
-@{
-}
-
-@* <h1>Temporary profile page<h1> *@
-
-    
 <html lang="en">
+  
 <head>
   <title>Profile Page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <style>    
-    /* Set black background color, white text and some padding */
-    footer {
-      background-color: #555;
-      color: white;
-      padding: 15px;
-    }
-  </style>
-</head>
-<body>
+  <link rel="stylesheet" href="styles.css">
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="#">Logo</a>
-    </div>
-    @* <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Home</a></li>
-        <li><a href="#">Messages</a></li>
-      </ul> *@
-      <form class="navbar-form navbar-right" role="search">
-        <div class="form-group input-group">
-          <input type="text" class="form-control" placeholder="Search..">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">
-              <span class="glyphicon glyphicon-search"></span>
-            </button>
-          </span>        
-        </div>
-      </form>
-      @* <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> My Account</a></li>
-      </ul> *@
-    </div>
-  </div>
-</nav>
-  
-<div class="container text-center">    
-  <div class="row">
-    <div class="col-sm-3 well">
-      <div class="well">
-        <p><a href="#">My Profile</a></p>
-        <img src="bird.jpg" class="img-circle" height="65" width="65" alt="Avatar">
-      </div>
-      <div class="well">
-        @* <p><a href="#">Tags</a></p>
-        <p>
-          <span class="label label-default">Tags Here</span>
-        </p> *@
-      </div>
-      @* <div class="alert alert-success fade in">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
-        <p><strong>Ey!</strong></p>
-        People are looking at your profile. Find out who.
-      </div>
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p> *@
-    </div>
-    <div class="col-sm-7">
+<style>
+body {
+  background: white;
+  min-height: 100vh;
+  overflow-x:hidden;
+}
+
+p {
+  margin: auto;
+}
+
+.Content {
+  text-align: center;
+  min-width: 700px;
+  max-width: 1000px;
+  @* row py-5 px-4 *@
+}
+
+.Profile {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.Cover {
+  background-color: lightgreen;
+  min-height: 250px;
+  max-height: 50vh;
+  overflow: hidden;
+}
+
+.Cover-leftcol {
+  height: 100%;
+  width: 40%;
+  float:left;
+  padding: 10px;
+}
+
+.ProfilePic {
+  border: 10px outset white;
+  border-style: solid;
+  border-radius: 15px;
+  height: 250px;
+}
+
+.Cover-rightcol {
+  height: 100%;
+  width: 60%;
+  float: right;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.Section-games {
+  background-color: lightgray;
+  min-height: 250px;
+  padding: 10px;
+}
+
+.Section-blog {
+  background-color: white;
+  min-height: 250px;
+  padding: 10px;
+}
+
+.Section-comments {
+  background-color: lightgray;
+  min-height: 250px;
+  padding: 10px;
+}
+
+.Comments {
+  background-color: white;
+  min-height: 250px;
+  padding: 15px;
+}
+
+.UserInfo {
+  height: 55px;
+  padding: 5px;
+}
+
+.UserInfo-pic {
+  width: 50px;
+  float: left;
+}
+
+.UserInfo-info {
+  width: 500px;
+  float: left;
+  padding-left: 5px;
+  text-align: left;
+}
+
+#Comment-name {font-size: 14px; font-weight: bold; color: green;}
+#Comment-date {font-size: 11px; color: gray;}
+#Comment-text {font-size: 12px}
     
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="panel panel-default text-left">
-            <div class="panel-body">
-                <p><a href="#">Tags</a></p>
-        <p>
-          <span class="label label-default">Tags Here</span>
-        </p>
-              @* <p contenteditable="true">Status: Feeling Blue</p>
-              <button type="button" class="btn btn-default btn-sm">
-                <span class="glyphicon glyphicon-thumbs-up"></span> Like
-              </button>      *@
-            </div>
+.fs-12 {font-size: 12px}
+    
+.shadow-none {box-shadow: none}
+    
+.name {color: #007bff}
+    
+.cursor:hover {color: blue}
+    
+.cursor {cursor: pointer}
+    
+.textarea {resize: none}
+
+.rating {
+  display: flex;
+  margin-top: -10px;
+  margin-left: -4px;
+  flex-direction: row-reverse;
+  float: left;
+}
+
+.rating>input {
+  display: none
+}
+
+.rating>label {
+  position: relative;
+  width: 19px;
+  font-size: 25px;
+  color: #ffe600;
+  cursor: pointer;
+}
+
+.rating>label::before {
+  content: "\2605";
+  position: absolute;
+  opacity: 0;
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before {
+  opacity: 1 !important
+}
+
+.rating>input:checked~label:before {
+  opacity: 1
+}
+
+.rating:hover>input:checked~label:before {
+  opacity: 0.4
+}
+</style>
+</head>
+
+<body>
+<div class="Content">
+  <div class="Profile">
+    <div class="Cover"> 
+          <div class="Cover-leftcol"> 
+            <img src="https://cdn.dribbble.com/userupload/6181686/file/original-fa57dca1ba81a59e8a1db9c1427acb68.png?" alt="Profile Picture Here" class="ProfilePic">
           </div>
-        </div>
-      </div>
-      
-      @* <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p>John</p>
-           <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
+          <div class="Cover-rightcol">
+            <h2>User Name</h2>
+            <h4>Bio</h4>
+            <p>Bio info here</p>
+            <h4>Tags</h4>
+            <p>Tag 1 | Tag 2 | Tag 3</p>
           </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
+    </div>
+    <div class="Section-games">
+          <h4>Active Games</h4>
+          <p>List of active games goes here</p>
+    </div>
+      <div class="Section-blog">
+            <h4>Blog</h4>
+            <p>Recent blog posts go here</p>
+            <p>Link to see all blog posts from user goes here</p>
+    </div>
+    <div class="Section-comments">
+          <h4>Comments</h4>
+          <div class="Comments">
+                  <div class="UserInfo">
+                      <div class="UserInfo-pic">
+                        <img class="rounded-circle" src="https://i.redd.it/oq69tph90ad71.jpg" width="40">
+                      </div>
+                      <div class="UserInfo-info">
+                        <p id="Comment-name">Froggy McStabbers</p>
+                        <p id="Comment-date">Shared publicly - Jul 2024</p>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <p id="Comment-text">I love this frog.</p>
+                  </div>
+                  <div class="d-flex flex-row fs-12">
+                        <div class="like p-2 cursor"><i class="fa fa-thumbs-o-up"></i><span class="ml-1">Like</span></div>
+                        <div class="like p-2 cursor"><i class="fa fa-commenting-o"></i><span class="ml-1">Comment</span></div>
+                        <div class="like p-2 cursor"><i class="fa fa-share"></i><span class="ml-1">Share</span></div>
+                        <div class="rating"> 
+                              <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                              <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label> 
+                              <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                              <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                              <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                        </div>
+                  </div>
+                  <div class="d-flex flex-row align-items-start">
+                        <img class="rounded-circle" src="https://i.redd.it/oq69tph90ad71.jpg" width="40" padding="5">
+                        <textarea class="form-control ml-1 shadow-none textarea"></textarea>
+                  </div>
+                  <div class="mt-2 text-right">
+                        <button class="btn btn-primary btn-sm shadow-none" type="button">Post comment</button>
+                        <button class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="button">Cancel</button>
+                  </div>
           </div>
-        </div>
-      </div> *@
-      <div class="comment">
-    <h3>User Name</h3>
-    <p>This is a comment...</p>
-    <form id="comment-form">
-    <label for="username">Name:</label>
-    <input type="text" id="username" name="username" required>
-    <label for="comment">Comment:</label>
-    <textarea id="comment" name="comment" required></textarea>
-    <button type="submit">Submit Comment</button>
-</form>
-</div>
-      @* <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p>Bo</p>
-           <img src="bandmember.jpg" class="img-circle" height="55" width="55" alt="Avatar">
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p>Jane</p>
-           <img src="bandmember.jpg" class="img-circle" height="55" width="55" alt="Avatar">
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p>Anja</p>
-           <img src="bird.jpg" class="img-circle" height="55" width="55" alt="Avatar">
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p>
-          </div>
-        </div>
-      </div>     
-    </div> *@
-    @* <div class="col-sm-2 well">
-      <div class="thumbnail">
-        <p>Upcoming Events:</p>
-        <img src="paris.jpg" alt="Paris" width="400" height="300">
-        <p><strong>Paris</strong></p>
-        <p>Fri. 27 November 2015</p>
-        <button class="btn btn-primary">Info</button>
-      </div>       *@
-      @* <div class="well">
-        <p>ADS</p>
-      </div>
-      <div class="well">
-        <p>ADS</p>
-      </div> *@
     </div>
   </div>
 </div>
-
-@* <footer class="container-fluid text-center">
-  <p>Footer Text</p>
-</footer> *@
-
 </body>
 </html>

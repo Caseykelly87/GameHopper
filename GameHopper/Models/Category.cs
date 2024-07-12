@@ -13,8 +13,6 @@ namespace GameHopper.Models
         public ICollection<Tag>? Tags { get; set; } = new List<Tag>();
         public string CategoryName { get; set; }
 
-        // public ICollection<Category>? Categories { get; set; } = new List<Category>();
-
         public Category(string name)
         {
             Name = name;
