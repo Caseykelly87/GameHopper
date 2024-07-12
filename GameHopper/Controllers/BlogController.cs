@@ -5,7 +5,7 @@ using GameHopper;
 using System;
 using Microsoft.EntityFrameworkCore;
 using GameHopper.Models;
-using TechJobs6Persistent.ViewModels;
+using GameHopper.ViewModels;
 
 namespace Blog.Controllers {
     public class BlogController : Controller {
