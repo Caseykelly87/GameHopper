@@ -20,7 +20,7 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
         public DbSet<Tag>? Tags { get; set; }
         public DbSet<Request>? Requests { get; set; }
 
-        public DbSet<BlogEntry>? Blog { get; set; }
+        public DbSet<BlogEntry>? Blogs { get; set; }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,10 +47,10 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
             .WithMany(p => p.CurrentGames)
             .UsingEntity(gp => gp.ToTable("GamePlayers"));
 
-            modelBuilder.Entity<Player>()
-                .HasOne(u => u.Blog)
-                .WithOne(b => b.Author)
-                .HasForeignKey<BlogEntry>(b => b.AuthorId);
+            // modelBuilder.Entity<Player>()
+            //     .HasOne(u => u.Blog)
+            //     .WithOne(b => b.Author)
+            //     .HasForeignKey<BlogEntry>(b => b.AuthorId);
     
         }
     }
