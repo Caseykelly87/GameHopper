@@ -47,17 +47,18 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
             .WithMany(p => p.CurrentGames)
             .UsingEntity(gp => gp.ToTable("GamePlayers"));
         
-
-
             // modelBuilder.Entity<Player>()
             //     .HasOne(u => u.Blog)
             //     .WithOne(b => b.Author)
             //     .HasForeignKey<BlogEntry>(b => b.AuthorId);
     
-        // modelBuilder.Entity<Player>()
-        //     .HasMany(g => g.CurrentGames)
-        //     .WithMany(p => p.Players)
-        //     .UsingEntity(gp => gp.ToTable("PlayerGame"));
+        modelBuilder.Entity<User>()
+                .HasMany(u => u.CurrentGames)
+                .WithMany(g => g.Players)
+                .UsingEntity<Dictionary<string, object>>(
+                    "UserGame",
+                    j => j.HasOne<Game>().WithMany().HasForeignKey("GameId"),
+                    j => j.HasOne<User>().WithMany().HasForeignKey("UserId"));
 
 
         }
