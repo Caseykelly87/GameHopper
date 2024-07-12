@@ -170,7 +170,32 @@ p {
             <p>Bio info here</p>
             <h4>Preferred Systems</h4>
             <p>Game 1 | Game 2</p>
-            <h4>Tags</h4>
+            <h4>Select play styles:</h4>
+            <form>
+  <div>
+    <input
+      type="checkbox"
+      id="tagcheckbox"
+      name="tag"
+      value="tags" />
+    <label for="tagcheckbox">Tag option</label>
+    <input
+      type="checkbox"
+      id="tagcheckbox"
+      name="tag"
+      value="tags" />
+    <label for="tagcheckbox">Tag option</label>
+    <input
+      type="checkbox"
+      id="tagcheckbox"
+      name="tag"
+      value="tags" />
+    <label for="tagcheckbox">Tag option</label>
+  </div>
+  <div>
+    <button type="submit">Confirm</button>
+  </div>
+</form>
             <p>Tag 1 | Tag 2 | Tag 3</p>
           </div>
     </div>
@@ -178,10 +203,35 @@ p {
           <h4>Active Games</h4>
           <p>List of active games goes here</p>
     </div>
-      <div class="Section-blog">
-            <h4>Blog</h4>
-            <p>Recent blog posts go here</p>
-            <p>Link to see all blog posts from user goes here</p>
+    @using GameHopper.Models;
+@model BlogEntry
+@{
+    ViewData["Title"] = "Create Post";
+    }
+
+<link href="~/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/js/froala_editor.pkgd.min.js"></script>
+
+ <h5 class="mb-4">Blog Post</h5>
+
+<div>
+
+    <form action="BlogCreatorPage" method="POST">
+        <input hidden asp-for=Id/>
+        <textarea asp-for=Content id = "myBlogEditor"></textarea>
+        <br/>
+        <button class="btn btn-secondary">Submit</button>
+    </form>
+
+    <script>
+        var editor = new FroalaEditor('#myBlogEditor')
+    </script>
+
+</div>
+            <p>Two newest blog posts go here</p>
+            <div>
+            <button class="btn btn-primary btn-sm shadow-none" type="button">All Blog Posts</button>
+            </div>
     </div>
     <div class="Section-comments">
           <h4>Comments</h4>
