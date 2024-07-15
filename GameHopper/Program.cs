@@ -68,6 +68,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// 
 // using (var scope = app.Services.CreateScope())
 // {
 //     var userManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityUser>>();
