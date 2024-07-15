@@ -17,7 +17,9 @@ namespace GameHopper.Controllers
         public IActionResult Index()
         {
             List<Tag> tags = context.Tags.ToList();
-            return View(tags);
+            ViewBag.tags = tags;
+            return View();
         }
     }
 }
+
