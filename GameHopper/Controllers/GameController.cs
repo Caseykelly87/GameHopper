@@ -27,10 +27,18 @@ public IActionResult AddGame()
 }
 
  [HttpPost] 
-public IActionResult AddGame(Game newGame)
+public IActionResult AddGame(Game newGame, IFormFile gamePicture)
 {
     if (ModelState.IsValid)
     {
+        if (gamePicture != null && gamePicture.Length > 0)
+        {
+            using (var ms = new MemoryStream())
+            {
+                gamePicture.CopyTo(ms);
+                newGame.GamePicture = ms.ToArray();
+            }
+        }
         context.Games.Add(newGame);
         context.SaveChanges();
         return RedirectToAction("Index");
