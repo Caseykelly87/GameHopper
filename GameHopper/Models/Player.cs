@@ -4,10 +4,7 @@ namespace GameHopper;
 
 public class Player : User
     {
-    
-        public Player() 
-        {
-        }
+    public string role = "Player";
         public Player(string name) : base(name)
         {
         }

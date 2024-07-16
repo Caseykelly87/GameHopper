@@ -1,6 +1,6 @@
 ﻿@page
 @model GameHopper.Models.RegisterViewModel
-@* @model RegisterModel *@
+@model RegisterModel
 @{
     ViewData["Title"] = "Register";
 }
@@ -28,10 +28,15 @@
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label for="ProfilePicture">Profile Picture</label>
-                <input type="file" asp-for="ProfilePicture" class="form-control" />
+
+            <div class="RolesSelection">
+                <select class="form-select" aria-label="Select Player Type">
+                <label>Are you a GameMaster or just a player?</label>
+                <option selected="Player">Player</option>
+                <option value="GameMaster">Game Master</option>
+            </select>
             </div>
+            <br />
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>

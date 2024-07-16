@@ -3,9 +3,7 @@ using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameHopper.Models
-{
-
+namespace GameHopper.Models;
 public class Game
 { 
     public int Id { get; set; }

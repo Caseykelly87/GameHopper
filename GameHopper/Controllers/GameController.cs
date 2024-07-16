@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameHopper;
+namespace GameHopper{
 
 public class GameController : Controller {
 
@@ -19,7 +19,7 @@ public class GameController : Controller {
         return View(games);
         }
 
-  [HttpGet]
+[HttpGet]
 [Route("game/addgame")]
 public IActionResult AddGame()
 {
@@ -80,4 +80,5 @@ public IActionResult AddGame(Game newGame, IFormFile gamePicture)
                 return View("/Game");
             }
         }
+}
 }
