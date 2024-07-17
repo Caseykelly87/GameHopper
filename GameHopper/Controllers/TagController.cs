@@ -20,6 +20,27 @@ namespace GameHopper.Controllers
             ViewBag.tags = tags;
             return View();
         }
+//needs to be set for Admin Only
+        [HttpGet]
+        public IActionResult Add()
+        {
+            Tag tag = new Tag();
+            return View(tag);
+        }
+
+        [HttpPost]
+        public IActionResult Add(Tag tag)
+        {
+            if (ModelState.IsValid)
+            {
+                context.Tags.Add(tag);
+                context.SaveChanges();
+
+                return Redirect("/Tag/");
+            }
+
+            return View("Add", tag);
+        }
     }
 }
 
