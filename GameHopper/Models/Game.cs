@@ -1,10 +1,9 @@
 using GameHopper.Models;
 using Microsoft.Identity.Client;
-namespace GameHopper.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-
+namespace GameHopper.Models;
 public class Game
 { 
     public int Id { get; set; }
