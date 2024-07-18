@@ -20,6 +20,10 @@ namespace GameHopper.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
+        [Required]
+        [Display(Name = "Role")]
+        public string Role { get; set; }
+
         public IFormFile? ProfilePicture { get; set; } // New property for profile picture
     }
 }

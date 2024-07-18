@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using GameHopper.Models;
+using GameHopper.ViewModels;
 using System.Threading.Tasks;
 using System.IO;
+using Microsoft.Identity.Client;
 
 namespace GameHopper.Controllers
 {
@@ -30,7 +32,16 @@ namespace GameHopper.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new Player(model.Email) { UserName = model.Email, Email = model.Email };
+                User user;
+
+            if (model.Role == "GameMaster")
+            {
+                user = new GameMaster { UserName = model.Email, Email = model.Email };
+            }
+            else
+            {
+                user = new Player { UserName = model.Email, Email = model.Email };
+            }
 
                 if (model.ProfilePicture != null && model.ProfilePicture.Length > 0)
                 {
