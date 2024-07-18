@@ -59,7 +59,7 @@ public IActionResult AddGame(Game game)
         
         foreach (int gameId in gameIds)
             {
-            Game theGame = context.Games.Find(gameIds);
+            Game theGame = context.Games.Find(gameId);
             context.Games.Remove(theGame);
             }
             
