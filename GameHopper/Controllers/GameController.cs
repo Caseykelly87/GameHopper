@@ -27,7 +27,7 @@ public IActionResult AddGame()
     return View();
 }
 
- [HttpPost] 
+[HttpPost] 
 public IActionResult AddGame(Game newGame, IFormFile gamePicture)
 {
     if (ModelState.IsValid)
@@ -43,11 +43,11 @@ public IActionResult AddGame(Game newGame, IFormFile gamePicture)
         context.Games.Add(newGame);
         context.SaveChanges();
         return RedirectToAction("Index");
-    // }
+    }else {
 
     return View(); // Return the view with validation errors if ModelState is not valid
     }
-    
+}
 
     public IActionResult Delete()
         {
@@ -81,5 +81,5 @@ public IActionResult AddGame(Game newGame, IFormFile gamePicture)
                 return View("/Game");
             }
         }
-}
+    }
 }
