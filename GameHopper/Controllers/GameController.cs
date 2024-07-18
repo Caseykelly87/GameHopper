@@ -26,13 +26,21 @@ public IActionResult AddGame()
 {
     return View();
 }
-// [Authorize("GameMaster")]
-[HttpPost] 
-public IActionResult AddGame(Game game)
+
+ [HttpPost] 
+public IActionResult AddGame(Game newGame, IFormFile gamePicture)
 {
-    // if (ModelState.IsValid)
-    // {
-        context.Games.Add(game);
+    if (ModelState.IsValid)
+    {
+        if (gamePicture != null && gamePicture.Length > 0)
+        {
+            using (var ms = new MemoryStream())
+            {
+                gamePicture.CopyTo(ms);
+                newGame.GamePicture = ms.ToArray();
+            }
+        }
+        context.Games.Add(newGame);
         context.SaveChanges();
         return RedirectToAction("Index");
     // }
@@ -60,7 +68,7 @@ public IActionResult AddGame(Game game)
         
         foreach (int gameId in gameIds)
             {
-            Game theGame = context.Games.Find(gameIds);
+            Game theGame = context.Games.Find(gameId);
             context.Games.Remove(theGame);
             }
             

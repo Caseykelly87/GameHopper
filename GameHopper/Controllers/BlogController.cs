@@ -9,9 +9,9 @@ namespace Blog.Controllers
 {
     public class BlogController : Controller {
     private GameDbContext context;
-    private UserManager<IdentityUser> userManager;
+    private UserManager<User> userManager;
 
-        public BlogController(GameDbContext dbContext, UserManager<IdentityUser> userManager)
+        public BlogController(GameDbContext dbContext, UserManager<User> userManager)
         {
             context = dbContext;
             this.userManager = userManager;
