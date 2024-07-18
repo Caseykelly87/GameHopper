@@ -17,7 +17,30 @@ namespace GameHopper.Controllers
         public IActionResult Index()
         {
             List<Tag> tags = context.Tags.ToList();
-            return View(tags);
+            ViewBag.tags = tags;
+            return View();
         }
-     }
+//needs to be set for Admin Only
+        [HttpGet]
+        public IActionResult Add()
+        {
+            Tag tag = new Tag();
+            return View(tag);
+        }
+
+        [HttpPost]
+        public IActionResult Add(Tag tag)
+        {
+            if (ModelState.IsValid)
+            {
+                context.Tags.Add(tag);
+                context.SaveChanges();
+
+                return Redirect("/Tag/");
+            }
+
+            return View("Add", tag);
+        }
+    }
 }
+

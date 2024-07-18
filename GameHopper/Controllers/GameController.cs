@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameHopper;
+namespace GameHopper{
 
 public class GameController : Controller {
 
@@ -14,13 +14,39 @@ public class GameController : Controller {
             context = dbContext;
         }
 
-    [HttpPost]
-    public IActionResult Create()
+    public IActionResult Index() {
+        List<Game> games = context.Games.ToList();
+        return View(games);
+        }
+
+[HttpGet]
+[Route("game/addgame")]
+public IActionResult AddGame()
+{
+    return View();
+}
+
+ [HttpPost] 
+public IActionResult AddGame(Game newGame, IFormFile gamePicture)
+{
+    if (ModelState.IsValid)
     {
-        List<string> Game = new List<string>();
-        Game gamelisting = new Game();
-        return View(gamelisting);
+        if (gamePicture != null && gamePicture.Length > 0)
+        {
+            using (var ms = new MemoryStream())
+            {
+                gamePicture.CopyTo(ms);
+                newGame.GamePicture = ms.ToArray();
+            }
+        }
+        context.Games.Add(newGame);
+        context.SaveChanges();
+        return RedirectToAction("Index");
     }
+
+    return View(); // Return the view with validation errors if ModelState is not valid
+    }
+    
 
     public IActionResult Delete()
         {
@@ -41,7 +67,7 @@ public class GameController : Controller {
         
         foreach (int gameId in gameIds)
             {
-            Game theGame = context.Games.Find(gameIds);
+            Game theGame = context.Games.Find(gameId);
             context.Games.Remove(theGame);
             }
             
@@ -54,4 +80,5 @@ public class GameController : Controller {
                 return View("/Game");
             }
         }
+}
 }

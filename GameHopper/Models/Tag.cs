@@ -9,18 +9,12 @@ namespace GameHopper.Models
 
         public string Name { get; set; }
 
-        public ICollection<Game> LinkedGames { get; set; }
-        public ICollection<Category> Categories { get; set; }
-
-
-        public string TagName { get; set; }
-
-        public ICollection<Tag>? Tags { get; set; }
+        public ICollection<Game> Games { get; set; } = new List<Game>();
+        public ICollection<Category> Categories { get; set; } = new List<Category>();
 
         public Tag(string name)
         {
-            TagName = name;
-            Tags = new List<Tag>();
+            Name = name;
         }
 
         public Tag()

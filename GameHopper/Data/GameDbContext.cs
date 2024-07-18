@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using GameHopper.Models;
+﻿using GameHopper.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -8,66 +7,66 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameHopper;
 
-public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
+public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
 {
+    public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
+    {
+    }
 
         public DbSet<Game>? Games { get; set; }
-
-        public DbSet<GameMaster>? GameMasters { get; set; }
-
-        public DbSet<Player>? Players { get; set; }
 
         public DbSet<Category>? Categories { get; set; }
 
         public DbSet<Tag>? Tags { get; set; }
+        public DbSet<Request>? Requests { get; set; }
 
-        // public DbSet<Image>? Images { get; set; }
-
-        public GameDbContext(DbContextOptions<GameDbContext> options) : base(options)
-        {
-        }
+        public DbSet<BlogEntry>? Blogs { get; set; }
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             
-            modelBuilder.Entity<Game>()
-                .HasOne(c => c.Category)
-                .WithMany(g => g.Games);
-            
-            modelBuilder.Entity<Game>()
-                .HasOne(m => m.GameMaster)
-                .WithMany(g => g.CreatedGames);
+            modelBuilder.Entity<User>()
+        .HasMany(u => u.CurrentGames)
+        .WithMany(g => g.GamePlayers)
+        .UsingEntity<Dictionary<string, object>>(
+            "UserGames",
+            j => j
+                .HasOne<Game>()
+                .WithMany()
+                .HasForeignKey("GameId"),
+            j => j
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey("UserId")
+        );
 
-            modelBuilder.Entity<Game>()
-                .HasMany(p => p.Players)
-                .WithMany(g => g.CurrentGames);
-            
-            modelBuilder.Entity<Game>()
-                .HasMany(t => t.Tags)
-                .WithMany(g => g.LinkedGames);
+            modelBuilder.Entity<User>()
+                .HasMany(p => p.CurrentGames)
+                .WithMany(g => g.GamePlayers);
 
-            modelBuilder.Entity<Category>()
-                .HasMany(t => t.Tags)
-                .WithMany(c => c.Categories);
-            
-            // modelBuilder.Entity<GameMaster>()
-            //     .HasMany(o => o.CreatedGames)
-            //     .WithOne(g => g.GameMaster)
-            //     .hasforeignkey(g. => g.GMasterId);
-            
-            // modelBuilder.Entity<Game>()
-            //     .HasMany(p => p.Players)
-            //     .withMany(g => g.Games)
-            //     .hasforeignkey(i => i.GameId);
-            
-            // modelBuilder.Entity<Image>()
-            //     .HasOne(u => u.User)
-            //     .withMany(a => a. Images)
-            //     .HasForeignKey(ui => ui.UserId); 
-    
+            modelBuilder.Entity<GameMaster>()
+                .HasMany(gm => gm.CreatedGames)
+                .WithOne(g => g.GameMaster)
+                .HasForeignKey(g => g.GameMasterId);
+
+            modelBuilder.Entity<User>(entity =>
+        {
+            entity.Property(e => e.ProfilePicture)
+                .HasColumnType("LONGBLOB")
+                .IsRequired(false); // Ensure the column is nullable
+
+
+            modelBuilder.Entity<BlogEntry>()
+            .HasOne(b => b.User)
+            .WithMany(u => u.BlogEntries) // Ensure this is a collection
+            .HasForeignKey(b => b.UserId);    
+        });    
+
+        
         }
     }
-
+    
 
 

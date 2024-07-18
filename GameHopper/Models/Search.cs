@@ -4,8 +4,8 @@ namespace GameHopper.Models;
 
 public class Search
 {
-    public ICollection<Category>? categories { get; set; }
-    public ICollection<Tag>? tags { get; set; }
-
+    public string? CategoryId { get; set; }
+    public string SearchTerm { get; set; } = "";
+    public List<int> TagIds { get; set; } = new List<int>();
 
 }
