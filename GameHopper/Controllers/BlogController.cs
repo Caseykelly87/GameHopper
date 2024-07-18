@@ -13,8 +13,12 @@ namespace Blog.Controllers
         {
             context = dbContext;
         }
-
+    // private string GetCurrentUserId()
+    //     {
+    //         return User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    //     }
         public async Task<IActionResult> IndexAsync() {
+            // string userId = GetCurrentUserId();
             List<BlogEntry>? blogcontent = context.Blogs.ToList();
             
             
@@ -31,6 +35,7 @@ namespace Blog.Controllers
         // }
 
         public IActionResult BlogCreatorPage(Guid id) {
+            // string userId = GetCurrentUserId();
             if(id != Guid.Empty) {
                 List<BlogEntry> existingEntry = context.Blogs.ToList();
                 existingEntry.FirstOrDefault(x => x.Id == id);
@@ -44,6 +49,7 @@ namespace Blog.Controllers
         [HttpPost]
         public async Task<IActionResult> BlogCreatorPage(AddBlogVM entry){
             // New Article
+            // string userId = GetCurrentUserId();
             if (ModelState.IsValid) {
             var user = await context.Users.FindAsync(entry.Id);
                 if(entry.Id == Guid.Empty){

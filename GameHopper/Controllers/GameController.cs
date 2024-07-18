@@ -1,4 +1,5 @@
 using GameHopper.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
@@ -25,16 +26,16 @@ public IActionResult AddGame()
 {
     return View();
 }
-
+// [Authorize("GameMaster")]
 [HttpPost] 
 public IActionResult AddGame(Game game)
 {
-    if (ModelState.IsValid)
-    {
+    // if (ModelState.IsValid)
+    // {
         context.Games.Add(game);
         context.SaveChanges();
         return RedirectToAction("Index");
-    }
+    // }
 
     return View(); // Return the view with validation errors if ModelState is not valid
     }
