@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameHopper;
+namespace GameHopper{
 
 public class GameController : Controller {
 
@@ -19,7 +19,7 @@ public class GameController : Controller {
         return View(games);
         }
 
-  [HttpGet]
+[HttpGet]
 [Route("game/addgame")]
 public IActionResult AddGame()
 {
@@ -27,10 +27,18 @@ public IActionResult AddGame()
 }
 
  [HttpPost] 
-public IActionResult AddGame(Game newGame)
+public IActionResult AddGame(Game newGame, IFormFile gamePicture)
 {
     if (ModelState.IsValid)
     {
+        if (gamePicture != null && gamePicture.Length > 0)
+        {
+            using (var ms = new MemoryStream())
+            {
+                gamePicture.CopyTo(ms);
+                newGame.GamePicture = ms.ToArray();
+            }
+        }
         context.Games.Add(newGame);
         context.SaveChanges();
         return RedirectToAction("Index");
@@ -59,7 +67,7 @@ public IActionResult AddGame(Game newGame)
         
         foreach (int gameId in gameIds)
             {
-            Game theGame = context.Games.Find(gameIds);
+            Game theGame = context.Games.Find(gameId);
             context.Games.Remove(theGame);
             }
             
@@ -72,4 +80,5 @@ public IActionResult AddGame(Game newGame)
                 return View("/Game");
             }
         }
+}
 }
