@@ -15,6 +15,10 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
 
         public DbSet<Game>? Games { get; set; }
 
+        public DbSet<GameMaster>? GameMasters { get; set; }
+
+        public DbSet<Player>? Players { get; set; }
+
         public DbSet<Category>? Categories { get; set; }
 
         public DbSet<Tag>? Tags { get; set; }
