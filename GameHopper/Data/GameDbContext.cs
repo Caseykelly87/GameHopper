@@ -54,8 +54,14 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
             modelBuilder.Entity<User>(entity =>
         {
             entity.Property(e => e.ProfilePicture)
-                .HasColumnType("BLOB")
+                .HasColumnType("LONGBLOB")
                 .IsRequired(false); // Ensure the column is nullable
+
+
+            modelBuilder.Entity<BlogEntry>()
+            .HasOne(b => b.User)
+            .WithMany(u => u.BlogEntries) // Ensure this is a collection
+            .HasForeignKey(b => b.UserId);    
         });    
 
         
