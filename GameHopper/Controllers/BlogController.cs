@@ -14,7 +14,7 @@ namespace Blog.Controllers
         public BlogController(GameDbContext dbContext, UserManager<IdentityUser> userManager)
         {
             context = dbContext;
-            userManager = userManager;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> IndexAsync() {

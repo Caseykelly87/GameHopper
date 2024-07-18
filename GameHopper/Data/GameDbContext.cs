@@ -30,25 +30,25 @@ public class GameDbContext : IdentityDbContext<IdentityUser, IdentityRole, strin
         {
             base.OnModelCreating(modelBuilder);
             
-            modelBuilder.Entity<Game>()
-            .HasOne(g => g.Category)
-            .WithMany(c => c.Games)
-            .HasForeignKey(g => g.CategoryId);
+        //     modelBuilder.Entity<Game>()
+        //     .HasOne(g => g.Category)
+        //     .WithMany(c => c.Games)
+        //     .HasForeignKey(g => g.CategoryId);
 
-        modelBuilder.Entity<Game>()
-            .HasOne(g => g.GameMaster)
-            .WithMany(gm => gm.CreatedGames)
-            .HasForeignKey(g => g.GameMasterId);
+        // modelBuilder.Entity<Game>()
+        //     .HasOne(g => g.GameMaster)
+        //     .WithMany(gm => gm.CreatedGames)
+        //     .HasForeignKey(g => g.GameMasterId);
 
-        modelBuilder.Entity<Game>()
-            .HasMany(g => g.Tags)
-            .WithMany(t => t.Games)
-            .UsingEntity(gt => gt.ToTable("GameTags"));
+        // modelBuilder.Entity<Game>()
+        //     .HasMany(g => g.Tags)
+        //     .WithMany(t => t.Games)
+        //     .UsingEntity(gt => gt.ToTable("GameTags"));
 
-        modelBuilder.Entity<Game>()
-            .HasMany(g => g.Players)
-            .WithMany(p => p.CurrentGames)
-            .UsingEntity(gp => gp.ToTable("GamePlayers"));
+        // modelBuilder.Entity<Game>()
+        //     .HasMany(g => g.Players)
+        //     .WithMany(p => p.CurrentGames)
+        //     .UsingEntity(gp => gp.ToTable("GamePlayers"));
     
         }
     }

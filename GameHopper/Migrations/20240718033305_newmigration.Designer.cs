@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHopper.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20240715165301_newmigrations")]
-    partial class newmigrations
+    [Migration("20240718033305_newmigration")]
+    partial class newmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -88,17 +88,6 @@ namespace GameHopper.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Address2")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid?>("BlogId")
-                        .HasColumnType("char(36)");
-
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
@@ -106,27 +95,27 @@ namespace GameHopper.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("GameMasterId")
+                    b.Property<string>("PlayerId")
                         .HasColumnType("varchar(255)");
 
                     b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("TagId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Zip")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("BlogId");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("GameMasterId");
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("TagId");
 
                     b.ToTable("Games");
                 });
@@ -172,36 +161,6 @@ namespace GameHopper.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Tags");
-                });
-
-            modelBuilder.Entity("GamePlayer", b =>
-                {
-                    b.Property<int>("CurrentGamesId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PlayersId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("CurrentGamesId", "PlayersId");
-
-                    b.HasIndex("PlayersId");
-
-                    b.ToTable("GamePlayers", (string)null);
-                });
-
-            modelBuilder.Entity("GameTag", b =>
-                {
-                    b.Property<int>("GamesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("GamesId", "TagsId");
-
-                    b.HasIndex("TagsId");
-
-                    b.ToTable("GameTags", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -432,13 +391,6 @@ namespace GameHopper.Migrations
                     b.HasDiscriminator().HasValue("Player");
                 });
 
-            modelBuilder.Entity("GameHopper.GameMaster", b =>
-                {
-                    b.HasBaseType("GameHopper.Player");
-
-                    b.HasDiscriminator().HasValue("GameMaster");
-                });
-
             modelBuilder.Entity("CategoryTag", b =>
                 {
                     b.HasOne("GameHopper.Models.Category", null)
@@ -456,23 +408,17 @@ namespace GameHopper.Migrations
 
             modelBuilder.Entity("GameHopper.Models.Game", b =>
                 {
-                    b.HasOne("GameHopper.Models.BlogEntry", "Blog")
-                        .WithMany()
-                        .HasForeignKey("BlogId");
-
-                    b.HasOne("GameHopper.Models.Category", "Category")
+                    b.HasOne("GameHopper.Models.Category", null)
                         .WithMany("Games")
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("GameHopper.GameMaster", "GameMaster")
-                        .WithMany("CreatedGames")
-                        .HasForeignKey("GameMasterId");
+                    b.HasOne("GameHopper.Player", null)
+                        .WithMany("CurrentGames")
+                        .HasForeignKey("PlayerId");
 
-                    b.Navigation("Blog");
-
-                    b.Navigation("Category");
-
-                    b.Navigation("GameMaster");
+                    b.HasOne("GameHopper.Models.Tag", null)
+                        .WithMany("Games")
+                        .HasForeignKey("TagId");
                 });
 
             modelBuilder.Entity("GameHopper.Models.Request", b =>
@@ -488,36 +434,6 @@ namespace GameHopper.Migrations
                     b.Navigation("Game");
 
                     b.Navigation("Player");
-                });
-
-            modelBuilder.Entity("GamePlayer", b =>
-                {
-                    b.HasOne("GameHopper.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("CurrentGamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameHopper.Player", null)
-                        .WithMany()
-                        .HasForeignKey("PlayersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("GameTag", b =>
-                {
-                    b.HasOne("GameHopper.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GamesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GameHopper.Models.Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -585,14 +501,16 @@ namespace GameHopper.Migrations
                     b.Navigation("Games");
                 });
 
-            modelBuilder.Entity("GameHopper.Player", b =>
+            modelBuilder.Entity("GameHopper.Models.Tag", b =>
                 {
-                    b.Navigation("Requests");
+                    b.Navigation("Games");
                 });
 
-            modelBuilder.Entity("GameHopper.GameMaster", b =>
+            modelBuilder.Entity("GameHopper.Player", b =>
                 {
-                    b.Navigation("CreatedGames");
+                    b.Navigation("CurrentGames");
+
+                    b.Navigation("Requests");
                 });
 #pragma warning restore 612, 618
         }
