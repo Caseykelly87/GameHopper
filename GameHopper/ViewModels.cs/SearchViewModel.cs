@@ -1,9 +1,13 @@
-﻿namespace GameHopper;
+﻿using GameHopper.Models;
+
+namespace GameHopper;
 
 public class SearchViewModel
 {
-    public string? CategoryId { get; set; }
-    public string? SearchTerm { get; set; } = "";
-    public List<int> TagIds { get; set; }
+    public string? SearchTerm { get; set; }
+    public int? CategoryId { get; set; }
+
+    public List<int>? TagIds { get; set; }
+    public List<Game>? Results { get; set; } = new List<Game>();
 
 }

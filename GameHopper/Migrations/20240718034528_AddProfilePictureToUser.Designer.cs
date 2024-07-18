@@ -12,12 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHopper.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-<<<<<<<< HEAD:GameHopper/Migrations/20240712154623_InitialMigration.Designer.cs
-    [Migration("20240712154623_InitialMigration")]
-========
-    [Migration("20240718023111_InitialMigration")]
->>>>>>>> Casey---search/Db:GameHopper/Migrations/20240718023111_InitialMigration.Designer.cs
-    partial class InitialMigration
+    [Migration("20240718034528_AddProfilePictureToUser")]
+    partial class AddProfilePictureToUser
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,13 +50,10 @@ namespace GameHopper.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-<<<<<<<< HEAD:GameHopper/Migrations/20240712154623_InitialMigration.Designer.cs
-========
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
->>>>>>>> Casey---search/Db:GameHopper/Migrations/20240718023111_InitialMigration.Designer.cs
                     b.HasKey("Id");
 
                     b.HasIndex("UserId")
@@ -235,7 +228,7 @@ namespace GameHopper.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("longblob");
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
