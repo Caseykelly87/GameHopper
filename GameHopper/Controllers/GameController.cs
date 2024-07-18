@@ -26,12 +26,20 @@ public IActionResult AddGame()
     return View();
 }
 
-[HttpPost] 
-public IActionResult AddGame(Game game)
+ [HttpPost] 
+public IActionResult AddGame(Game newGame, IFormFile gamePicture)
 {
     if (ModelState.IsValid)
     {
-        context.Games.Add(game);
+        if (gamePicture != null && gamePicture.Length > 0)
+        {
+            using (var ms = new MemoryStream())
+            {
+                gamePicture.CopyTo(ms);
+                newGame.GamePicture = ms.ToArray();
+            }
+        }
+        context.Games.Add(newGame);
         context.SaveChanges();
         return RedirectToAction("Index");
     }

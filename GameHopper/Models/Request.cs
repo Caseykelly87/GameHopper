@@ -8,7 +8,7 @@ public class Request
 {
     public int Id { get; set; }
     public Game? Game { get; set; }
-    public string? GameId { get; set; }
+    public int GameId { get; set; }
     public Player? Player { get; set; }
     public string? PlayerId { get; set; }
 

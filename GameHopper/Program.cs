@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using GameHopper;
 using System.Configuration;
+using GameHopper.Models;
+using Microsoft.AspNetCore.Http.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,10 +18,15 @@ var serverVersion = new MySqlServerVersion(new Version(8,0,38));
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // 100 MB
+});
+
 builder.Services.AddDbContext<GameDbContext>(dbContextOptions => dbContextOptions.UseMySql(connectionString, serverVersion));
 
 
-builder.Services.AddDefaultIdentity<IdentityUser>
+builder.Services.AddDefaultIdentity<User>
 (options =>
 {
 options.SignIn.RequireConfirmedAccount = false;
@@ -28,7 +35,9 @@ options.Password.RequiredLength = 10;
 options.Password.RequireNonAlphanumeric = false;
 options.Password.RequireUppercase = true;
 options.Password.RequireLowercase = false;
-}).AddRoles<IdentityRole>().AddEntityFrameworkStores<GameDbContext>();
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<GameDbContext>().AddDefaultTokenProviders();
+
+builder.Services.AddScoped<SignInManager<User>>();
 
 
 var app = builder.Build();
@@ -59,32 +68,60 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-    var roles = new[] {"Admin", "GameMaster", "Player"};
+    // Seed roles
+    string[] roleNames = { "Admin", "GameMaster", "Player" };
+    foreach (var roleName in roleNames)
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
 
-    foreach (var role in roles){
-        if(!await roleManager.RoleExistsAsync(role));
-        await roleManager.CreateAsync(new IdentityRole(role));
+    // Seed admin user
+    var adminEmail = "admin@admin.com";
+    var adminPassword = "TestAdmin123";
+    if (await userManager.FindByEmailAsync(adminEmail) == null)
+    {
+        var adminUser = new Player(adminEmail)
+        {
+            UserName = adminEmail,
+            Email = adminEmail
+        };
+        var result = await userManager.CreateAsync(adminUser, adminPassword);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
     }
 }
 
-// 
+app.Run();
+
 // using (var scope = app.Services.CreateScope())
 // {
-//     var userManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityUser>>();
-//     string name = "Admin";
-//     string email = "Admin@admin.com";
-//     string password = "TestAdmin";
-//     if (await userManager.FindByNameAsync(name) == null) {
-//         var user = new IdentityUser();
-//         user.Email = email;
-//         user.UserName = name;
+//     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+//     var roles = new[] {"Admin", "GameMaster", "Player"};
 
-//     await userManager.CreateAsync(user);
+//     foreach (var role in roles)
+//     {
+//         if(!await roleManager.RoleExistsAsync(role));
+//         await roleManager.CreateAsync(new IdentityRole(role));
+//     }
 
-//     await userManager.AddToRoleAsync(user,"Admin");
-//     }  
+//     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+//     string adminEmail = "admin@admin.com";
+//     string adminPassword = "Test@Admin123";
+//     if (await userManager.FindByEmailAsync(adminEmail) == null)
+//     {
+//         var adminUser = new Player { UserName = adminEmail, Email = adminEmail };
+//         var createUserResult = await userManager.CreateAsync(adminUser, adminPassword);
+//         if (createUserResult.Succeeded)
+//         {
+//             await userManager.AddToRoleAsync(adminUser, "Admin");
+//         }
+//     }
 // }
-
-app.Run();
