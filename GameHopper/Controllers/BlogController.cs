@@ -24,25 +24,7 @@ namespace Blog.Controllers
             return View(blogcontent);
         }
 
-        // public IActionResult BlogCreatorPage(Guid id) {
-        //     if(id != Guid.Empty) {
-        //         BlogEntry existingEntry = context.Blogs.FirstOrDefault(x => x.Id == id);
-
-        //         return View(model: existingEntry);
-        //     }
-        //     return View();
-        // }
-
-        // public IActionResult BlogCreatorPage(Guid id) {
-        //     if(id != Guid.Empty) {
-        //         List<BlogEntry> existingEntry = context.Blogs.ToList();
-        //         existingEntry.FirstOrDefault(x => x.Id == id);
-        //         // AddBlogVM addBlog = new(existingEntry);
-
-        //         return View(model: existingEntry);
-        //     }   
-        //     return View();
-        // } 
+       
         public IActionResult BlogCreatorPage(Guid id)
 {
     if (id != Guid.Empty)
@@ -54,7 +36,6 @@ namespace Blog.Controllers
             {
                 Id = existingEntry.Id,
                 Content = existingEntry.Content,
-                // UserId = user.Id
             };
             return View(addBlog);
         }
@@ -70,7 +51,7 @@ namespace Blog.Controllers
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 if (user == null)
                 {
-                    // Handle case where user is not found (this shouldn't happen if authentication is properly configured)
+                    // Handle case where user is not found 
                     return BadRequest("Please Log-In or Register to Add to Blog");
                 }
 
@@ -89,7 +70,7 @@ namespace Blog.Controllers
             } else {
                 // existing article
             BlogEntry existingEntry = context.Blogs.FirstOrDefault(x => x.Id == entry.Id);
-            // existingEntry.Content = entry.Content;
+            
               if (existingEntry != null)
                     {
                         existingEntry.Content = entry.Content;
@@ -98,51 +79,6 @@ namespace Blog.Controllers
             await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-        // [HttpPost]
-// public async Task<IActionResult> BlogCreatorPage(AddBlogVM entry)
-// {
-//     if (ModelState.IsValid)
-//     {
-//         var user = await userManager.GetUserAsync(HttpContext.User);
-//         if (user == null)
-//         {
-//             return BadRequest("User not found");
-//         }
-
-//         if (entry.Id == Guid.Empty)
-//         {
-//             BlogEntry newEntry = new BlogEntry
-//             {
-//                 Id = Guid.NewGuid(),
-//                 Content = entry.Content,
-//                 UserId = user.Id
-//             };
-//             context.Blogs.Add(newEntry);
-//         }
-//         else
-//         {
-//             BlogEntry existingEntry = await context.Blogs.FindAsync(entry.Id);
-//             if (existingEntry != null)
-//             {
-//                 existingEntry.Content = entry.Content;
-//             }
-//         }
-
-//         try
-//         {
-//             await context.SaveChangesAsync();
-//             return RedirectToAction("Index");
-//         }
-//         catch (Exception ex)
-//         {
-//             // Microsoft.Build.Framework.ILogger.LogError(ex, "Error saving blog entry.");
-//             throw;
-//         }
-//     }
-
-//     // // If ModelState is not valid, return the view with the same ViewModel to display validation errors
-//     // Console.WriteLine("Invalid Model state");
-//     // return View(entry);
-// }
+       
     }
 }
