@@ -12,11 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHopper.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-<<<<<<<< HEAD:GameHopper/Migrations/20240712154623_InitialMigration.Designer.cs
-    [Migration("20240712154623_InitialMigration")]
-========
-    [Migration("20240718023111_InitialMigration")]
->>>>>>>> Casey---search/Db:GameHopper/Migrations/20240718023111_InitialMigration.Designer.cs
+    [Migration("20240718173628_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -54,17 +50,13 @@ namespace GameHopper.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-<<<<<<<< HEAD:GameHopper/Migrations/20240712154623_InitialMigration.Designer.cs
-========
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
 
->>>>>>>> Casey---search/Db:GameHopper/Migrations/20240718023111_InitialMigration.Designer.cs
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Blogs");
                 });
@@ -235,7 +227,7 @@ namespace GameHopper.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<byte[]>("ProfilePicture")
-                        .HasColumnType("longblob");
+                        .HasColumnType("LONGBLOB");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("longtext");
@@ -460,11 +452,13 @@ namespace GameHopper.Migrations
 
             modelBuilder.Entity("GameHopper.Models.BlogEntry", b =>
                 {
-                    b.HasOne("GameHopper.Models.User", null)
-                        .WithOne("Blog")
-                        .HasForeignKey("GameHopper.Models.BlogEntry", "UserId")
+                    b.HasOne("GameHopper.Models.User", "User")
+                        .WithMany("BlogEntries")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GameHopper.Models.Game", b =>
@@ -593,7 +587,7 @@ namespace GameHopper.Migrations
 
             modelBuilder.Entity("GameHopper.Models.User", b =>
                 {
-                    b.Navigation("Blog");
+                    b.Navigation("BlogEntries");
                 });
 
             modelBuilder.Entity("GameHopper.Player", b =>

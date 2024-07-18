@@ -38,16 +38,11 @@ namespace GameHopper.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-<<<<<<<< HEAD:GameHopper/Migrations/20240712154623_InitialMigration.cs
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Content = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-========
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    ProfilePicture = table.Column<byte[]>(type: "longblob", nullable: true),
+                    ProfilePicture = table.Column<byte[]>(type: "LONGBLOB", nullable: true),
                     Discriminator = table.Column<string>(type: "varchar(13)", maxLength: 13, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -72,7 +67,6 @@ namespace GameHopper.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false)
->>>>>>>> Casey---search/Db:GameHopper/Migrations/20240718023111_InitialMigration.cs
                 },
                 constraints: table =>
                 {
@@ -448,8 +442,7 @@ namespace GameHopper.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Blogs_UserId",
                 table: "Blogs",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CategoryTag_TagsId",
