@@ -8,6 +8,8 @@ using GameHopper;
 using System.Configuration;
 using GameHopper.Models;
 using Microsoft.AspNetCore.Http.Features;
+using GameHopper.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,7 @@ options.Password.RequireLowercase = false;
 
 builder.Services.AddScoped<SignInManager<User>>();
 
+builder.Services.AddScoped<EmailService>();
 
 var app = builder.Build();
 

@@ -155,6 +155,46 @@ namespace GameHopper.Migrations
                     b.ToTable("Requests");
                 });
 
+            modelBuilder.Entity("GameHopper.Models.Session", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DMUserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("NextSessionDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("RecurrenceDayOfWeek")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RecurrencePattern")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<TimeSpan>("RecurrenceTime")
+                        .HasColumnType("time(6)");
+
+                    b.Property<DateTime>("SessionDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DMUserId");
+
+                    b.HasIndex("GameId");
+
+                    b.ToTable("Sessions");
+                });
+
             modelBuilder.Entity("GameHopper.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -494,6 +534,25 @@ namespace GameHopper.Migrations
                     b.Navigation("Game");
 
                     b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("GameHopper.Models.Session", b =>
+                {
+                    b.HasOne("GameHopper.Models.User", "DMUser")
+                        .WithMany()
+                        .HasForeignKey("DMUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameHopper.Models.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DMUser");
+
+                    b.Navigation("Game");
                 });
 
             modelBuilder.Entity("GameTag", b =>
