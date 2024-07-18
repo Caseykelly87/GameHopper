@@ -22,4 +22,5 @@ public class BlogEntry
         Content = content;
         UserId = userid;
     }
+
 }
