@@ -24,7 +24,7 @@ namespace Blog.Controllers
             return View(blogcontent);
         }
 
-       
+
         public IActionResult BlogCreatorPage(Guid id)
 {
     if (id != Guid.Empty)

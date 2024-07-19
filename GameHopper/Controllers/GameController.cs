@@ -9,8 +9,8 @@ namespace GameHopper{
 
 public class GameController : Controller {
 
-    private GameDbContext context;
-    private UserManager<User> userManager;
+    private readonly GameDbContext context;
+    private readonly UserManager<User> userManager;
 
         public GameController(GameDbContext dbContext, UserManager<User> userManager)
         {
@@ -31,7 +31,7 @@ public IActionResult AddGame()
     return View();
 }
 
- [HttpPost] 
+[HttpPost] 
 public IActionResult AddGame(Game newGame, IFormFile gamePicture)
 {
     if (ModelState.IsValid)

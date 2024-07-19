@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using GameHopper;
 using System.Configuration;
+using GameHopper.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<GameDbContext>(dbContextOptions => dbContextOptions.UseMySql(connectionString, serverVersion));
 
 
-builder.Services.AddDefaultIdentity<IdentityUser>
+builder.Services.AddDefaultIdentity<User>
 (options =>
 {
 options.SignIn.RequireConfirmedAccount = false;
@@ -68,23 +69,38 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var userManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityUser>>();
-//     string name = "Admin";
-//     string email = "Admin@admin.com";
-//     string password = "TestAdmin";
-//     if (await userManager.FindByNameAsync(name) == null) {
-//         var user = new IdentityUser();
-//         user.Email = email;
-//         user.UserName = name;
 
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 
-//     await userManager.CreateAsync(user);
+    // Seed roles
+    string[] roleNames = { "Admin", "GameMaster", "Player" };
+    foreach (var roleName in roleNames)
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
 
-//     await userManager.AddToRoleAsync(user,"Admin");
-//     }  
-// }
+    // Seed admin user
+    var adminEmail = "admin@admin.com";
+    var adminPassword = "TestAdmin123";
+    if (await userManager.FindByEmailAsync(adminEmail) == null)
+    {
+        var adminUser = new Player(adminEmail)
+        {
+            UserName = adminEmail,
+            Email = adminEmail
+        };
+        var result = await userManager.CreateAsync(adminUser, adminPassword);
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+    }
+}
 
 app.Run();
