@@ -6,34 +6,32 @@ namespace GameHopper.ViewModels
 {
     public class GameViewModel
     {
-        // Properties for creating/editing a Game
-        public int Id { get; set; }
+        // 
 
-        [Required(ErrorMessage = "Title is required")]
+        [Required(ErrorMessage = "What's your game called?")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Description is required")]
+        [Required(ErrorMessage = "Please tell us about your game so we can find you players!")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "State is required")]
+        // Address Fields
+        public string Address { get; set; }
+        public string Address2 { get; set; }
         public string State { get; set; }
+        public int Zip { get; set; }
 
-        // Additional properties as needed
+        // --- Dependent on other contollers 
 
         // Property to select category
-        public int CategoryId { get; set; }
-        public List<Category> Categories { get; set; }
+        // public int CategoryId { get; set; }
+        // public List<Category> Categories { get; set; }
 
         // Property for selecting tags (multiple)
-        public List<int> SelectedTagIds { get; set; }
-        public List<Tag> Tags { get; set; }
+        // public List<int> SelectedTagIds { get; set; }
+        // public List<Tag> Tags { get; set; }
 
-        // Constructor to initialize collections
-        public GameViewModel()
-        {
-            Categories = new List<Category>();
-            Tags = new List<Tag>();
-        }
+        public int Id { get; set; }
+        
     }
 }
 

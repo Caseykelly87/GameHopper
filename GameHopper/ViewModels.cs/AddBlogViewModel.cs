@@ -21,7 +21,7 @@ namespace GameHopper.ViewModels
         [Required(ErrorMessage = "Content is required")]
         public string Content { get; set; }
 
-        public Int32 UserId { get; set; }
+        public string UserId { get; set; }
 
         public AddBlogVM() {
 

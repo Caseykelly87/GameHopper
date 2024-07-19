@@ -1,18 +1,23 @@
 using GameHopper.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace GameHopper{
 
 public class GameController : Controller {
 
     private GameDbContext context;
+    private UserManager<User> userManager;
 
-        public GameController(GameDbContext dbContext)
+        public GameController(GameDbContext dbContext, UserManager<User> userManager)
         {
             context = dbContext;
+            this.userManager = userManager;
         }
+
 
     public IActionResult Index() {
         List<Game> games = context.Games.ToList();
