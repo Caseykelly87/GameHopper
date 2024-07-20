@@ -19,6 +19,19 @@ public class GameController : Controller {
             this.userManager = userManager;
         }
 
+public async Task<IActionResult> Details(int id)
+        {
+            var game = await context.Games
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (game == null)
+            {
+                return NotFound(); // Handle case where game is not found
+            }
+
+            return View(game);
+        }
+
     public IActionResult Index() {
         List<Game> games = context.Games.ToList();
         return View(games);
