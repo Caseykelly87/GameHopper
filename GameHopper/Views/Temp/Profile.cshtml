@@ -1,5 +1,4 @@
 @using GameHopper.Models;
-@model BlogEntry
 
 <html lang="en">
   
@@ -208,6 +207,8 @@ p {
           <h4>Active Games</h4>
           <p>List of active games goes here</p>
     </div>
+
+    @model GameHopper.ViewModels.AddBlogVM
     
 @{
     ViewData["Title"] = "Create Post";
@@ -216,7 +217,7 @@ p {
 <link href="~/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="~/js/froala_editor.pkgd.min.js"></script>
 
- <h5 class="mb-4">Blog Post</h5>
+ <h5 class="mb-4">Create Post</h5>
 
 <div>
 

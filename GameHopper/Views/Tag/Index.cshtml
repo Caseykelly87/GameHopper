@@ -1,0 +1,40 @@
+@using GameHopper.Models;
+@model List<GameHopper.Models.Tag>
+
+@{
+    ViewData["Title"] = "Tags";
+    }
+
+@* <h1>All Tags</h1>
+
+    <table class="table">
+        <tr>
+            <th>Id
+            <th>Name</th>
+        </tr>
+        @foreach (Tag tag in @Model)
+        {
+            <tr>
+                <td>@tag.Id</td>
+                <td><a asp-controller="Tag" asp-action="Detail" asp-route-id="@tag.Id">@tag.Name</a></td>
+            </tr>
+        }
+    </table>
+
+<p><a asp-controller="Tag" asp-action="Add">Add more tags</a></p> *@
+
+<h2>All Tags</h2>
+<hr />
+    <div>
+        @foreach (Tag tag in @Model){
+            <div class = "card mb-2">
+                <div class = "card-body">
+                    @Html.Raw(@tag.Name)
+                </div>
+
+                <div class = "card-footer">
+                    @Html.ActionLink("Edit", "Add", new {Id = @tag.Id})
+                </div>
+            </div>
+        }
+    </div>
