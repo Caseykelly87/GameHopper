@@ -1,0 +1,23 @@
+﻿@model IEnumerable<Game>
+
+<h1>Search Results</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model)
+        {
+            <tr>
+                <td>@game.Title</td>
+                <td>@game.Category.Name</td>
+                <td>@game.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>

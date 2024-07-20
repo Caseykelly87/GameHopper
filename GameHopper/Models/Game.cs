@@ -12,7 +12,7 @@ public class Game
     public ICollection<User> GamePlayers { get; set; } = new List<User>();
     public string UserId { get; set;}
     public ICollection<Tag> Tags { get; set; } = new List<Tag>();
-    public Category? Category { get; set; }
+    public Category Category { get; set; }
     public int? CategoryId { get; set; }
     public GameMaster? GameMaster { get; set; }
     public string? GameMasterId { get; set; }
