@@ -64,7 +64,9 @@ public async Task<IActionResult> AddGameAsync(GameViewModel model, IFormFile gam
                 newGame.GamePicture = ms.ToArray();
             }
         }
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
         context.Games.Add(newGame);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         context.SaveChanges();
         return RedirectToAction("Index");
     } else {
@@ -86,12 +88,15 @@ public async Task<IActionResult> AddGameAsync(GameViewModel model, IFormFile gam
             Console.WriteLine("Are you sure you want to delete your account?"); 
             answer = Console.ReadLine();
 
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             if (answer.ToLower().Equals("yes") || answer.ToLower().Equals("y") )
             {
         
         foreach (int gameId in gameIds)
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             Game theGame = context.Games.Find(gameId);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             context.Games.Remove(theGame);
             }
             
@@ -103,6 +108,7 @@ public async Task<IActionResult> AddGameAsync(GameViewModel model, IFormFile gam
             else{
                 return View("/Game");
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
 }
 }

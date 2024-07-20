@@ -7,7 +7,6 @@ namespace GameHopper.ViewModels
 {
     public class AddBlogVM
     {
-        internal static object entry;
         public List<BlogEntry> existingEntry;
 
         public AddBlogVM(List<BlogEntry> existingEntry)
@@ -19,9 +18,9 @@ namespace GameHopper.ViewModels
         public Guid Id { get; set; }
         
         [Required(ErrorMessage = "Content is required")]
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
-        public Int32 UserId { get; set; }
+        public Int32? UserId { get; set; }
 
         public AddBlogVM() {
 

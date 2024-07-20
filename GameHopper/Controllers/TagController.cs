@@ -33,7 +33,9 @@ namespace GameHopper.Controllers
         {
             if (ModelState.IsValid)
             {
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 context.Tags.Add(tag);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 context.SaveChanges();
 
                 return Redirect("/Tag/");
