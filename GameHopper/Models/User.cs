@@ -10,7 +10,7 @@ namespace GameHopper.Models
         public byte[]? ProfilePicture { get; set; }
         public ICollection<Game>? CurrentGames { get; set; } = new List<Game>();
         public ICollection<Request>? Requests { get; set; } = new List<Request>();
-        public ICollection<BlogEntry> BlogEntries { get; set; }
+        public ICollection<BlogEntry> BlogEntries { get; set; } = new List<BlogEntry>();
         
         public User()
         {

@@ -10,13 +10,13 @@ public class Game
     public string Title { get; set; }
     public byte[]? GamePicture { get; set; }
     public ICollection<User> GamePlayers { get; set; } = new List<User>();
-    public string UserId { get; set;}
-    public ICollection<Tag> Tags { get; set; } = new List<Tag>();
-    public Category? Category { get; set; }
-    public int? CategoryId { get; set; }
+
+    // public ICollection<Tag> Tags { get; set; } = new List<Tag>();
+    // public Category? Category { get; set; }
+    // public int? CategoryId { get; set; }
     public GameMaster? GameMaster { get; set; }
     public string? GameMasterId { get; set; }
-    public BlogEntry? Blog { get; set; }
+    // public BlogEntry? Blog { get; set; }
 
     public string Description { get; set; }
 
@@ -30,13 +30,16 @@ public class Game
 
     public Game() 
     {
+        GamePlayers = new List<User>();
+        // Tags = new List<Tag>();
     }
+    // public Game(string title, User players, Tag tags, Category category, GameMaster gameMaster, string description, string address, string address2, string state, int zip) : this () { 
 
-    public Game(string title, User players, Tag tags, Category category, GameMaster gameMaster, string description, string address, string address2, string state, int zip) : this () { 
+    public Game(string title, User players, GameMaster gameMaster, string description, string address, string address2, string state, int zip) : this () { 
         Title = title;
         GamePlayers = (ICollection<User>)players;
-        Tags = (ICollection<Tag>)tags;
-        Category = category;
+        // Tags = (ICollection<Tag>)tags;
+        // Category = category;
         GameMaster = gameMaster;
         Description = description;
         Address = address;

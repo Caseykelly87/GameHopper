@@ -15,24 +15,28 @@ namespace GameHopper.ViewModels
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "State is required")]
+        public string Address { get; set; }
+
+        public string Address2 { get; set; }
+
         public string State { get; set; }
+
+        public int Zip { get; set; }
 
         // Additional properties as needed
 
-        // Property to select category
-        public int CategoryId { get; set; }
-        public List<Category> Categories { get; set; }
+        // // Property to select category
+        // public int CategoryId { get; set; }
+        // public List<Category> Categories { get; set; }
 
-        // Property for selecting tags (multiple)
-        public List<int> SelectedTagIds { get; set; }
-        public List<Tag> Tags { get; set; }
+        // // Property for selecting tags (multiple)
+        // public List<int> SelectedTagIds { get; set; }
+        // public List<Tag> Tags { get; set; }
 
         // Constructor to initialize collections
         public GameViewModel()
         {
-            Categories = new List<Category>();
-            Tags = new List<Tag>();
+
         }
     }
 }
