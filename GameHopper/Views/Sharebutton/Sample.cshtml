@@ -1,0 +1,25 @@
+<head>
+    <meta charset="UTF-9=8">
+    <meta name="Viewport" content="Width=device-width,  initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Websharing</title>
+    <link rel="stylesheet" href="Shared/_Sharebutton.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1> Sample Websharing</h1>
+
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda recusandae laudantium beatae harum doloribus non unde blanditiis, hic corrupti eligendi porro velit molestiae est sequi! Hic sit ratione eaque nesciunt!</p> 
+    </div>
+
+
+@* Share Button injector Bellow *@
+
+ <div id = "SharebuttonInsert"></div>
+@section Scripts {
+    <script>
+        $('#SharebuttonInsert').load("ShareButtonPartial")
+    </script>
+}
+</body>
