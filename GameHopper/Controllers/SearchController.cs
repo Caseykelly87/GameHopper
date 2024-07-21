@@ -28,11 +28,17 @@ public class SearchController : Controller
     {
         ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
         ViewData["Tags"] = new SelectList(_context.Tags, "Id", "Name");
-        
-        var query = _context.Games
+
+         var query = _context.Games
             .Include(g => g.Category)
             .Include(g => g.Tags)
-            .Where(g => g.Category.Id == search.CategoryId);
+            .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
+            .AsQueryable();
+
+        if (search.CategoryId.HasValue)
+        {
+            query = query.Where(g => g.CategoryId == search.CategoryId.Value);
+        }    
 
         if (!string.IsNullOrEmpty(search.SearchTerm))
         {
@@ -46,7 +52,8 @@ public class SearchController : Controller
 
         var results = query.ToList();
         // Optionally sort by number of matching tags
-        var sortedResults = results.OrderByDescending(g => g.Tags.Count(t => search.TagIds.Contains(t.Id))).ToList();
+        var sortedResults = results.OrderByDescending(g => g.Tags.Count(t => search.TagIds.Contains(t.Id)) + 
+                                (g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) || g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0)).ToList();
 
         return View("Results", sortedResults);
     }

@@ -42,10 +42,6 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
                 .HasForeignKey("UserId")
         );
 
-            modelBuilder.Entity<User>()
-                .HasMany(p => p.CurrentGames)
-                .WithMany(g => g.GamePlayers);
-
             modelBuilder.Entity<GameMaster>()
                 .HasMany(gm => gm.CreatedGames)
                 .WithOne(g => g.GameMaster)

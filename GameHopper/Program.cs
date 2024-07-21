@@ -100,28 +100,3 @@ using (var scope = app.Services.CreateScope())
 
 app.Run();
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-//     var roles = new[] {"Admin", "GameMaster", "Player"};
-
-//     foreach (var role in roles)
-//     {
-//         if(!await roleManager.RoleExistsAsync(role));
-//         await roleManager.CreateAsync(new IdentityRole(role));
-//     }
-
-//     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-//     string adminEmail = "admin@admin.com";
-//     string adminPassword = "Test@Admin123";
-//     if (await userManager.FindByEmailAsync(adminEmail) == null)
-//     {
-//         var adminUser = new Player { UserName = adminEmail, Email = adminEmail };
-//         var createUserResult = await userManager.CreateAsync(adminUser, adminPassword);
-//         if (createUserResult.Succeeded)
-//         {
-//             await userManager.AddToRoleAsync(adminUser, "Admin");
-//         }
-//     }
-// }
