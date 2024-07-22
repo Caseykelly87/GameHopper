@@ -6,7 +6,7 @@ namespace GameHopper.Models
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public ICollection<Game>? Games { get; set; } = new List<Game>();
         public ICollection<Category>? Categories { get; set; } = new List<Category>();

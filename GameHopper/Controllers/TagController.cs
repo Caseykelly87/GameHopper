@@ -18,58 +18,55 @@ namespace GameHopper.Controllers
         public IActionResult Index()
         {
             List<Tag> tags = context.Tags.ToList();
-            // ViewBag.tags = tags;
-            return View();
+            return View(tags);
         }
 
-        // [HttpGet]
-        // public IActionResult Add()
-        // {
-        //     Tag tag = new Tag();
-        //     return View(tag);
-        // }
-
-        // [HttpPost]
-        // public IActionResult Add(Tag tag)
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         context.Tags.Add(tag);
-        //         context.SaveChanges();
-
-        //         return Redirect("/Tag/");
-        //     }
-
-        //     return View("Add", tag);
-        // }
 
         //needs to be set for Admin Only
         [HttpGet]
         public IActionResult Add()
         {
-            AddTagViewModel addEmployerViewModel = new AddTagViewModel();
-            return View(addEmployerViewModel);
+            AddTagViewModel addTagViewModel = new AddTagViewModel();
+            return View(addTagViewModel);
         }
 
         [HttpPost]
         public IActionResult Add(AddTagViewModel addTagViewModel)
         {
             if (ModelState.IsValid)
+            
             {
+        
                 Tag newTag = new Tag
                 {
                     Name = addTagViewModel.TagName,
-                    Id = addTagViewModel.TagId
+                    Id = addTagViewModel.Id
                 };
-                context.Tags.Add(newTag);
-                context.SaveChanges();
 
-                return Redirect("/Tag/");
+                bool tags = context.Tags.Any(x => x.Name == newTag.Name);
+
+
+                    if (tags)
+                    {
+
+                        return Redirect("/Tag/Add/");
+                        
+                    }
+
+                    else
+                    {
+
+                    context.Tags.Add(newTag);
+                    context.SaveChanges();
+                    return Redirect("/Tag/");
+                    }
+                }
+                return View("Add", addTagViewModel);
             }
           
-            return View("Create", addTagViewModel);
+            
         }
         
     }
-}
+
 

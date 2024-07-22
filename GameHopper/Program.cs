@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http.Features;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = "server=localhost;user=crazyfrog;password=crazyfrog;database=gamehopper";
-var serverVersion = new MySqlServerVersion(new Version(8,0,36));
+var serverVersion = new MySqlServerVersion(new Version(8,0,38));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
