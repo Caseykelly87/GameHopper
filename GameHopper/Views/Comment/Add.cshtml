@@ -1,0 +1,26 @@
+@* HTML Editor that sends content to Blog Controller *@
+@* @using GameHopper.Models;
+@model GameHopper.ViewModels.AddBlogVM
+@{
+    ViewData["Title"] = "Create Post";
+    }
+
+<link href="~/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/js/froala_editor.pkgd.min.js"></script>
+
+ <h5 class="mb-4">Create Post</h5>
+
+<div>
+
+    <form action="BlogCreatorPage" method="POST">
+        <input hidden asp-for=Id/>
+        <textarea asp-for=Content id = "myBlogEditor"></textarea>
+        <br/>
+        <button class="btn btn-secondary">Submit</button>
+    </form>
+
+    <script>
+        var editor = new FroalaEditor('#myBlogEditor')
+    </script>
+
+</div> *@
