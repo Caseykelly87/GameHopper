@@ -1,6 +1,21 @@
 @using System.Security.Claims
 @model GameHopper.Models.BlogEntry
+<style>
+    .footer-buttons {
+    max-height: 35px;
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5;
+    background: #879199;
+    border: none;
+}
 
+.footer-buttons a, .footer-buttons button {
+    display: inline-block;
+    height: 100%;
+    width: auto;
+}
+</style>
 <div class="card mb-2">
     <div class="card-body">
         @Html.Raw(Model.Content)
@@ -8,11 +23,12 @@
     <div class="card-footer">
         @if (User.Identity.IsAuthenticated && Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
         {
-            @Html.ActionLink("Edit", "BlogCreatorPage", new { Id = Model.Id })
+            <!-- Edit Button -->
+            <a asp-action="BlogCreatorPage" asp-route-id="@Model.Id" class="btn btn-primary footer-buttons style="display:inline;">Edit</a>
 
             <!-- Delete Button -->
             <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?');">Delete</button>
+                <button type="submit" class="btn btn-danger footer-buttons" onclick="return confirm('Are you sure you want to delete this post?');">Delete</button>
             </form>
         }
     </div>
