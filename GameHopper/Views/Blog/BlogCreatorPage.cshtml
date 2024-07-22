@@ -1,4 +1,4 @@
-@* HTML Editor that sends content to Blog Controller *@
+@* HTML Editor that sends content to Blog Controller
 @using GameHopper.Models;
 @model GameHopper.ViewModels.AddBlogVM
 @{
@@ -23,4 +23,14 @@
         var editor = new FroalaEditor('#myBlogEditor')
     </script>
 
-</div>
+</div> *@
+
+@model GameHopper.ViewModels.AddBlogVM
+
+@{
+    ViewData["Title"] = Model.Id == Guid.Empty ? "Create Post" : "Edit Post";
+}
+
+<h5 class="mb-4">@ViewData["Title"]</h5>
+
+@Html.Partial("_BlogCreatorPartial", Model)

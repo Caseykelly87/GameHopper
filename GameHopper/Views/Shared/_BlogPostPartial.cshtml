@@ -1,0 +1,19 @@
+@using System.Security.Claims
+@model GameHopper.Models.BlogEntry
+
+<div class="card mb-2">
+    <div class="card-body">
+        @Html.Raw(Model.Content)
+    </div>
+    <div class="card-footer">
+        @if (User.Identity.IsAuthenticated && Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+        {
+            @Html.ActionLink("Edit", "BlogCreatorPage", new { Id = Model.Id })
+
+            <!-- Delete Button -->
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?');">Delete</button>
+            </form>
+        }
+    </div>
+</div>
