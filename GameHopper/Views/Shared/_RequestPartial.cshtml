@@ -1,0 +1,86 @@
+﻿@using GameHopper.Models
+@model RequestViewModel
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (Model.IsGameGM)
+    {
+        <h3>Current Players</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var player in Model.CurrentPlayers)
+                {
+                    <tr>
+                        <td>@player.UserName</td>
+                        <td>
+                            <form asp-controller="Request" asp-action="KickPlayer" method="post" style="display:inline;">
+                                <input type="hidden" name="gameId" value="@Model.GameId" />
+                                <input type="hidden" name="playerId" value="@player.Id" />
+                                <button type="submit" class="btn btn-danger">Kick</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <h3>Join Requests</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Message</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model.Requests)
+                {
+                    <tr>
+                        <td>@request.Player.UserName</td>
+                        <td>@request.Message</td>
+                        <td>
+                            <form asp-controller="Request" asp-action="ApproveRequest" method="post" style="display:inline;">
+                                <input type="hidden" name="requestId" value="@request.Id" />
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                            <form asp-controller="Request" asp-action="DenyRequest" method="post" style="display:inline;">
+                                <input type="hidden" name="requestId" value="@request.Id" />
+                                <button type="submit" class="btn btn-danger">Deny</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else if (Model.IsCurrentPlayer)
+    {
+        <p>You are currently playing this game.</p>
+        <form asp-controller="Request" asp-action="LeaveGame" method="post">
+            <input type="hidden" asp-for="GameId" />
+            <button type="submit" class="btn btn-danger">Leave Game</button>
+        </form>
+    }
+    else if (Model.HasPendingRequest)
+    {
+        <p>Your request to join this game is pending.</p>
+    }
+    else
+    {
+        <form asp-controller="Request" asp-action="CreateRequest" method="post">
+            <input type="hidden" asp-for="GameId" />
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <textarea asp-for="Message" class="form-control"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Request to Join Game</button>
+        </form>
+    }
+}

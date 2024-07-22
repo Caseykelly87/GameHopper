@@ -23,6 +23,8 @@ namespace GameHopper.ViewModels
 
         public int Zip { get; set; }
 
+        public IFormFile GamePicture { get; set; }
+
         // Additional properties as needed
 
         // // Property to select category

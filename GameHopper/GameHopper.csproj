@@ -8,11 +8,6 @@
 
   <ItemGroup>
     <Content Remove="Views\Game\GameDetails.cshtml" />
-    <Content Remove="Views\Shared\_SearchForm.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Views\Shared\_SearchForm.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

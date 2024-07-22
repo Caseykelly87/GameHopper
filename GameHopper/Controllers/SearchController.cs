@@ -1,4 +1,5 @@
-﻿using GameHopper.Models;
+﻿using System.Linq;
+using GameHopper.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -47,12 +48,12 @@ public class SearchController : Controller
 
         if (search.TagIds.Any())
         {
-            query = query.Where(g => g.Tags.Any(t => search.TagIds.Contains(t.Id)));
+            query = query.Where(g => g.Tags.Any(t => search.TagIds.Contains((int)t.Id)));
         }
 
         var results = query.ToList();
         // Optionally sort by number of matching tags
-        var sortedResults = results.OrderByDescending(g => g.Tags.Count(t => search.TagIds.Contains(t.Id)) + 
+        var sortedResults = results.OrderByDescending(g => g.Tags.Count(t => search.TagIds.Contains((int)t.Id)) + 
                                 (g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) || g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0)).ToList();
 
         return View("Results", sortedResults);
