@@ -21,6 +21,9 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
         public DbSet<Request>? Requests { get; set; }
 
         public DbSet<BlogEntry>? Blogs { get; set; }
+
+        public DbSet<Session> Sessions { get; set; }
+
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
