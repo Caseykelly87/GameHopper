@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Http.Features;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = "server=localhost;user=crazyfrog;password=crazyfrog;database=gamehopper";
-var serverVersion = new MySqlServerVersion(new Version(8,0,38));
+var serverVersion = new MySqlServerVersion(new Version(8,0,36));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -85,7 +85,7 @@ using (var scope = app.Services.CreateScope())
     var adminPassword = "TestAdmin123";
     if (await userManager.FindByEmailAsync(adminEmail) == null)
     {
-        var adminUser = new Player(adminEmail)
+        GameMaster adminUser = new GameMaster(adminEmail)
         {
             UserName = adminEmail,
             Email = adminEmail

@@ -47,7 +47,7 @@ public IActionResult AddGame()
 [HttpPost] 
 public async Task<IActionResult> AddGame(GameViewModel model, IFormFile gamePicture)
 {
-    if (ModelState.IsValid)
+    if (!ModelState.IsValid)
     
     {
             // Retrieve current user's ID

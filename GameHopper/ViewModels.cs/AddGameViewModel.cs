@@ -17,7 +17,7 @@ namespace GameHopper.ViewModels
 
         public string Address { get; set; }
 
-        public string Address2 { get; set; }
+        public string? Address2 { get; set; }
 
         public string State { get; set; }
 
