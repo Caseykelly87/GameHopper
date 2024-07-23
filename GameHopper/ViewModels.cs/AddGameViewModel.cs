@@ -24,7 +24,6 @@ namespace GameHopper.ViewModels
         public string? State { get; set; }
 
         public int? Zip { get; set; }
-        public byte[]? GamePicture { get; set; }
 
         public IFormFile GamePicture { get; set; }
 

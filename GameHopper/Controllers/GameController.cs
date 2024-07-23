@@ -40,7 +40,7 @@ namespace GameHopper
             List<Game> games = context.Games.ToList();
             return View(games);
         }
-// Create
+        // Create
         [HttpGet]
         public IActionResult AddGame()
         {
@@ -89,8 +89,8 @@ namespace GameHopper
             return View();
 
         }
-// GET: EditGame
-        public async Task<IActionResult> EditGame(int id)
+        // GET: EditGame
+        public async Task<IActionResult> EditGame(int id, IFormFile gamePicture)
         {
             var game = await context.Games.FirstOrDefaultAsync(x => x.Id == id);
             if (game == null)
@@ -107,14 +107,22 @@ namespace GameHopper
                 Address2 = game.Address2,
                 State = game.State,
                 Zip = game.Zip,
-                GamePicture = game.GamePicture
+                // GamePicture = game.GamePicture
             };
 
+            if (gamePicture != null && gamePicture.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    gamePicture.CopyTo(ms);
+                    game.GamePicture = ms.ToArray();
+                }
+            }
             return View(gameViewModel);
         }
-// POST: EditGame
+        // POST: EditGame
         [HttpPost]
-        public async Task<IActionResult> EditGame(GameViewModel gameViewModel)
+        public async Task<IActionResult> EditGame(GameViewModel gameViewModel, IFormFile gamePicture)
         {
             if (ModelState.IsValid)
             {
@@ -141,7 +149,15 @@ namespace GameHopper
                 existingGame.Address2 = gameViewModel.Address2;
                 existingGame.State = gameViewModel.State;
                 existingGame.Zip = gameViewModel.Zip;
-                existingGame.GamePicture = gameViewModel.GamePicture;
+
+                if (gamePicture != null && gamePicture.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await gamePicture.CopyToAsync(ms);
+                        existingGame.GamePicture = ms.ToArray();
+                    }
+                }
 
                 await context.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -150,7 +166,7 @@ namespace GameHopper
             return View(gameViewModel);
         }
 
-//Delete
+        //Delete
 
         [HttpPost, ActionName("DeleteGame")]
         public async Task<IActionResult> DeleteConfirmed(int id)
