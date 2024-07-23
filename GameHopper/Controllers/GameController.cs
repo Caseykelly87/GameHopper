@@ -44,11 +44,6 @@ namespace GameHopper
             return View(game);
         }
 
-        public IActionResult Index()
-        {
-            List<Game> games = context.Games.ToList();
-            return View(games);
-        }
         // Create
         [HttpGet]
         public IActionResult AddGame()
@@ -110,7 +105,7 @@ namespace GameHopper
         // GET: EditGame
         public async Task<IActionResult> EditGame(int id, IFormFile gamePicture)
         {
-var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.Id == id);            if (game == null)
+            var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.Id == id); if (game == null)
             {
                 return NotFound("Game not found");
             }
@@ -124,7 +119,7 @@ var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.I
                 Address2 = game.Address2,
                 State = game.State,
                 Zip = game.Zip,
-                // GamePicture = game.GamePicture
+                SelectedTagIds = game.Tags.Select(t => t.Id).ToList()
             };
 
             if (gamePicture != null && gamePicture.Length > 0)
@@ -135,6 +130,12 @@ var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.I
                     game.GamePicture = ms.ToArray();
                 }
             }
+            var categories = context.Categories.ToList();
+            var tags = context.Tags.ToList();
+
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+            ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
+
             return View(gameViewModel);
         }
         // POST: EditGame
@@ -149,7 +150,7 @@ var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.I
                     return BadRequest("Please Log-In or Register to Edit Game");
                 }
 
-                var existingGame = await context.Games.FirstOrDefaultAsync(x => x.Id == gameViewModel.Id);
+                var existingGame = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.Id == gameViewModel.Id); 
                 if (existingGame == null)
                 {
                     return NotFound("Game not found");
@@ -176,6 +177,13 @@ var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.I
                     }
                 }
 
+                existingGame.Tags.Clear();
+                if (gameViewModel.SelectedTagIds != null && gameViewModel.SelectedTagIds.Count > 0)
+                {
+                    existingGame.Tags = context.Tags.Where(t => gameViewModel.SelectedTagIds.Contains(t.Id)).ToList();
+                }
+
+                await context.SaveChangesAsync();
                 await context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }

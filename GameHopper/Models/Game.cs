@@ -11,7 +11,7 @@ public class Game
     public byte[]? GamePicture { get; set; }
     public ICollection<User>? GamePlayers { get; set; }
 
-    public ICollection<Tag>? Tags { get; set; }
+    public ICollection<Tag> Tags { get; set; }
     public ICollection<Request>? Requests { get; set; } 
     public Category? Category { get; set; }
     public int? CategoryId { get; set; }
@@ -28,6 +28,8 @@ public class Game
     public string? State { get; set; }
 
     public int? Zip { get; set; }
+
+    public List<int> SelectedTagIds { get; set; }
 
     public Game() 
     {
