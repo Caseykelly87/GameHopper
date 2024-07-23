@@ -16,17 +16,20 @@ public class SearchController : Controller
         _context = context;
     }
 
-    // [HttpGet]
-    // public IActionResult Search()
-    // {
-    //     ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
-    //     ViewData["Tags"] = new SelectList(_context.Tags, "Id", "Name");
-    //     return PartialView("_SearchPartial", new Search());
-    // }
+    [HttpGet]
+    public IActionResult Search()
+    {
+        ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
+        ViewData["Tags"] = new SelectList(_context.Tags, "Id", "Name");
+        return PartialView("_SearchPartial", new SearchViewModel());
+    }
 
     [HttpPost]
-public IActionResult Search(Search search)
+public IActionResult Search(SearchViewModel search)
 {
+    // ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
+    // ViewData["Tags"] = new SelectList(_context.Tags, "Id", "Name");
+
     var query = _context.Games
         .AsQueryable();
 
