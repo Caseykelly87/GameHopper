@@ -56,7 +56,7 @@ public class SessionsController : Controller
         {
             nextDateTime = nextDateTime.AddDays(1);
         }
-
+        
         if (nextDateTime < DateTime.Now)
         {
             nextDateTime = nextDateTime.AddDays(7);
