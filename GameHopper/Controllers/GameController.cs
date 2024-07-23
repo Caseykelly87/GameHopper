@@ -81,7 +81,7 @@ public async Task<IActionResult> AddGame(GameViewModel model, IFormFile gamePict
         context.Games.Add(newGame);
 
         context.SaveChangesAsync();
-        return RedirectToAction("Details", new { id = newGame.Id});
+        return RedirectToAction("Index");
     } else {
 
     return View(model); // Return the view with validation errors if ModelState is not valid

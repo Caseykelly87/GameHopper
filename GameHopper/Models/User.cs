@@ -5,7 +5,7 @@ namespace GameHopper.Models
 {
     public abstract class User : IdentityUser
     {
-        // public string id = User.Id { get; set; }
+        // public override string Id { get; set; }
         public string? Name { get; set; }
         public byte[]? ProfilePicture { get; set; }
         public ICollection<Game> CurrentGames { get; set; } = [];

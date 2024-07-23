@@ -7,9 +7,8 @@ using Microsoft.EntityFrameworkCore;
 public class Request
 {
     public int Id { get; set; }
-    public Game? Game { get; set; }
     public int GameId { get; set; }
-    public User? Player { get; set; }
+    // public User? Player { get; set; }
     public string? PlayerId { get; set; }
     public string? Message { get; set; }
     public bool IsApproved { get; set; }

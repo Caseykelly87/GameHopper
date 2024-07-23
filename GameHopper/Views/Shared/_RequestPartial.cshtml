@@ -43,7 +43,7 @@
                 @foreach (var request in Model.Requests)
                 {
                     <tr>
-                        <td>@request.Player.UserName</td>
+                        @* <td>@request.Player.Name</td> *@
                         <td>@request.Message</td>
                         <td>
                             <form asp-controller="Request" asp-action="ApproveRequest" method="post" style="display:inline;">
