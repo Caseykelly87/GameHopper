@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MyApp.Namespace
 {
-    public class DetailsModel : PageModel
+    public class EditGameModel : PageModel
     {
         public void OnGet()
         {
