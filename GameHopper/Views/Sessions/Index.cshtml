@@ -1,0 +1,28 @@
+@model IEnumerable<GameHopper.Models.Session>
+@{
+    ViewData["Title"] = "Sessions";
+}
+
+<h2>Sessions</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Game</th>
+            <th>DM</th>
+            <th>Session Date and Time</th>
+            <th>Recurrence Pattern</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var session in Model)
+    {
+        <tr>
+            <td>@session.Game.Title</td>
+            <td>@session.DMUser.UserName</td>
+            <td>@session.SessionDateTime</td>
+            <td>@session.RecurrencePattern</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,16 @@
+<h1>Delete Category</h1>
+
+<form method="post">
+    @foreach (var category in ViewBag.categories)
+    {
+        <div>
+            <label>
+                <span>@category.Name</span>
+                <input type="checkbox" name="categoryIds" value="@category.Id">
+            </label>
+        </div>
+    }
+
+    <input type="submit" value="Delete Selected Categories" class="btn btn-danger">
+
+</form>

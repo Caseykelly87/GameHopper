@@ -13,8 +13,6 @@ namespace GameHopper.Models
         public ICollection<Tag>? Tags { get; set; } = new List<Tag>();
         
 
-        
-
         public Category(string name)
         {
             Name = name;
@@ -23,6 +21,11 @@ namespace GameHopper.Models
     
         public Category()
         {
+        }
+
+         public override string ToString()
+        {
+            return Name;
         }
 
     }

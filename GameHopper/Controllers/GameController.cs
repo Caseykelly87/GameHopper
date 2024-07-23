@@ -44,7 +44,11 @@ namespace GameHopper
             return View(game);
         }
 
-
+        public IActionResult Index()
+        {
+            List<Game> games = context.Games.ToList();
+            return View(games);
+        }
         // Create
         [HttpGet]
         public IActionResult AddGame()
@@ -104,7 +108,7 @@ namespace GameHopper
 
         }
         // GET: EditGame
-        public async Task<IActionResult> EditGame(int id)
+        public async Task<IActionResult> EditGame(int id, IFormFile gamePicture)
         {
 var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.Id == id);            if (game == null)
             {
@@ -120,21 +124,22 @@ var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.I
                 Address2 = game.Address2,
                 State = game.State,
                 Zip = game.Zip,
-                GamePicture = game.GamePicture
-                SelectedTagIds = game.Tags.Select(t => t.Id).ToList()
+                // GamePicture = game.GamePicture
             };
 
-            var categories = context.Categories.ToList();
-            var tags = context.Tags.ToList();
-
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-            ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
-
+            if (gamePicture != null && gamePicture.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    gamePicture.CopyTo(ms);
+                    game.GamePicture = ms.ToArray();
+                }
+            }
             return View(gameViewModel);
         }
         // POST: EditGame
         [HttpPost]
-        public async Task<IActionResult> EditGame(GameViewModel gameViewModel)
+        public async Task<IActionResult> EditGame(GameViewModel gameViewModel, IFormFile gamePicture)
         {
             if (ModelState.IsValid)
             {
@@ -161,7 +166,15 @@ var game = await context.Games.Include(g => g.Tags).FirstOrDefaultAsync(x => x.I
                 existingGame.Address2 = gameViewModel.Address2;
                 existingGame.State = gameViewModel.State;
                 existingGame.Zip = gameViewModel.Zip;
-                existingGame.GamePicture = gameViewModel.GamePicture;
+
+                if (gamePicture != null && gamePicture.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await gamePicture.CopyToAsync(ms);
+                        existingGame.GamePicture = ms.ToArray();
+                    }
+                }
 
                 await context.SaveChangesAsync();
                 return RedirectToAction("Index");

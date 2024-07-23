@@ -8,11 +8,13 @@ using GameHopper;
 using System.Configuration;
 using GameHopper.Models;
 using Microsoft.AspNetCore.Http.Features;
+using GameHopper.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = "server=localhost;user=crazyfrog;password=crazyfrog;database=gamehopper";
-var serverVersion = new MySqlServerVersion(new Version(8,0,38));
+var serverVersion = new MySqlServerVersion(new Version(8,0,36));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -39,6 +41,7 @@ options.Password.RequireLowercase = false;
 
 builder.Services.AddScoped<SignInManager<User>>();
 
+builder.Services.AddScoped<EmailService>();
 
 var app = builder.Build();
 
@@ -46,7 +49,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -85,7 +87,7 @@ using (var scope = app.Services.CreateScope())
     var adminPassword = "TestAdmin123";
     if (await userManager.FindByEmailAsync(adminEmail) == null)
     {
-        var adminUser = new Player(adminEmail)
+        GameMaster adminUser = new GameMaster(adminEmail)
         {
             UserName = adminEmail,
             Email = adminEmail
@@ -100,28 +102,3 @@ using (var scope = app.Services.CreateScope())
 
 app.Run();
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-//     var roles = new[] {"Admin", "GameMaster", "Player"};
-
-//     foreach (var role in roles)
-//     {
-//         if(!await roleManager.RoleExistsAsync(role));
-//         await roleManager.CreateAsync(new IdentityRole(role));
-//     }
-
-//     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-//     string adminEmail = "admin@admin.com";
-//     string adminPassword = "Test@Admin123";
-//     if (await userManager.FindByEmailAsync(adminEmail) == null)
-//     {
-//         var adminUser = new Player { UserName = adminEmail, Email = adminEmail };
-//         var createUserResult = await userManager.CreateAsync(adminUser, adminPassword);
-//         if (createUserResult.Succeeded)
-//         {
-//             await userManager.AddToRoleAsync(adminUser, "Admin");
-//         }
-//     }
-// }

@@ -8,6 +8,6 @@ public class SearchViewModel
     public int? CategoryId { get; set; }
 
     public List<int>? TagIds { get; set; }
-    public List<Game>? Results { get; set; } = new List<Game>();
+    public List<Game>? Results { get; set; }
 
 }
