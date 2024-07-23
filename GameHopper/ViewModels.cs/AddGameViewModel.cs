@@ -2,36 +2,46 @@
 // using System.ComponentModel.DataAnnotations;
 // using GameHopper.Models; // Import necessary models
 
+using System.ComponentModel.DataAnnotations;
+
 namespace GameHopper.ViewModels
 {
     public class GameViewModel
     {
-        // 
+        // Properties for creating/editing a Game
+        public int Id { get; set; }
 
-        [Required(ErrorMessage = "What's your game called?")]
+        [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Please tell us about your game so we can find you players!")]
+        [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
 
-        // Address Fields
-        public string Address { get; set; }
-        public string Address2 { get; set; }
-        public string State { get; set; }
-        public int Zip { get; set; }
+        public string? Address { get; set; }
 
-        // --- Dependent on other contollers 
+        public string? Address2 { get; set; }
 
-        // Property to select category
+        public string? State { get; set; }
+
+        public int? Zip { get; set; }
+
+        public IFormFile GamePicture { get; set; }
+
+        // Additional properties as needed
+
+        // // Property to select category
         // public int CategoryId { get; set; }
         // public List<Category> Categories { get; set; }
 
-        // Property for selecting tags (multiple)
+        // // Property for selecting tags (multiple)
         // public List<int> SelectedTagIds { get; set; }
         // public List<Tag> Tags { get; set; }
 
-        public int Id { get; set; }
-        
+        // Constructor to initialize collections
+        public GameViewModel()
+        {
+
+        }
     }
 }
 

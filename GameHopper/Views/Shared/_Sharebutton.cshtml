@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share Overlay</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        .overlay {
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, .5);
+            display: none;
+        }
+
+        .share {
+            display: none;
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 1em;
+            z-index: 2;
+            box-shadow: 0 0 15px rgba(0, 0, 0, .3);
+            border-radius: 5px;
+
+        }
+
+        #copyButton {
+            background: #0d6efd;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: white;
+            border-radius: 5px;
+            padding: 0.2em;
+        }
+
+            #copyButton:hover {
+                opacity: 0.9;
+        }
+
+            .show-share {
+                display: block;
+        }
+
+            #copy-text {
+                width: 90%;
+                padding: 0.5em;
+                margin-bottom: 1em;
+        }
+
+            #share-buttons i {
+                font-size: 60px;
+                margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <button id="shareButton">Share</button>
+    </div>
+
+    <div class="overlay"></div>
+    <div class="share">
+        <h2>Share Now</h2>
+        <br />
+
+        <input id="copy-text" type="text" class="text" readonly>
+
+        <button id="copyButton">
+            <i class="fa fa-clone"></i>
+        </button>
+
+        <div id="share-buttons">
+            <a class="facebook" target="_blank" href="#"><i class="fab fa-facebook"></i></a>
+
+            <a class="twitter" target="_blank" href="#"><i class="fab fa-twitter"></i></a>
+
+            <a class="linkedin" target="_blank" href="#"><i class="fab fa-linkedin"></i></a>
+
+            <a class="reddit" target="_blank" href="#"><i class="fab fa-reddit"></i></a>
+
+            <a class="whatsapp" target="_blank" href="#"><i class="fab fa-whatsapp"></i></a>
+
+        </div>
+
+
+    </div>
+
+    <script>
+        const overlay = document.querySelector('.overlay');
+        const shareModal = document.querySelector('.share');
+        const copyText = document.querySelector('#copy-text');
+        const copyButton = document.querySelector('#copyButton');
+
+        const updateShareLinks = () => {
+            const link = encodeURIComponent(window.location.href);
+            const msg = encodeURIComponent('Wanna Play? Join a Table Top RPG locally!');
+            const title = encodeURIComponent(document.title);
+
+
+            const fb = document.querySelector('.facebook');
+            fb.href = `https://www.facebook.com/share.php?u=${link}`;
+
+            const twitter = document.querySelector('.twitter');
+            twitter.href = `http://twitter.com/share?&url=${link}&text=${msg}&hashtags=javascript,programming`;
+
+            const linkedIn = document.querySelector('.linkedin');
+            linkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
+
+            const reddit = document.querySelector('.reddit');
+            reddit.href = `http://www.reddit.com/submit?url=${link}&title=${title}`;
+
+            const whatsapp = document.querySelector('.whatsapp');
+            whatsapp.href = `https://api.whatsapp.com/send?text=${msg}: ${link}`;
+
+            const telegram = document.querySelector('.telegram');
+            telegram.href = `https://telegram.me/share/url?url=${link}&text=${msg}`;
+        };
+
+        // Event listeners
+        shareButton.addEventListener('click', () => {
+            overlay.classList.add('show-share');
+            shareModal.classList.add('show-share');
+            copyText.value = window.location.href;
+            updateShareLinks(); // Update share links when modal opens
+        });
+
+        overlay.addEventListener('click', () => {
+            overlay.classList.remove('show-share');
+            shareModal.classList.remove('show-share');
+        });
+
+        copyButton.addEventListener('click', () => {
+            copyText.select();
+            document.execCommand("copy");
+            copyText.classList.add("active");
+            setTimeout(() => {
+                copyText.classList.remove("active");
+            }, 2500);
+        });
+
+
+    </script>
+</body>
+
+</html>
+
+
+@* Embedded code
+
+<div id = "SharebuttonInsert"></div>
+
+@section Scripts {
+    <script>
+        $('#SharebuttonInsert').load("/home/ShareButtonPartial")
+    </script>
+}
+
+ *@

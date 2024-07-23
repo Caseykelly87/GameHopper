@@ -1,0 +1,31 @@
+@using GameHopper.Models;
+@model GameHopper.ViewModels.AddCategoryViewModel
+
+<h1>Edit a Category</h1>
+
+<form method="post">
+    @foreach (var category in ViewBag.categories)
+    {
+        <div>
+            <label>
+                <span>@category.Name</span>
+                <input type="radio" name="categoryIds" value="@category.Id">
+            </label>
+        </div>
+    }
+
+    <form asp-controller="Category" asp-action="Add" method="post">
+
+    <div class="form-group">
+        <label asp-for="CategoryName">New Category Name: </label>
+        <input asp-for="CategoryName" />
+        <span asp-validation-for="CategoryName"></span>
+    </div>
+
+    <br />
+
+    <input type="submit" value="Edit Selected Category" class="btn btn-danger">
+
+</form>
+
+</form>

@@ -1,0 +1,18 @@
+﻿@page
+@model GameHopper.Models.Game
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1>@Model.Title</h1>
+
+<p><strong>Description:</strong> @Model.Description</p>
+<p><strong>Address:</strong> @Model.Address @Model.Address2</p>
+<p><strong>State:</strong> @Model.State</p>
+<p><strong>Zip Code:</strong> @Model.Zip</p>
+
+@if (Model.GamePicture != null)
+{
+    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.GamePicture)" alt="Game Picture" style="max-width: 400px;" />
+}

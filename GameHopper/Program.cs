@@ -90,7 +90,7 @@ using (var scope = app.Services.CreateScope())
     var adminPassword = "TestAdmin123";
     if (await userManager.FindByEmailAsync(adminEmail) == null)
     {
-        var adminUser = new Player(adminEmail)
+        GameMaster adminUser = new GameMaster(adminEmail)
         {
             UserName = adminEmail,
             Email = adminEmail
@@ -104,3 +104,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+

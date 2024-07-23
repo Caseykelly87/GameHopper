@@ -1,11 +1,13 @@
-@model GameHopper.Models.Game
+@using GameHopper.Models;
+@model GameHopper.ViewModels.GameViewModel
+
 @{
     ViewData["Title"] = "Create Game Listing";
 }
 
 <h1>Create Game</h1>
 
-<form asp-controller="Game" method="post" asp-action="AddGame">
+<form asp-controller="Game" method="post" asp-action="AddGame" enctype="multipart/form-data">
     <div class="form-group">
         <label asp-for="Title">Title</label>
         <input asp-for="Title" class="form-control" />
@@ -13,8 +15,8 @@
     </div>
 
     <div class="form-group">
-        <label for="GamePicture">Game Picture</label>
-        <input type="file" name="GamePicture" class="form-control" />
+        <label asp-for="GamePicture">Game Picture</label>
+        <input asp-for="GamePicture" type="file" class="form-control" />
     </div>
     
     <div class="form-group">
@@ -22,17 +24,19 @@
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
-    <h2>Where is your game going to be hosted?</h2>
+    
+    <br />
+    <h3>Where is your game going to be hosted?</h3>
     <br />
 
     <div class="form-group">
-        <label for="Address">Address</label>
-        <input type="String" name="Address" class="form-control" />
+        <label asp-for="Address">Address</label>
+        <input asp-for="Address" class="form-control" />
     </div>
-
- <div class="form-group">
-        <label for="Address2">Address2</label>
-        <input type="String" name="Address2" class="form-control" />
+    
+    <div class="form-group">
+        <label asp-for="Address2">Address2</label>
+        <input asp-for="Address2" class="form-control" />
     </div>
 
     <div class="form-group">
@@ -92,12 +96,12 @@
         <span asp-validation-for="State" class="text-danger"></span>
     </div>
 
- <div class="form-group">
-        <label for="Zip">Zip Code</label>
-        <input type="Int" name="Zip" class="form-control" />
+<div class="form-group">
+        <label asp-for="Zip">Zip Code</label>
+        <input asp-for="Zip" type="Int" class="form-control" />
     </div>
 
     <br />
-    <button type="submit" class="btn btn-primary">Create</button>
+    <button type="submit" value="Create" class="btn btn-primary">Create</button>
 </form>
 

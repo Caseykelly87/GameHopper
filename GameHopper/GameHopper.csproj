@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Shared\_SearchForm.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Views\Shared\_SearchForm.cshtml" />
+    <Content Remove="Views\Game\GameDetails.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +26,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Game\GameDetails.cshtml" />
   </ItemGroup>
 
 </Project>

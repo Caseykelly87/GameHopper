@@ -5,14 +5,12 @@ namespace GameHopper.Models
 {
     public class Category
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string? Name { get; set; }
 
         public ICollection<Game>? Games { get; set; } = new List<Game>();
         public ICollection<Tag>? Tags { get; set; } = new List<Tag>();
-        
-
         
 
         public Category(string name)
@@ -23,6 +21,11 @@ namespace GameHopper.Models
     
         public Category()
         {
+        }
+
+         public override string ToString()
+        {
+            return Name;
         }
 
     }
