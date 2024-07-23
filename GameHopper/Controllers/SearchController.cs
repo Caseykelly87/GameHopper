@@ -19,8 +19,11 @@ public class SearchController : Controller
     [HttpGet]
     public IActionResult Search()
     {
-        ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
-        ViewData["Tags"] = new SelectList(_context.Tags, "Id", "Name");
+        var categories = _context.Categories.ToList();
+            var tags = _context.Tags.ToList();
+
+            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+            ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
         return PartialView("_SearchPartial", new SearchViewModel());
     }
 
