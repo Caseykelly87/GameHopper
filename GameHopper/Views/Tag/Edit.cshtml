@@ -1,0 +1,31 @@
+@using GameHopper.Models;
+@model GameHopper.ViewModels.AddTagViewModel
+
+<h1>Edit a Tag</h1>
+
+<form method="post">
+    @foreach (var tag in ViewBag.tags)
+    {
+        <div>
+            <label>
+                <span>@tag.Name</span>
+                <input type="radio" name="tagIds" value="@tag.Id">
+            </label>
+        </div>
+    }
+
+    <form asp-controller="Tag" asp-action="Add" method="post">
+
+    <div class="form-group">
+        <label asp-for="TagName">New Tag Name: </label>
+        <input asp-for="TagName" />
+        <span asp-validation-for="TagName"></span>
+    </div>
+
+    <br />
+
+    <input type="submit" value="Edit Selected Tag" class="btn btn-danger">
+
+</form>
+
+</form>

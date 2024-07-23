@@ -3,8 +3,6 @@ using GameHopper.Models;
 using GameHopper.ViewModels;
 
 
-// For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace GameHopper.Controllers
 {
     public class TagController : Controller
@@ -64,6 +62,68 @@ namespace GameHopper.Controllers
                 return View("Add", addTagViewModel);
             }
           
+          public IActionResult Delete()
+        {
+            ViewBag.tags = context.Tags.ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Delete(int[] tagIds)
+        {
+            foreach (int tagId in tagIds)
+            {
+                Tag theTag = context.Tags.Find(tagId);
+                context.Tags.Remove(theTag);
+            }
+
+            context.SaveChanges();
+
+            return Redirect("/Tag/");
+        }
+
+        public IActionResult Edit()
+        {
+            ViewBag.tags = context.Tags.ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int[] tagIds, AddTagViewModel addTagViewModel)
+        {
+            foreach (int tagId in tagIds)
+            {
+                Tag oldTag = context.Tags.Find(tagId);
+
+                Tag newTag = new Tag
+                {
+                    Name = addTagViewModel.TagName,
+                    Id = tagId
+                };
+                bool tags = context.Tags.Any(x => x.Name == newTag.Name);
+
+
+                    if (tags)
+                    {
+
+                        return Redirect("/Tag/Edit/");
+                        
+                    }
+
+                    else
+                    {
+
+                context.Tags.Remove(oldTag);
+                context.Tags.Add(newTag);
+                    }
+                    context.SaveChanges();
+            }
+
+
+            return Redirect("/Tag/");
+        }
             
         }
         
