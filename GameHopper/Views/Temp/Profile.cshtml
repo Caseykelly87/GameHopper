@@ -171,11 +171,14 @@ p {
             <h4>Bio</h4>
             <p>Bio info here</p>
             <h4>Preferred Systems</h4>
+            <p><a asp-controller="Category" asp-action="Add">Add categories</a></p>
             <p>Game 1 | Game 2</p>
             <h4>Select play styles:</h4>
             <form>
   <div>
-    <input
+
+    <p><a asp-controller="Tag" asp-action="Add">Add tags</a></p>
+    @* <input
       type="checkbox"
       id="tagcheckbox"
       name="tag"
@@ -192,11 +195,9 @@ p {
       id="tagcheckbox"
       name="tag"
       value="tags" />
-    <label for="tagcheckbox">Tag option</label>
+    <label for="tagcheckbox">Tag option</label> *@
   </div>
-  <div>
-    <button type="submit">Confirm</button>
-  </div>
+
 
   
 </form>
