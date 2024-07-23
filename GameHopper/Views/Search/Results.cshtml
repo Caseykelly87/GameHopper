@@ -24,6 +24,17 @@
                     }
                 </td>
             </tr>
+            @* <tr>
+                <td colspan="4">
+                    @await Html.PartialAsync("_RequestPartial", new RequestViewModel
+                    {
+                        GameId = game.Id,
+                        IsGameGM = User.IsInRole("GameMaster") && game.GameMasterId == User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                        CurrentPlayers = game.GamePlayers.ToList(),
+                        Requests = game.Requests.ToList()
+                    })
+                </td>
+            </tr> *@
         }
     </tbody>
 </table>
