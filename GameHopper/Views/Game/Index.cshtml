@@ -1,4 +1,4 @@
-@using GameHopper.Models
+@using GameHopper.Models;
 @model IEnumerable<Game>
 
 @{
@@ -13,7 +13,7 @@
             <th>Title</th>
             <th>Description</th>
             <th>Game Picture</th>
-            <th>Details</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -29,7 +29,14 @@
                     }
                 </td>
                 <td>
-                    <a asp-action="GameDetails" asp-route-id="@game.Id" class="btn btn-info">View Details</a>
+                    <a asp-action="Details" asp-route-id="@game.Id" class="btn btn-info">View Details</a>
+                    @if (User.Identity.IsAuthenticated && game.GameMasterId == User.Identity.Name)
+                    {
+                        <a asp-action="EditGame" asp-route-id="@game.Id" class="btn btn-primary">Edit</a>
+                        <form asp-action="DeleteGame" asp-route-id="@game.Id" method="post" style="display: inline-block;">
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this game?')">Delete</button>
+                        </form>
+                    }
                 </td>
             </tr>
         }

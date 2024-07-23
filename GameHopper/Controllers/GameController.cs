@@ -5,21 +5,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameHopper{
+namespace GameHopper
+{
 
-public class GameController : Controller {
+    public class GameController : Controller
+    {
 
-    private GameDbContext context;
+        private GameDbContext context;
 
-    private UserManager<User> userManager;
+        private UserManager<User> userManager;
 
         public GameController(GameDbContext dbContext, UserManager<User> userManager)
         {
             context = dbContext;
             this.userManager = userManager;
         }
-
-public async Task<IActionResult> Details(int id)
+//Index
+        public async Task<IActionResult> Details(int id)
         {
             var game = await context.Games
                 .FirstOrDefaultAsync(g => g.Id == id);
@@ -32,96 +34,145 @@ public async Task<IActionResult> Details(int id)
             return View(game);
         }
 
-    public IActionResult Index() {
-        List<Game> games = context.Games.ToList();
-        return View(games);
+        public IActionResult Index()
+        {
+            List<Game> games = context.Games.ToList();
+            return View(games);
+        }
+// Create
+        [HttpGet]
+        public IActionResult AddGame()
+        {
+            return View();
         }
 
-[HttpGet]
-// [Route("game/addgame")]
-public IActionResult AddGame()
-{
-    return View();
-}
+        [HttpPost]
+        public async Task<IActionResult> AddGameAsync(GameViewModel game, IFormFile gamePicture)
+        {
+            if (ModelState.IsValid)
 
-[HttpPost] 
-public async Task<IActionResult> AddGameAsync(GameViewModel model, IFormFile gamePicture)
-{
-    if (ModelState.IsValid)
-    
-    {
-            // Retrieve current user's ID
+            {
+                // Retrieve current user's ID
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 if (user == null)
                 {
                     // Handle case where user is not found 
-                    return BadRequest("Please Log-In or Register to Add to Blog");
+                    return BadRequest("Please Log-In or Register to Add a Game Listing");
                 }
-        var newGame = new Game
+                var newGame = new Game
                 {
-                    Title = model.Title,
-                    Description = model.Description,
-                    Address = model.Address,
-                    Address2 = model.Address2,
-                    State = model.State,
-                    Zip = model.Zip,
+                    Title = game.Title,
+                    Description = game.Description,
+                    Address = game.Address,
+                    Address2 = game.Address2,
+                    State = game.State,
+                    Zip = game.Zip,
                     GameMasterId = user.Id
-                    // CategoryId = model.CategoryId,
+                    // CategoryId = game.CategoryId,
                 };
-                
-        if (gamePicture != null && gamePicture.Length > 0)
-        {
-            using (var ms = new MemoryStream())
-            {
-                gamePicture.CopyTo(ms);
-                newGame.GamePicture = ms.ToArray();
+
+                if (gamePicture != null && gamePicture.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        gamePicture.CopyTo(ms);
+                        newGame.GamePicture = ms.ToArray();
+                    }
+                }
+                context.Games.Add(newGame);
+                await context.SaveChangesAsync();
+                return RedirectToAction("Index");
+
             }
-        }
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-        context.Games.Add(newGame);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-        context.SaveChanges();
-        return RedirectToAction("Index");
-    } else {
 
-    return View(); // Return the view with validation errors if ModelState is not valid
-    }
-}
-
-    public IActionResult Delete()
-        {
-            ViewBag.games = context.Games.ToList();
             return View();
+
         }
+//Edit
+        public async Task<IActionResult> EditGame(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction(nameof(Index)); // Redirect to Index if id is null
+            }
+
+            var game = await context.Games.FindAsync(id);
+            if (game == null)
+            {
+                return RedirectToAction(nameof(Index)); // Redirect to Index if game is not found
+            }
+
+            var model = new GameViewModel
+            {
+                Id = game.Id,
+                Title = game.Title,
+                Description = game.Description,
+                Address = game.Address,
+                Address2 = game.Address2,
+                State = game.State,
+                Zip = game.Zip
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateGame(int id, GameViewModel game)
+        {
+            if (id != game.Id)
+            {
+                return RedirectToAction(nameof(Index)); // Redirect to Index if id doesn't match model id
+            }
+
+            if (ModelState.IsValid)
+            {
+                var existingGame = await context.Games.FindAsync(id);
+                if (existingGame == null)
+                {
+                    return RedirectToAction(nameof(Index)); // Redirect to Index if game is not found
+                }
+
+                existingGame.Title = game.Title;
+                existingGame.Description = game.Description;
+                existingGame.Address = game.Address;
+                existingGame.Address2 = game.Address2;
+                existingGame.State = game.State;
+                existingGame.Zip = game.Zip;
+
+                context.Update(existingGame);
+                await context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(game);
+        }
+
+//Delete
 
         [HttpPost]
         public IActionResult Delete(int[] gameIds)
         {
             string answer;
-            Console.WriteLine("Are you sure you want to delete your account?"); 
+            Console.WriteLine("Are you sure you want to delete your account?");
             answer = Console.ReadLine();
 
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            if (answer.ToLower().Equals("yes") || answer.ToLower().Equals("y") )
+            if (answer.ToLower().Equals("yes") || answer.ToLower().Equals("y"))
             {
-        
-        foreach (int gameId in gameIds)
-            {
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            Game theGame = context.Games.Find(gameId);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
-            context.Games.Remove(theGame);
-            }
-            
-            context.SaveChanges();
 
-            return View("/Home");
+                foreach (int gameId in gameIds)
+                {
+                    Game theGame = context.Games.Find(gameId);
+                    context.Games.Remove(theGame);
+                }
+
+                context.SaveChanges();
+
+                return View("/Home");
             }
 
-            else{
+            else
+            {
                 return View("/Game");
             }
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
         }
-}
+    }
 }

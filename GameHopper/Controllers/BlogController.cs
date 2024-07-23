@@ -65,18 +65,14 @@ namespace Blog.Controllers
                         Id = Guid.NewGuid(),
                         UserId = user.Id
                     };
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
                     context.Blogs.Add(newEntry);
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 await context.SaveChangesAsync();
                 return RedirectToAction("Index");                   
                 }
 
             } else {
                 // existing article
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
             BlogEntry existingEntry = context.Blogs.FirstOrDefault(x => x.Id == entry.Id);
-#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
             
               if (existingEntry != null)
                     {
