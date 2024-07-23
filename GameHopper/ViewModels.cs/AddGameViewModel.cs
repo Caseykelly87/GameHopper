@@ -2,6 +2,8 @@
 // using System.ComponentModel.DataAnnotations;
 // using GameHopper.Models; // Import necessary models
 
+using System.ComponentModel.DataAnnotations;
+
 namespace GameHopper.ViewModels
 {
     public class GameViewModel
@@ -22,6 +24,7 @@ namespace GameHopper.ViewModels
         public string? State { get; set; }
 
         public int? Zip { get; set; }
+        public byte[]? GamePicture { get; set; }
 
         // Additional properties as needed
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace GameHopper
 {
@@ -20,7 +21,7 @@ namespace GameHopper
             context = dbContext;
             this.userManager = userManager;
         }
-//Index
+        //Index
         public async Task<IActionResult> Details(int id)
         {
             var game = await context.Games
@@ -88,21 +89,16 @@ namespace GameHopper
             return View();
 
         }
-//Edit
-        public async Task<IActionResult> EditGame(int? id)
+// GET: EditGame
+        public async Task<IActionResult> EditGame(int id)
         {
-            if (id == null)
-            {
-                return RedirectToAction(nameof(Index)); // Redirect to Index if id is null
-            }
-
-            var game = await context.Games.FindAsync(id);
+            var game = await context.Games.FirstOrDefaultAsync(x => x.Id == id);
             if (game == null)
             {
-                return RedirectToAction(nameof(Index)); // Redirect to Index if game is not found
+                return NotFound("Game not found");
             }
 
-            var model = new GameViewModel
+            var gameViewModel = new GameViewModel
             {
                 Id = game.Id,
                 Title = game.Title,
@@ -110,70 +106,97 @@ namespace GameHopper
                 Address = game.Address,
                 Address2 = game.Address2,
                 State = game.State,
-                Zip = game.Zip
+                Zip = game.Zip,
+                GamePicture = game.GamePicture
             };
 
-            return View(model);
+            return View(gameViewModel);
         }
-
+// POST: EditGame
         [HttpPost]
-        public async Task<IActionResult> UpdateGame(int id, GameViewModel game)
+        public async Task<IActionResult> EditGame(GameViewModel gameViewModel)
         {
-            if (id != game.Id)
-            {
-                return RedirectToAction(nameof(Index)); // Redirect to Index if id doesn't match model id
-            }
-
             if (ModelState.IsValid)
             {
-                var existingGame = await context.Games.FindAsync(id);
-                if (existingGame == null)
+                var user = await userManager.GetUserAsync(HttpContext.User);
+                if (user == null)
                 {
-                    return RedirectToAction(nameof(Index)); // Redirect to Index if game is not found
+                    return BadRequest("Please Log-In or Register to Edit Game");
                 }
 
-                existingGame.Title = game.Title;
-                existingGame.Description = game.Description;
-                existingGame.Address = game.Address;
-                existingGame.Address2 = game.Address2;
-                existingGame.State = game.State;
-                existingGame.Zip = game.Zip;
+                var existingGame = await context.Games.FirstOrDefaultAsync(x => x.Id == gameViewModel.Id);
+                if (existingGame == null)
+                {
+                    return NotFound("Game not found");
+                }
 
-                context.Update(existingGame);
+                if (existingGame.GameMasterId != user.Id)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to edit this game");
+                }
+
+                existingGame.Title = gameViewModel.Title;
+                existingGame.Description = gameViewModel.Description;
+                existingGame.Address = gameViewModel.Address;
+                existingGame.Address2 = gameViewModel.Address2;
+                existingGame.State = gameViewModel.State;
+                existingGame.Zip = gameViewModel.Zip;
+                existingGame.GamePicture = gameViewModel.GamePicture;
+
                 await context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
-            return View(game);
+
+            return View(gameViewModel);
         }
 
 //Delete
 
-        [HttpPost]
-        public IActionResult Delete(int[] gameIds)
+        [HttpPost, ActionName("DeleteGame")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            string answer;
-            Console.WriteLine("Are you sure you want to delete your account?");
-            answer = Console.ReadLine();
-
-            if (answer.ToLower().Equals("yes") || answer.ToLower().Equals("y"))
+            var game = await context.Games.FirstOrDefaultAsync(x => x.Id == id);
+            if (game == null)
             {
-
-                foreach (int gameId in gameIds)
-                {
-                    Game theGame = context.Games.Find(gameId);
-                    context.Games.Remove(theGame);
-                }
-
-                context.SaveChanges();
-
-                return View("/Home");
+                return NotFound("Game not found");
             }
 
-            else
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            if (user == null || game.GameMasterId != user.Id)
             {
-                return View("/Game");
+                return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to delete this game");
             }
+
+            context.Games.Remove(game);
+            await context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
-    }
+        // [HttpPost]
+        // public IActionResult Delete(int[] gameIds)
+        // {
+        //     string answer;
+        //     Console.WriteLine("Are you sure you want to delete your account?");
+        //     answer = Console.ReadLine();
+
+        //     if (answer.ToLower().Equals("yes") || answer.ToLower().Equals("y"))
+        //     {
+
+        //         foreach (int gameId in gameIds)
+        //         {
+        //             Game theGame = context.Games.Find(gameId);
+        //             context.Games.Remove(theGame);
+        //         }
+
+        //         context.SaveChanges();
+
+        //         return View("/Home");
+        //     }
+
+        //     else
+        //     {
+        //         return View("/Game");
+        //     }
+        // }
     }
 }
