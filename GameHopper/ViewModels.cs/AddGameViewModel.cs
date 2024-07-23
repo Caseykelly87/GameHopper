@@ -15,13 +15,13 @@ namespace GameHopper.ViewModels
         [Required(ErrorMessage = "Description is required")]
         public string Description { get; set; }
 
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
-        public string Address2 { get; set; }
+        public string? Address2 { get; set; }
 
-        public string State { get; set; }
+        public string? State { get; set; }
 
-        public int Zip { get; set; }
+        public int? Zip { get; set; }
 
         // Additional properties as needed
 
