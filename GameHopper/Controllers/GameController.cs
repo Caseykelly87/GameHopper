@@ -28,7 +28,10 @@ namespace GameHopper
 
         public IActionResult Index()
         {
-            List<Game> games = context.Games.ToList();
+            List<Game> games = context.Games
+            .Include(g => g.Tags)
+            .Include(g => g.Category)
+            .ToList();
             return View(games);
         }
         public async Task<IActionResult> Details(int id)
@@ -134,8 +137,8 @@ namespace GameHopper
 
             return View(gameViewModel);
         }
-    // PUT: EditGame
-        [HttpPut]
+        // PUT: EditGame
+        [HttpPost]
         public async Task<IActionResult> EditGame(GameViewModel gameViewModel, IFormFile gamePicture)
         {
             if (ModelState.IsValid)
@@ -147,8 +150,8 @@ namespace GameHopper
                 }
 
                 var existingGame = await context.Games
-                .Include(g => g.Tags)
-                .FirstOrDefaultAsync(x => x.Id == gameViewModel.Id);
+                    .Include(g => g.Tags)
+                    .FirstOrDefaultAsync(x => x.Id == gameViewModel.Id);
 
                 if (existingGame == null)
                 {
@@ -158,8 +161,9 @@ namespace GameHopper
                 if (existingGame.GameMasterId != user.Id)
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to edit this game");
-                } else
-      
+                }
+
+                // Update game properties
                 existingGame.Title = gameViewModel.Title;
                 existingGame.Description = gameViewModel.Description;
                 existingGame.Address = gameViewModel.Address;
@@ -168,38 +172,43 @@ namespace GameHopper
                 existingGame.Zip = gameViewModel.Zip;
                 existingGame.CategoryId = gameViewModel.CategoryId;
 
+                // Clear existing tags
                 existingGame.Tags.Clear();
-        foreach (var tagId in gameViewModel.SelectedTagIds)
-        {
-            var tag = await context.Tags.FindAsync(tagId);
-            if (tag != null)
-            {
-                existingGame.Tags.Add(tag);
+                foreach (var tagId in gameViewModel.SelectedTagIds)
+                {
+                    var tag = await context.Tags.FindAsync(tagId);
+                    if (tag != null)
+                    {
+                        existingGame.Tags.Add(tag);
+                    }
+                }
+                Console.WriteLine(existingGame.Tags);
+                // Update game picture
+                if (gamePicture != null && gamePicture.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        await gamePicture.CopyToAsync(ms);
+                        existingGame.GamePicture = ms.ToArray();
+                    }
+                }
+                 var updatedtags = context.Tags.ToList();
+                 ViewBag.Tags = new MultiSelectList(updatedtags, "Id", "Name", gameViewModel.SelectedTagIds);
+
+                context.Games.Update(existingGame);
+                await context.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
+
+            // If model state is invalid, return to the view with the current data
+            var categories = context.Categories.ToList();
+            var tags = context.Tags.ToList();
+
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", gameViewModel.CategoryId);
+            ViewBag.Tags = new MultiSelectList(tags, "Id", "Name", gameViewModel.SelectedTagIds);
+
+            return View(gameViewModel);
         }
-
-        if (gamePicture != null && gamePicture.Length > 0)
-        {
-            using (var ms = new MemoryStream())
-            {
-                await gamePicture.CopyToAsync(ms);
-                existingGame.GamePicture = ms.ToArray();
-            }
-        }
-
-        await context.SaveChangesAsync();
-        return RedirectToAction("Index");
-    }
-
-    // If model state is invalid, return to the view with the current data
-    // var categories = context.Categories.ToList();
-    // var tags = context.Tags.ToList();
-
-    // ViewBag.Categories = new SelectList(categories, "Id", "Name", gameViewModel.CategoryId);
-    // ViewBag.Tags = new MultiSelectList(tags, "Id", "Name", gameViewModel.SelectedTagIds);
-
-    return View(gameViewModel);
-    }
 
         //Delete
 
