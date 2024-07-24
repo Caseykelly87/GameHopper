@@ -1,4 +1,4 @@
-
+@* 
 
 @using GameHopper.Models;
 @using System.Security.Claims
@@ -15,17 +15,64 @@
     <div class="card mb-2">
         <div class="card-header">
             <h5 class="card-title">@game.Title</h5>
-            <p class="card-text">@game.Description</p>
             @if (game.GamePicture != null)
             {
                 <img src="data:image/jpeg;base64,@Convert.ToBase64String(game.GamePicture)" alt="Game Picture" class="img-fluid" style="max-width: 100px;" />
             }
             </div>
-        <div class="card-body">
+        <div class="card-body"> 
+            <p class="card-text">@game.Description</p>
             <p class="card-text"><small class="text-muted">Address: @game.Address @game.Address2, @game.State @game.Zip</small></p>
         </div>
         <div class="card-footer">
-            <a asp-action="Details" asp-route-id="@game.Id" class="btn btn-info">View Details</a>
+          
+            @if (User.Identity.IsAuthenticated && game.GameMasterId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))
+            {
+                <a asp-action="EditGame" asp-route-id="@game.Id" class="btn btn-primary footer-buttons" style="display:inline;">Edit</a>
+                <form asp-action="DeleteGame" asp-route-id="@game.Id" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger footer-buttons" onclick="return confirm('Are you sure you want to delete this game?');">Delete</button>
+                </form>
+            }
+        </div>
+    </div>
+} *@
+
+@using GameHopper.Models;
+@using System.Security.Claims
+@model IEnumerable<Game>
+
+@{
+    ViewData["Title"] = "My Game Listings";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@foreach (var game in Model)
+{
+    <div class="card mb-2">
+        <div class="card-header">
+            <h5 class="card-title">@game.Title</h5>
+            @if (game.GamePicture != null)
+            {
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(game.GamePicture)" alt="Game Picture" class="img-fluid" style="max-width: 100px;" />
+            }
+        </div>
+        <div class="card-body"> 
+            <p class="card-text">@game.Description</p>
+            <p class="card-text"><small class="text-muted">Address: @game.Address @game.Address2, @game.State @game.Zip</small></p>
+            <p class="card-text"><strong>Category:</strong> @game.Category?.Name</p>
+            <p class="card-text"><strong>Tags:</strong> 
+                @if (game.Tags != null && game.Tags.Any())
+                {
+                    @string.Join(", ", game.Tags.Select(t => t.Name))
+                }
+                else
+                {
+                    <span>No Tags</span>
+                }
+            </p>
+        </div>
+        <div class="card-footer">
             @if (User.Identity.IsAuthenticated && game.GameMasterId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))
             {
                 <a asp-action="EditGame" asp-route-id="@game.Id" class="btn btn-primary footer-buttons" style="display:inline;">Edit</a>

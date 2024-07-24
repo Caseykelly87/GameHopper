@@ -10,8 +10,8 @@ public class Game
     public string? Title { get; set; }
     public byte[]? GamePicture { get; set; }
     public ICollection<User>? GamePlayers { get; set; }
-
-    public ICollection<Tag> Tags { get; set; }
+    public List<int>? SelectedTagIds { get; set; }
+    public ICollection<Tag>? Tags { get; set; }
     public ICollection<Request>? Requests { get; set; } 
     public Category? Category { get; set; }
     public int? CategoryId { get; set; }
@@ -29,7 +29,7 @@ public class Game
 
     public int? Zip { get; set; }
 
-    public List<int> SelectedTagIds { get; set; }
+
 
     public Game() 
     {
