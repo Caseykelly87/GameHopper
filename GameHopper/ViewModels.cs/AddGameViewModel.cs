@@ -27,14 +27,14 @@ namespace GameHopper.ViewModels
         public string? State { get; set; }
 
         public int? Zip { get; set; }
-
+        [Required(ErrorMessage = "Photo is Required ")]
         public IFormFile? GamePicture { get; set; }
 
         public List<int>? SelectedTagIds { get; set; }
 
         public int? CategoryId { get; set; }
         public List<Category>? Categories { get; set; }
-    
+
         public List<Tag>? Tags { get; set; }
 
         public GameViewModel()
