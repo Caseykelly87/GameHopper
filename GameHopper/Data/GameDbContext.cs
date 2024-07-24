@@ -26,6 +26,11 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<User>()
+        .HasDiscriminator<string>("Discriminator")
+        .HasValue<Player>("Player")
+        .HasValue<GameMaster>("GameMaster");
             
             modelBuilder.Entity<User>()
         .HasMany(u => u.CurrentGames)
@@ -61,6 +66,14 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
             entity.Property(e => e.ProfilePicture)
                 .HasColumnType("LONGBLOB")
                 .IsRequired(false); // Ensure the column is nullable
+            
+            });    
+            
+            modelBuilder.Entity<Game>(entity =>
+        {            
+            entity.Property(e => e.GamePicture)
+                .HasColumnType("LONGBLOB")
+                .IsRequired(false);
             });    
 
             modelBuilder.Entity<BlogEntry>()

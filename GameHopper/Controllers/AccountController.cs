@@ -36,7 +36,7 @@ namespace GameHopper.Controllers
 
             if (model.Role == "GameMaster")
             {
-                user = new GameMaster { UserName = model.Email, Email = model.Email };
+                 user = new GameMaster { UserName = model.Email, Email = model.Email };
             }
             else
             {
