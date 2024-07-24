@@ -60,51 +60,64 @@ namespace GameHopper
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddGameAsync(GameViewModel game, IFormFile gamePicture, Tag tag)
+        public async Task<IActionResult> AddGameAsync(GameViewModel game, IFormFile gamePicture)
         {
-            if (ModelState.IsValid)
-
+            if (!ModelState.IsValid)
             {
-                var user = await userManager.GetUserAsync(HttpContext.User);
-                if (user == null)
-                {
-                    return BadRequest("Please Log-In or Register to Add a Game Listing");
-                }
-                var newGame = new Game
-                {
-                    Title = game.Title,
-                    Description = game.Description,
-                    Address = game.Address,
-                    Address2 = game.Address2,
-                    State = game.State,
-                    Zip = game.Zip,
-                    GameMasterId = user.Id,
-                    Tags = new List<Tag>()
-                };
+                var categories = context.Categories.ToList();
+                var tags = context.Tags.ToList();
 
-                if (gamePicture != null && gamePicture.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        gamePicture.CopyTo(ms);
-                        newGame.GamePicture = ms.ToArray();
-                    }
-                }
-                context.Games.Add(newGame);
-                await context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                ViewBag.Categories = new SelectList(categories, "Id", "Name");
+                ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
 
+                return View(game);
             }
-            var categories = context.Categories.ToList();
-            var tags = context.Tags.ToList();
 
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-            ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Please Log-In or Register to Add a Game Listing");
+                return View(game);
+            }
 
-            return View(game);
+            var newGame = new Game
+            {
+                Title = game.Title,
+                Description = game.Description,
+                Address = game.Address,
+                Address2 = game.Address2,
+                State = game.State,
+                Zip = game.Zip,
+                GameMasterId = user.Id,
+                CategoryId = game.CategoryId,
+                Tags = new List<Tag>()
+            };
 
+            if (gamePicture != null && gamePicture.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    gamePicture.CopyTo(ms);
+                    newGame.GamePicture = ms.ToArray();
+                }
+            }
 
+            foreach (var tagId in game.SelectedTagIds)
+            {
+                var tag = await context.Tags.FindAsync(tagId);
+                if (tag != null)
+                {
+                    newGame.Tags.Add(tag);
+                }
+            }
+
+            context.Games.Add(newGame);
+            await context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
+
+
+
         // GET: EditGame
         public async Task<IActionResult> EditGame(int id)
         {
@@ -192,8 +205,8 @@ namespace GameHopper
                         existingGame.GamePicture = ms.ToArray();
                     }
                 }
-                 var updatedtags = context.Tags.ToList();
-                 ViewBag.Tags = new MultiSelectList(updatedtags, "Id", "Name", gameViewModel.SelectedTagIds);
+                var updatedtags = context.Tags.ToList();
+                ViewBag.Tags = new MultiSelectList(updatedtags, "Id", "Name", gameViewModel.SelectedTagIds);
 
                 context.Games.Update(existingGame);
                 await context.SaveChangesAsync();
