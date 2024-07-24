@@ -10,6 +10,9 @@
 
 <h1>@ViewData["Title"]</h1>
 
+<div id = "SharebuttonInsert"></div> 
+<br />
+
 @foreach (var game in Model)
 {
     <div class="card mb-2">
@@ -36,7 +39,7 @@
             </p>
         </div>
         <div class="card-footer">
-            <div id = "SharebuttonInsert"></div> 
+            
             @if (User.Identity.IsAuthenticated && game.GameMasterId == User.FindFirstValue(System.Security.Claims.ClaimTypes.NameIdentifier))
             {
                 <a asp-action="EditGame" asp-route-id="@game.Id" class="btn btn-primary footer-buttons" style="display:inline;">Edit</a>
