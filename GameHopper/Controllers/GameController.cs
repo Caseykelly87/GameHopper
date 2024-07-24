@@ -103,9 +103,11 @@ namespace GameHopper
 
         }
         // GET: EditGame
-        public async Task<IActionResult> EditGame(int id, IFormFile gamePicture)
+        public async Task<IActionResult> EditGame(int id)
         {
-            var game = context.Games.Include(g => g.Tags).FirstOrDefault(x => x.Id == id);
+            var game = await context.Games
+            .Include(g => g.Tags)
+            .FirstOrDefaultAsync(x => x.Id == id);
             if (game == null)
             {
                 return NotFound("Game not found");
@@ -124,7 +126,7 @@ namespace GameHopper
                 State = game.State,
                 Zip = game.Zip,
                 SelectedTagIds = game.Tags.Select(t => t.Id).ToList(),
-                CategoryId = game.CategoryId 
+                CategoryId = game.CategoryId // Assuming you have CategoryId in the model
             };
 
             ViewBag.Categories = new SelectList(categories, "Id", "Name", game.CategoryId);
@@ -132,8 +134,8 @@ namespace GameHopper
 
             return View(gameViewModel);
         }
-        // POST: EditGame
-        [HttpPost]
+    // PUT: EditGame
+        [HttpPut]
         public async Task<IActionResult> EditGame(GameViewModel gameViewModel, IFormFile gamePicture)
         {
             if (ModelState.IsValid)
@@ -144,7 +146,10 @@ namespace GameHopper
                     return BadRequest("Please Log-In or Register to Edit Game");
                 }
 
-                var existingGame = await context.Games.FirstOrDefaultAsync(x => x.Id == gameViewModel.Id);
+                var existingGame = await context.Games
+                .Include(g => g.Tags)
+                .FirstOrDefaultAsync(x => x.Id == gameViewModel.Id);
+
                 if (existingGame == null)
                 {
                     return NotFound("Game not found");
@@ -153,30 +158,48 @@ namespace GameHopper
                 if (existingGame.GameMasterId != user.Id)
                 {
                     return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to edit this game");
-                }
-
+                } else
+      
                 existingGame.Title = gameViewModel.Title;
                 existingGame.Description = gameViewModel.Description;
                 existingGame.Address = gameViewModel.Address;
                 existingGame.Address2 = gameViewModel.Address2;
                 existingGame.State = gameViewModel.State;
                 existingGame.Zip = gameViewModel.Zip;
+                existingGame.CategoryId = gameViewModel.CategoryId;
 
-                if (gamePicture != null && gamePicture.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        await gamePicture.CopyToAsync(ms);
-                        existingGame.GamePicture = ms.ToArray();
-                    }
-                }
-
-                await context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                existingGame.Tags.Clear();
+        foreach (var tagId in gameViewModel.SelectedTagIds)
+        {
+            var tag = await context.Tags.FindAsync(tagId);
+            if (tag != null)
+            {
+                existingGame.Tags.Add(tag);
             }
-
-            return View(gameViewModel);
         }
+
+        if (gamePicture != null && gamePicture.Length > 0)
+        {
+            using (var ms = new MemoryStream())
+            {
+                await gamePicture.CopyToAsync(ms);
+                existingGame.GamePicture = ms.ToArray();
+            }
+        }
+
+        await context.SaveChangesAsync();
+        return RedirectToAction("Index");
+    }
+
+    // If model state is invalid, return to the view with the current data
+    // var categories = context.Categories.ToList();
+    // var tags = context.Tags.ToList();
+
+    // ViewBag.Categories = new SelectList(categories, "Id", "Name", gameViewModel.CategoryId);
+    // ViewBag.Tags = new MultiSelectList(tags, "Id", "Name", gameViewModel.SelectedTagIds);
+
+    return View(gameViewModel);
+    }
 
         //Delete
 

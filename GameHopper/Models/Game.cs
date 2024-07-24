@@ -42,21 +42,6 @@ public class Game
         Description = description;
     }
         
-    
-    
-    // public Game(string title, User players, Tag tags, Category category, GameMaster gameMaster, string description, string address, string address2, string state, int zip) : this () { 
-    //     Title = title;
-    //     GamePlayers = (ICollection<User>)players;
-    //     Tags = (ICollection<Tag>)tags;
-    //     Category = category;
-    //     GameMaster = gameMaster;
-    //     Description = description;
-    //     Address = address;
-    //     Address2 = address2;
-    //     State = state;
-    //     Zip = zip;
-        
-    // }
 
 }
 

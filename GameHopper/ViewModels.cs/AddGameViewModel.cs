@@ -28,7 +28,7 @@ namespace GameHopper.ViewModels
 
         public int? Zip { get; set; }
 
-        public IFormFile GamePicture { get; set; }
+        public IFormFile? GamePicture { get; set; }
 
         public List<int>? SelectedTagIds { get; set; }
 
