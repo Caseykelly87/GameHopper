@@ -7,15 +7,17 @@
         <tr>
             <th>Title</th>
             <th>Category</th>
+            <th>Tags</th>
             <th>Description</th>
-            <th>Game Picture</th>
+            <th>Picture</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var game in Model){
             <tr>
                 <td>@game.Title</td>
-                <td>"TBD"</td>
+                <td>@game.Category</td>
+                <td>@game.Tags</td>
                 <td>@game.Description</td>
                 <td>
                     @if (game.GamePicture != null)
