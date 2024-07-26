@@ -17,7 +17,9 @@
         {
             <tr>
                 <td>@rating.Id</td>
-                <td><a asp-controller="Rating" asp-action="Detail" asp-route-id="@rating.Id">@rating.StarRating</a></td>
+                <td>@rating.StarRating</td>
             </tr>
         }
     </table>
+
+    <p><a asp-controller="Rating" asp-action="Delete">Delete Rating</a></p>

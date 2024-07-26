@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using GameHopper;
 using GameHopper.Models;
 using GameHopper.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameHopper.Controllers
@@ -18,7 +16,7 @@ namespace GameHopper.Controllers
             context = dbContext;
             this.userManager = userManager;
         }
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             List<Comment> commenttext = await context.Comments.ToListAsync();
             var addCommentViewModel = new AddCommentViewModel();
@@ -89,35 +87,6 @@ namespace GameHopper.Controllers
             }
 
             return View(entry);
-        }
-
-        // public async Task<IActionResult> CommentPartial()
-        // {
-        //     var commentText = context.Comments.ToList();
-        //     var addCommentViewModel = new AddCommentViewModel();
-        //     ViewData["AddCommentViewModel"] = addCommentViewModel;
-        //     return View(commentText);
-        // }
-
-        [HttpPost, ActionName("Delete")]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
-        {
-            var entry = context.Comments.FirstOrDefault(x => x.Id == id);
-            if (entry == null)
-            {
-                return NotFound("Comment not found");
-            }
-
-            var user = await userManager.GetUserAsync(HttpContext.User);
-            if (user == null || entry.UserId != user.Id)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to delete this comment");
-            }
-
-            context.Comments.Remove(entry);
-            await context.SaveChangesAsync();
-
-            return RedirectToAction("Index");
         }
     }
 }

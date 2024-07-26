@@ -46,5 +46,26 @@
                     return View("Add", ratingViewModel);
         
     }
+
+    public IActionResult Delete()
+        {
+            ViewBag.ratings = context.Ratings.ToList();
+
+            return View();
+        }
+
+    [HttpPost]
+        public IActionResult Delete(int[] ratingIds)
+        {
+            foreach (int ratingId in ratingIds)
+            {
+                Rating theRating = context.Ratings.Find(ratingId);
+                context.Ratings.Remove(theRating);
+            }
+
+            context.SaveChanges();
+
+            return Redirect("/Rating/");
+        }
 }
 }
