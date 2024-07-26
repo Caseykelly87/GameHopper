@@ -21,6 +21,9 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
         public DbSet<Request>? Requests { get; set; }
 
         public DbSet<BlogEntry>? Blogs { get; set; }
+
+        public DbSet<Session> Sessions { get; set; }
+
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,28 +44,31 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
                 .HasForeignKey("UserId")
         );
 
-            modelBuilder.Entity<User>()
-                .HasMany(p => p.CurrentGames)
-                .WithMany(g => g.GamePlayers);
-
             modelBuilder.Entity<GameMaster>()
                 .HasMany(gm => gm.CreatedGames)
                 .WithOne(g => g.GameMaster)
                 .HasForeignKey(g => g.GameMasterId);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.Category)
+                .WithMany(c => c.Games)
+                .HasForeignKey(g => g.CategoryId);
+
+            modelBuilder.Entity<Game>()
+                .HasMany(g => g.Tags)
+                .WithMany(t => t.Games);    
 
             modelBuilder.Entity<User>(entity =>
         {
             entity.Property(e => e.ProfilePicture)
                 .HasColumnType("LONGBLOB")
                 .IsRequired(false); // Ensure the column is nullable
-
+            });    
 
             modelBuilder.Entity<BlogEntry>()
-            .HasOne(b => b.User)
-            .WithMany(u => u.BlogEntries) // Ensure this is a collection
-            .HasForeignKey(b => b.UserId);    
-        });    
-
+                .HasOne(b => b.User)
+                .WithMany(u => u.BlogEntries) // Ensure this is a collection
+                .HasForeignKey(b => b.UserId);    
         
         }
     }

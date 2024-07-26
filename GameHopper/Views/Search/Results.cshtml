@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Game>
+
+<h1>Search Results</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Game Picture</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var game in Model){
+            <tr>
+                <td>@game.Title</td>
+                <td>"TBD"</td>
+                <td>@game.Description</td>
+                <td>
+                    @if (game.GamePicture != null)
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(game.GamePicture)" alt="Game Picture" style="max-width: 100px;" />
+                    }
+                </td>
+            </tr>
+            @* <tr>
+                <td colspan="4">
+                    @await Html.PartialAsync("_RequestPartial", new RequestViewModel
+                    {
+                        GameId = game.Id,
+                        IsGameGM = User.IsInRole("GameMaster") && game.GameMasterId == User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                        CurrentPlayers = game.GamePlayers.ToList(),
+                        Requests = game.Requests.ToList()
+                    })
+                </td>
+            </tr> *@
+        }
+    </tbody>
+</table>

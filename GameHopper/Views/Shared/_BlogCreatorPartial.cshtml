@@ -1,0 +1,17 @@
+@model GameHopper.ViewModels.AddBlogVM
+
+<link href="~/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/js/froala_editor.pkgd.min.js"></script>
+
+<div>
+    <form asp-action="BlogCreatorPage" method="POST">
+        <input type="hidden" asp-for="Id" />
+        <textarea asp-for="Content" id="myBlogEditor"></textarea>
+        <br />
+        <button class="btn btn-secondary">Submit</button>
+    </form>
+
+    <script>
+        var editor = new FroalaEditor('#myBlogEditor')
+    </script>
+</div>
