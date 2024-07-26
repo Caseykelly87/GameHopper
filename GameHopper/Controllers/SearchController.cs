@@ -1,9 +1,11 @@
 ﻿using System.Linq;
-using GameHopper.Models;
+using GameHopper.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 namespace GameHopper;
 
 
@@ -17,78 +19,107 @@ public class SearchController : Controller
     }
 
     
-private void PopulateViewData()
+    private async Task PopulateViewData()
     {
-        ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
-        ViewBag.Tags = new MultiSelectList(_context.Tags, "Id", "Name");
+        var Categories = await _context.Categories.ToListAsync();
+        var Tags = await _context.Tags.ToListAsync();
+        ViewBag.Categories = new SelectList(Categories, "Id", "Name");
+        ViewBag.Tags = new MultiSelectList(Tags, "Id", "Name");
     }
 
     [HttpGet]
-        public IActionResult Search()
-        {
-            PopulateViewData();
-            return View(new SearchViewModel());
-        }
+    public async Task<IActionResult> Search()
+    {
+        
+        await PopulateViewData();
+        // var Categories = await _context.Categories.ToListAsync();
+        // var Tags = await _context.Tags.ToListAsync();
+        // ViewBag.Categories = new SelectList(Categories, "Id", "Name");
+        // ViewBag.Tags = new MultiSelectList(Tags, "Id", "Name");
+        
+        return View();
+    }
 
     [HttpPost]
-        public IActionResult Search(SearchViewModel search)
-        {
-            PopulateViewData();
+    public async Task<IActionResult> Search(SearchViewModel search)
+    {
+        await PopulateViewData();
 
-            var query = _context.Games
+        var query = _context.Games
                 .Include(g => g.Category)
                 .Include(g => g.Tags)
-                .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
+                // .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
                 .AsQueryable();
 
-            if (search.CategoryId.HasValue)
+        if (search.CategoryId.HasValue)
             {
                 query = query.Where(g => g.CategoryId == search.CategoryId.Value);
-            }    
+            }          
 
-            if (!string.IsNullOrEmpty(search.SearchTerm))
-            {
-                query = query.Where(g => g.Title.Contains(search.SearchTerm) || g.Description.Contains(search.SearchTerm));
-            }
-
-            // if (search.TagIds != null)
-            // {
-            //     query = query.Where(g => g.Tags.Any(t => search.TagIds.Contains(t.Id)));
-            // }
-
-            var results = query.ToList();
-            // Optionally sort by number of matching tags
-            var sortedResults = results.OrderByDescending(g => g.Tags.Count(t => search.TagIds.Contains(t.Id)) + 
-                                    (g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) || g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0)).ToList();
-
-            // search.Results = sortedResults;
-            return View("Results", sortedResults);
+        if (!string.IsNullOrEmpty(search.SearchTerm))
+        {
+            query = query.Where(g => g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) || 
+                                g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase));
         }
+
+        // if (search.Tags != null)
+        // {
+        //     query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
+        // }
+                // var categories = _context.Categories.ToList();
+                // var tags = _context.Tags.ToList();
+
+                // ViewBag.Categories = new SelectList(categories, "Id", "Name");
+                // ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
+        var results = await query.ToListAsync();
+        // Optionally sort by number of matching tags
+        // var sortedResults = results.OrderByDescending(g => 
+        //                 (g.Tags != null ? g.Tags.Count(t => search.Tags != null && search.Tags.Contains(t.Id)) : 0) +
+        //                 (g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0) +
+        //                 (g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0))
+        //                 .ToList();
+
+        // results = query.ToList();
+        return View("Results", results);
+    }
+
+    // [HttpPost]
+    // public async Task<IActionResult> Search(SearchViewModel search)
+    // {
+    //     await PopulateViewData();
+
+    //     var query = _context.Games
+    //         .Include(g => g.Category)
+    //         .Include(g => g.Tags)
+    //         .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
+    //         .AsQueryable();
+
+    //     if (search.CategoryId.HasValue)
+    //     {
+    //         query = query.Where(g => g.CategoryId == search.CategoryId.Value);
+    //     }    
+
+    //     if (!string.IsNullOrEmpty(search.SearchTerm))
+    //     {
+    //         query = query.Where(g => g.Title.Contains(search.SearchTerm) || g.Description.Contains(search.SearchTerm));
+    //     }
+
+    //     if (search.Tags != null)
+    //     {
+    //         query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
+    //     }
+
+    //     var results = await query.ToListAsync();
+    //     // Optionally sort by number of matching tags
+    //     var sortedResults = results.OrderByDescending(g => g.Tags.Count(t => search.Tags.Contains(t.Id)) + 
+    //                             (g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0) +
+    //                             (g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0))
+    //                             .ToList();
+
+    //     search.Results = await query.ToListAsync();
+    //     return View("Results", search.Results);
+    // }
 
     
 }
 
-
-//     [HttpPost]
-// public IActionResult Search(SearchViewModel search)
-// {
-//     // ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
-//     // ViewData["Tags"] = new SelectList(_context.Tags, "Id", "Name");
-
-
-//     var query = _context.Games
-//         .AsQueryable();
-
-//     if (!string.IsNullOrEmpty(search.SearchTerm))
-//     {
-//         query = query.Where(g => g.Title.Contains(search.SearchTerm) || g.Description.Contains(search.SearchTerm));
-//     }
-//             var categories = _context.Categories.ToList();
-//             var tags = _context.Tags.ToList();
-
-//             ViewBag.Categories = new SelectList(categories, "Id", "Name");
-//             ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
-
-//     var results = query.ToList();
-//     return View("Results", results);
-// }

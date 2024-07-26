@@ -3,6 +3,7 @@
 // using GameHopper.Models; // Import necessary models
 
 using System.ComponentModel.DataAnnotations;
+using GameHopper.Models;
 
 namespace GameHopper.ViewModels
 {
@@ -25,17 +26,17 @@ namespace GameHopper.ViewModels
 
         public int? Zip { get; set; }
 
-        public IFormFile GamePicture { get; set; }
+        public IFormFile? GamePicture { get; set; }
 
         // Additional properties as needed
 
-        // // Property to select category
-        // public int CategoryId { get; set; }
-        // public List<Category> Categories { get; set; }
+        // Property to select category
+        public int CategoryId { get; set; }
+        public List<Category> Categories { get; set; }
 
-        // // Property for selecting tags (multiple)
-        // public List<int> SelectedTagIds { get; set; }
-        // public List<Tag> Tags { get; set; }
+        // Property for selecting tags (multiple)
+        public List<int> SelectedTagIds { get; set; }
+        public List<Tag> Tags { get; set; }
 
         // Constructor to initialize collections
         public GameViewModel()
