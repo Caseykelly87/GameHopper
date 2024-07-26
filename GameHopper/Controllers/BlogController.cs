@@ -3,7 +3,6 @@ using GameHopper;
 using GameHopper.Models;
 using GameHopper.ViewModels;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Controllers
@@ -18,10 +17,7 @@ namespace Blog.Controllers
             context = dbContext;
             this.userManager = userManager;
         }
-        // private string GetCurrentUserId()
-        //     {
-        //         return User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        //     }
+
         public async Task<IActionResult> IndexAsync()
         {
             List<BlogEntry> blogContent = await context.Blogs.ToListAsync();

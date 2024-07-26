@@ -10,7 +10,7 @@ public class Game
     public string? Title { get; set; }
     public byte[]? GamePicture { get; set; }
     public ICollection<User>? GamePlayers { get; set; }
-
+    public List<int>? SelectedTagIds { get; set; }
     public ICollection<Tag>? Tags { get; set; }
     public ICollection<Request>? Requests { get; set; } 
     public Category? Category { get; set; }
@@ -29,6 +29,8 @@ public class Game
 
     public int? Zip { get; set; }
 
+
+
     public Game() 
     {
         
@@ -40,21 +42,6 @@ public class Game
         Description = description;
     }
         
-    
-    
-    // public Game(string title, User players, Tag tags, Category category, GameMaster gameMaster, string description, string address, string address2, string state, int zip) : this () { 
-    //     Title = title;
-    //     GamePlayers = (ICollection<User>)players;
-    //     Tags = (ICollection<Tag>)tags;
-    //     Category = category;
-    //     GameMaster = gameMaster;
-    //     Description = description;
-    //     Address = address;
-    //     Address2 = address2;
-    //     State = state;
-    //     Zip = zip;
-        
-    // }
 
 }
 
