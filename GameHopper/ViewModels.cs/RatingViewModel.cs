@@ -1,14 +1,20 @@
 using GameHopper.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using GameHopper.Controllers;
 using System.ComponentModel.DataAnnotations;
 
 namespace GameHopper.ViewModels
 {
     public class RatingViewModel
     {
-        [Required(ErrorMessage = "Rating is required.")]
-        [StringLength(5, MinimumLength = 1, ErrorMessage = "Rating must be between 1 and 5 stars")]
-        
+
         public int Id { get; set; }
+
+        [Required(ErrorMessage =  "Rating can not be 0 stars")]
+        [Range(1,5, ErrorMessage = "Rating can not be 0 stars")]
         public int StarRating { get; set; }
+        public List<Rating>? Ratings { get; set; }
+
 }
 }

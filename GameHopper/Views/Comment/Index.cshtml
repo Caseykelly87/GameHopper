@@ -1,4 +1,6 @@
 @using GameHopper.Models;
+@using GameHopper.ViewModels;
+
 
 @model List<GameHopper.Models.Comment>
 
@@ -9,6 +11,7 @@
 <h2>Comments</h2>
 <hr />
     <div>
+        @* @foreach (var post in ViewBag.comments){ *@
         @foreach(Comment post in @Model){
             <div class = "card mb-2">
                 <div class = "card-body">
@@ -16,8 +19,42 @@
                 </div>
 
                 <div class = "card-footer">
-                    @Html.ActionLink("Edit", "Add", new {Id = @post.Id})
+                    @Html.ActionLink("Edit", "Delete", "Add", new {Id = @post.Id})
                 </div>
             </div>
         }
-    </div>  
+    </div> 
+
+@* <h5 class="mb-4">SubComment</h5>
+
+<div>
+
+    <form action="Add" method="POST">
+        <input hidden asp-for=Id/>
+        <textarea asp-for=Text id = "SubCommentSection"></textarea>
+        <br/>
+        <button class="btn btn-secondary">Submit</button>
+    </form>
+</div> *@
+
+@* @using GameHopper.Models;
+@using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims
+@model List<GameHopper.Models.BlogEntry>
+
+@{
+    ViewData["Title"] = "Posts";
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var addBlogVM = ViewData["AddBlogVM"] as GameHopper.ViewModels.AddBlogVM;
+}
+
+<h2>Posts</h2>
+<hr />
+<div>
+    @foreach (var post in Model)
+    {
+        @await Html.PartialAsync("_BlogPostPartial", post)
+    }
+</div>
+<h5>Create or Edit Post</h5>
+@await Html.PartialAsync("_BlogCreatorPartial", addBlogVM *@

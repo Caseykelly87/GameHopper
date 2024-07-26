@@ -3,23 +3,7 @@
 @{
     ViewData["Title"] = "Rating";
     }
-
-    <h5 class="mb-4">Rating</h5>
- 
- @* <head>
-    <title>rating</title>
-
-</head> *@
-
-<body>
-  <form>
-    <div class="rating">
-      <input type="radio" name="rating" method="post" value="5" id="5"><label for="5">☆</label>
-      <input type="radio" name="rating" method="post" value="4" id="4"><label for="4">☆</label>
-      <input type="radio" name="rating" method="post" value="3" id="3"><label for="3">☆</label>
-      <input type="radio" name="rating" method="post" value="2" id="2"><label for="2">☆</label>
-      <input type="radio" name="rating" method="post" value="1" id="1"><label for="1">☆</label>
-
+    <head>
       <style>
   .rating {
   display: flex;
@@ -60,61 +44,21 @@
   opacity: 0.4
 }
 </style>
-    </div>
-  </form>
-  </body>
+    </head>
 
-  @* .rating-control .rating-content {
-        width: 240px;
-        margin: 15px 0;
-        min-height: 75px;
-        padding:0;
-        text-align: center;
-    }
+  <body>
+    <form asp-controller="Rating" asp-action="Add" method="post">
+    <div class="rating">
+      <input type="radio" name="StarRating" value="5" id="5"><label for="5">☆</label>
+      <input type="radio" name="StarRating" value="4" id="4"><label for="4">☆</label>
+      <input type="radio" name="StarRating" value="3" id="3"><label for="3">☆</label>
+      <input type="radio" name="StarRating" value="2" id="2"><label for="2">☆</label>
+      <input type="radio" name="StarRating" value="1" id="1"><label for="1">☆</label>
+    </div> 
+    <input type="submit" value="Rate" />
 
-    .e-bigger .rating-control .rating-content {
-        width: 330px;
-        margin: 15px 0;
-        min-height: 75px;
-        padding:0;
-        text-align: center;
-    }
+    </form>
+    </body>
 
-    .rating-control{
-        margin: 6% auto;
-        max-width: 800px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    } *@
 
-@* @section ControlsSection{
-    <div class="control-section">
-        <div class="rating-control">
-            <div class="rating-content">
-                <label>Basic</label><br/>         
-                <ejs-rating id="rating"></ejs-rating>
-            </div>
-            <div class="rating-content">
-                <label>Reset</label><br/>            
-                <ejs-rating id="rating1" value=3 allowReset=true></ejs-rating>
-            </div>
-            <div class="rating-content">
-                <label>Single Selection</label><br/>            
-                <ejs-rating id="rating2" value=3 enableSingleSelection=true></ejs-rating>
-            </div>            
-            <div class="rating-content">
-                <label>ReadOnly</label><br/>            
-                <ejs-rating id="rating3" value=3 readOnly=true></ejs-rating>
-            </div>
-            <div class="rating-content">
-                <label>Disabled</label><br/>           
-                <ejs-rating id="rating4" value=3 disabled=true></ejs-rating>
-            </div>
-            <div class="rating-content">
-                <label>Items Count</label><br/>            
-                <ejs-rating id="rating5" value=3 itemsCount=8></ejs-rating>
-            </div>
-        </div>
-    </div>
-} *@
+
