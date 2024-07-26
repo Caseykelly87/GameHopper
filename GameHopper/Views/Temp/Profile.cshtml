@@ -177,7 +177,7 @@ p {
 
     <p><a asp-controller="Tag" asp-action="Add">Add tags</a></p>
 
-    <div>
+    @* <div>
     <form method="post">
     @foreach (var tag in ViewBag.tags)
     {
@@ -191,7 +191,7 @@ p {
 
     <input type="submit" value="Delete Selected Tags" class="btn btn-danger">
 </form>
-</div>
+</div> *@
 7
     @* <input
       type="checkbox"
@@ -278,6 +278,7 @@ p {
                               <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
                               <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
                         </div>
+                        
                   </div>
                   <div class="d-flex flex-row align-items-start">
                         <img class="rounded-circle" src="https://i.redd.it/oq69tph90ad71.jpg" width="40" padding="5">

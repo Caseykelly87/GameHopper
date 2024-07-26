@@ -74,6 +74,25 @@ namespace GameHopper.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("GameHopper.Models.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("GameHopper.Models.Game", b =>
                 {
                     b.Property<int>("Id")
@@ -130,6 +149,22 @@ namespace GameHopper.Migrations
                     b.HasIndex("GameMasterId");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("GameHopper.Models.Rating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("StarRating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("GameHopper.Models.Request", b =>
@@ -453,6 +488,15 @@ namespace GameHopper.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GameHopper.Models.Comment", b =>
+                {
+                    b.HasOne("GameHopper.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

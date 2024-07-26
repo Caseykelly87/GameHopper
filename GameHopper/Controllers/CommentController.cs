@@ -1,124 +1,124 @@
-// using Microsoft.AspNetCore.Mvc;
-// using GameHopper;
-// using GameHopper.Models;
-// using GameHopper.ViewModels;
-// using Microsoft.AspNetCore.Identity;
-// using Microsoft.Build.Framework;
-// using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using GameHopper;
+using GameHopper.Models;
+using GameHopper.ViewModels;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Build.Framework;
+using Microsoft.EntityFrameworkCore;
 
-// namespace Comment.Controllers
-// {
-//     public class CommentController : Controller
-//     {
-//         private GameDbContext context;
-//         private UserManager<User> userManager;
+namespace GameHopper.Controllers
+{
+    public class CommentController : Controller
+    {
+        private GameDbContext context;
+        private UserManager<User> userManager;
 
-//         public CommentController(GameDbContext dbContext, UserManager<User> userManager)
-//         {
-//             context = dbContext;
-//             this.userManager = userManager;
-//         }
-//         public async Task<IActionResult> IndexAsync()
-//         {
-//             List<BlogEntry> blogContent = await context.Blogs.ToListAsync();
-//             var addBlogVM = new AddBlogVM();
-//             ViewData["AddBlogVM"] = addBlogVM;
-//             return View(blogContent);
-//         }
-
-
-//         public IActionResult BlogCreatorPage(Guid id)
-//         {
-//             if (id != Guid.Empty)
-//             {
-//                 BlogEntry existingEntry = context.Blogs.FirstOrDefault(x => x.Id == id);
-//                 if (existingEntry != null)
-//                 {
-//                     AddBlogVM addBlog = new()
-//                     {
-//                         Id = existingEntry.Id,
-//                         Content = existingEntry.Content,
-//                     };
-//                     return View(addBlog);
-//                 }
-//             }
-//             return View(new AddBlogVM());
-//         }
+        public CommentController(GameDbContext dbContext, UserManager<User> userManager)
+        {
+            context = dbContext;
+            this.userManager = userManager;
+        }
+        public async Task<IActionResult> IndexAsync()
+        {
+            List<Comment> commenttext = await context.Comments.ToListAsync();
+            var addCommentViewModel = new AddCommentViewModel();
+            ViewData["AddCommentViewModel"] = addCommentViewModel;
+            return View(commenttext);
+        }
 
 
-//         [HttpPost]
-//         public async Task<IActionResult> BlogCreatorPage(AddBlogVM entry)
-//         {
-//             if (ModelState.IsValid)
-//             {
-//                 var user = await userManager.GetUserAsync(HttpContext.User);
-//                 if (user == null)
-//                 {
-//                     return BadRequest("Please Log-In or Register to Add to Blog");
-//                 }
-
-//                 if (entry.Id == Guid.Empty)
-//                 {
-//                     var newEntry = new BlogEntry
-//                     {
-//                         Content = entry.Content,
-//                         Id = Guid.NewGuid(),
-//                         UserId = user.Id
-//                     };
-//                     context.Blogs.Add(newEntry);
-//                 }
-//                 else
-//                 {
-//                     var existingEntry = context.Blogs.FirstOrDefault(x => x.Id == entry.Id);
-//                     if (entry == null)
-//                     {
-//                         return NotFound("Blog entry not found");
-//                     }
-
-//                     if (user == null || existingEntry.UserId != user.Id)
-//                     {
-//                         return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to edit this blog post");
-//                     }
-
-//                     existingEntry.Content = entry.Content;
-//                 }
+        public IActionResult Add(Guid id)
+        {
+            if (id != Guid.Empty)
+            {
+                Comment existingComment = context.Comments.FirstOrDefault(x => x.Id == id);
+                if (existingComment != null)
+                {
+                    AddCommentViewModel addComment = new()
+                    {
+                        Id = existingComment.Id,
+                        Text = existingComment.Text,
+                    };
+                    return View(addComment);
+                }
+            }
+            return View(new AddCommentViewModel());
+        }
 
 
-//                 await context.SaveChangesAsync();
-//                 return RedirectToAction("Index");
-//             }
+        [HttpPost]
+        public async Task<IActionResult> Add(AddCommentViewModel entry)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await userManager.GetUserAsync(HttpContext.User);
+                if (user == null)
+                {
+                    return BadRequest("Please Log-In or Register to make a comment");
+                }
 
-//             return View(entry);
-//         }
+                if (entry.Id == Guid.Empty)
+                {
+                    var newEntry = new Comment
+                    {
+                        Text = entry.Text,
+                        Id = Guid.NewGuid(),
+                        UserId = user.Id
+                    };
+                    context.Comments.Add(newEntry);
+                }
+                else
+                {
+                    var existingComment = context.Comments.FirstOrDefault(x => x.Id == entry.Id);
+                    if (entry == null)
+                    {
+                        return NotFound("Comment not found");
+                    }
 
-//         public async Task<IActionResult> BlogPartial()
-//         {
-//             var blogContent = context.Blogs.ToList();
-//             var addBlogVM = new AddBlogVM();
-//             ViewData["AddBlogVM"] = addBlogVM;
-//             return View(blogContent);
-//         }
+                    if (user == null || existingComment.UserId != user.Id)
+                    {
+                        return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to edit this comment");
+                    }
 
-//         [HttpPost, ActionName("Delete")]
-//         public async Task<IActionResult> DeleteConfirmed(Guid id)
-//         {
-//             var entry = context.Blogs.FirstOrDefault(x => x.Id == id);
-//             if (entry == null)
-//             {
-//                 return NotFound("Blog entry not found");
-//             }
+                    existingComment.Text = entry.Text;
+                }
 
-//             var user = await userManager.GetUserAsync(HttpContext.User);
-//             if (user == null || entry.UserId != user.Id)
-//             {
-//                 return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to delete this blog post");
-//             }
 
-//             context.Blogs.Remove(entry);
-//             await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
 
-//             return RedirectToAction("Index");
-//         }
-//     }
-// }
+            return View(entry);
+        }
+
+        // public async Task<IActionResult> CommentPartial()
+        // {
+        //     var commentText = context.Comments.ToList();
+        //     var addCommentViewModel = new AddCommentViewModel();
+        //     ViewData["AddCommentViewModel"] = addCommentViewModel;
+        //     return View(commentText);
+        // }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var entry = context.Comments.FirstOrDefault(x => x.Id == id);
+            if (entry == null)
+            {
+                return NotFound("Comment not found");
+            }
+
+            var user = await userManager.GetUserAsync(HttpContext.User);
+            if (user == null || entry.UserId != user.Id)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, "You do not have permission to delete this comment");
+            }
+
+            context.Comments.Remove(entry);
+            await context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+    }
+}
 
