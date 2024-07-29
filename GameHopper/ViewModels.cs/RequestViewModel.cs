@@ -10,7 +10,7 @@ public class RequestViewModel
 {
     public int Id { get; set; }
     public int? GameId { get; set; }
-    public int? UserId { get; set; }
+    public int? PlayerId { get; set; }
     public string? Message { get; set; }
     public bool IsGameMaster { get; set; }
     public bool IsGameGM { get; set; }

@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 namespace GameHopper;
 
 
@@ -48,40 +49,51 @@ public class SearchController : Controller
         var query = _context.Games
                 .Include(g => g.Category)
                 .Include(g => g.Tags)
-                // .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
+                .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
                 .AsQueryable();
 
         if (search.CategoryId.HasValue)
-            {
+        {
                 query = query.Where(g => g.CategoryId == search.CategoryId.Value);
-            }          
+        }          
 
+        if (search.Tags != null)
+        {
+            query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
+        }
+    
+        List<string> searchTerm = new List<string>();
         if (!string.IsNullOrEmpty(search.SearchTerm))
         {
-            query = query.Where(g => g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) || 
-                                g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase));
+            searchTerm = search.SearchTerm.ToLower().Split(' ').ToList();
+            query = query.Where(g => searchTerm.Any(term => g.Title.ToLower().Contains(term) || g.Description.ToLower().Contains(term)));
         }
 
-        // if (search.Tags != null)
-        // {
-        //     query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
-        // }
-                // var categories = _context.Categories.ToList();
-                // var tags = _context.Tags.ToList();
-
-                // ViewBag.Categories = new SelectList(categories, "Id", "Name");
-                // ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
         var results = await query.ToListAsync();
-        // Optionally sort by number of matching tags
-        // var sortedResults = results.OrderByDescending(g => 
-        //                 (g.Tags != null ? g.Tags.Count(t => search.Tags != null && search.Tags.Contains(t.Id)) : 0) +
-        //                 (g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0) +
-        //                 (g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0))
-        //                 .ToList();
+       
+        // Calculate match counts
+        var rankedResults = results.Select(g => new
+        {
+            Game = g,
+            CategoryMatch = search.CategoryId.HasValue && g.CategoryId == search.CategoryId.Value ? 1 : 0,
+            TagMatchCount = search.Tags != null && search.Tags.Count > 0 ? g.Tags.Count(t => search.Tags.Contains(t.Id)) : 0,
+            SearchTermMatchCount = searchTerm.Count == 0 ? 0 : searchTerm.Sum(term => (g.Title.ToLower().Contains(term) ? 1 : 0) + (g.Description.ToLower().Contains(term) ? 1 : 0))
+        });
 
-        // results = query.ToList();
-        return View("Results", results);
+        // Sort results
+        var sortedResults = rankedResults
+            .OrderByDescending(r => r.CategoryMatch)
+            .ThenByDescending(r => r.SearchTermMatchCount)
+            .ThenByDescending(r => r.TagMatchCount)
+            .Select(r => r.Game)
+            .ToList();
+
+        search.Results = sortedResults;
+
+        return View("Results", search);
     }
+        
+}
 
     // [HttpPost]
     // public async Task<IActionResult> Search(SearchViewModel search)
@@ -121,5 +133,5 @@ public class SearchController : Controller
     // }
 
     
-}
+
 
