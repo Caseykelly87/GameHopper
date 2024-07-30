@@ -14,7 +14,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var player in Model.CurrentPlayers)
+                @foreach (var player in Model.CurrentPlayers ?? new List<User>())
                 {
                     <tr>
                         <td>@player.UserName</td>
@@ -40,7 +40,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var request in Model.Requests)
+                @foreach (var request in Model.Requests ?? new List<Request>())
                 {
                     <tr>
                         @* <td>@request.Player.Name</td> *@

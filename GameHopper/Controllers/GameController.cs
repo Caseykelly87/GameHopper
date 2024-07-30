@@ -68,8 +68,8 @@ namespace GameHopper
                     Address2 = game.Address2,
                     State = game.State,
                     Zip = game.Zip,
-                    GameMasterId = user.Id
-                    // CategoryId = game.CategoryId,
+                    GameMasterId = user.Id,
+                    CategoryId = game.CategoryId
                 };
 
                 if (gamePicture != null && gamePicture.Length > 0)

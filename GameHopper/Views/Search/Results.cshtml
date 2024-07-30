@@ -1,5 +1,5 @@
-﻿@model SearchViewModel
-@* @model IEnumerable<Game> *@
+﻿@model GameHopper.ViewModels.SearchViewModel
+
 
 <h1>Search Results</h1>
 
@@ -15,10 +15,10 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var game in Model){
+        @foreach (var game in Model.Results){
             <tr>
                 <td>@game.Title</td>
-                <td>@game.Category</td>
+                <td>@(game.Category != null ? game.Category.Name : "No Category")</td>
                 <td>@if (game.Tags != null && game.Tags.Any())
                 {
                     @string.Join(", ", game.Tags.Select(t => t.Name))
@@ -27,25 +27,30 @@
                 {
                     <span>No Tags</span>
                 }</td>
-                <td>@game.Description</td>
+                <td>@(game.Description ?? "No Description")</td>
                 <td>
                     @if (game.GamePicture != null)
                     {
                         <img src="data:image/jpeg;base64,@Convert.ToBase64String(game.GamePicture)" alt="Game Picture" style="max-width: 100px;" />
                     }
+                    else
+                    {
+                        <!-- Display a placeholder image if GamePicture is null -->
+                        <img src="path/to/placeholder-image.jpg" alt="No Image Available" style="max-width: 100px;" />  
+                    }
                 </td>
             </tr>
-            <tr>
-                @* <td colspan="4">
+            @* <tr>
+                <td colspan="4">
                     @await Html.PartialAsync("_RequestPartial", new RequestViewModel
                     {
                         GameId = game.Id,
-                        IsGameGM = User.IsInRole("GameMaster") && game.GameMasterId == User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                        IsGameGM = false,
                         CurrentPlayers = game.GamePlayers.ToList(),
                         Requests = game.Requests.ToList()
                     })
-                </td> *@
-            </tr>
+                </td>
+            </tr> *@
         }
     </tbody>
 </table>

@@ -7,16 +7,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
+using GameHopper.Models;
 namespace GameHopper;
 
 
 public class SearchController : Controller
 {
     private readonly GameDbContext _context;
+    private readonly UserManager<User> _userManager;
 
-    public SearchController(GameDbContext context)
+    public SearchController(GameDbContext context, UserManager<User> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
     
@@ -33,10 +36,7 @@ public class SearchController : Controller
     {
         
         await PopulateViewData();
-        // var Categories = await _context.Categories.ToListAsync();
-        // var Tags = await _context.Tags.ToListAsync();
-        // ViewBag.Categories = new SelectList(Categories, "Id", "Name");
-        // ViewBag.Tags = new MultiSelectList(Tags, "Id", "Name");
+       
         
         return View();
     }
@@ -44,6 +44,8 @@ public class SearchController : Controller
     [HttpPost]
     public async Task<IActionResult> Search(SearchViewModel search)
     {
+        var userId = _userManager.GetUserId(User);
+
         await PopulateViewData();
 
         var query = _context.Games
@@ -52,10 +54,10 @@ public class SearchController : Controller
                 .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
                 .AsQueryable();
 
-        if (search.CategoryId.HasValue)
-        {
-                query = query.Where(g => g.CategoryId == search.CategoryId.Value);
-        }          
+        // if (search.CategoryId.HasValue)
+        // {
+        //         query = query.Where(g => g.CategoryId == search.CategoryId.Value);
+        // }          
 
         if (search.Tags != null)
         {
@@ -72,25 +74,36 @@ public class SearchController : Controller
         var results = await query.ToListAsync();
        
         // Calculate match counts
-        var rankedResults = results.Select(g => new
+        // var rankedResults = results.Select(g => new
+        // {
+        //     Game = g,
+        //     CategoryMatch = search.CategoryId.HasValue && g.CategoryId == search.CategoryId.Value ? 1 : 0,
+        //     TagMatchCount = search.Tags != null && search.Tags.Count > 0 ? g.Tags.Count(t => search.Tags.Contains(t.Id)) : 0,
+        //     SearchTermMatchCount = searchTerm.Count == 0 ? 0 : searchTerm.Sum(term => (g.Title.ToLower().Contains(term) ? 1 : 0) + (g.Description.ToLower().Contains(term) ? 1 : 0))
+        // });
+
+        // // Sort results
+        // var sortedResults = rankedResults
+        //     .OrderByDescending(r => r.CategoryMatch)
+        //     .ThenByDescending(r => r.SearchTermMatchCount)
+        //     .ThenByDescending(r => r.TagMatchCount)
+        //     .Select(r => r.Game)
+        //     .ToList();
+
+        // search.Results = rankedResults;
+
+        var viewModel = new SearchViewModel
         {
-            Game = g,
-            CategoryMatch = search.CategoryId.HasValue && g.CategoryId == search.CategoryId.Value ? 1 : 0,
-            TagMatchCount = search.Tags != null && search.Tags.Count > 0 ? g.Tags.Count(t => search.Tags.Contains(t.Id)) : 0,
-            SearchTermMatchCount = searchTerm.Count == 0 ? 0 : searchTerm.Sum(term => (g.Title.ToLower().Contains(term) ? 1 : 0) + (g.Description.ToLower().Contains(term) ? 1 : 0))
-        });
+            Results = results ?? new List<Game>(),
+            CurrentUser = userId ?? string.Empty,
+            SearchTerm = search.SearchTerm ?? string.Empty,
+            CategoryId = search.CategoryId ?? 0,
+            Tags = search.Tags ?? new List<int>(),
+        };
 
-        // Sort results
-        var sortedResults = rankedResults
-            .OrderByDescending(r => r.CategoryMatch)
-            .ThenByDescending(r => r.SearchTermMatchCount)
-            .ThenByDescending(r => r.TagMatchCount)
-            .Select(r => r.Game)
-            .ToList();
+        search.Results = results ?? new List<Game>();
 
-        search.Results = sortedResults;
-
-        return View("Results", search);
+        return View("Results", viewModel);
     }
         
 }

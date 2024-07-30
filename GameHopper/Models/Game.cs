@@ -2,6 +2,7 @@ using GameHopper.Models;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace GameHopper.Models;
 public class Game
