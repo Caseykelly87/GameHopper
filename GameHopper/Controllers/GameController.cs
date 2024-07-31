@@ -27,9 +27,11 @@ namespace GameHopper
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             var game = await context.Games
-                .Include(g => g.GamePlayers) // Include related data if necessary
-                .Include(g => g.Requests)
-                .FirstOrDefaultAsync(g => g.Id == id);
+        .Include(g => g.Category) // Include Category
+        .Include(g => g.Tags) // Include Tags
+        .Include(g => g.GamePlayers) // Include related data if necessary
+        .Include(g => g.Requests)
+        .FirstOrDefaultAsync(g => g.Id == id);
 
             if (game == null)
             {

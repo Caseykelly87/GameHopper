@@ -1,4 +1,5 @@
-﻿using Azure.Core;
+﻿using System.ComponentModel.DataAnnotations;
+using Azure.Core;
 using GameHopper.Models;
 using Microsoft.CodeAnalysis.FlowAnalysis.DataFlow;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -11,6 +12,8 @@ public class RequestViewModel
     public int Id { get; set; }
     public int? GameId { get; set; }
     public int? PlayerId { get; set; }
+
+    [StringLength(80, ErrorMessage = "The message cannot exceed 80 characters.")]
     public string? Message { get; set; }
     public bool IsGameMaster { get; set; }
     public bool IsGameGM { get; set; }

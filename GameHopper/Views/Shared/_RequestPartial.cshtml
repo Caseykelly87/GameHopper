@@ -94,8 +94,13 @@
             <div class="form-group">
                 <label asp-for="Message" class="control-label"></label>
                 <textarea asp-for="Message" class="form-control"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
             </div>
             <button type="submit" class="btn btn-primary">Request to Join Game</button>
         </form>
+
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        } 
     }
 }
