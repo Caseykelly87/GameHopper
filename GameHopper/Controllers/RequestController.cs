@@ -39,7 +39,24 @@ public class RequestController : Controller
         return View(model);
     }
 
-        [HttpPost]
+    
+    [HttpPost]
+    public async Task<IActionResult> EditRequest(int requestId, string newMessage)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId && r.PlayerId == user.Id);
+
+        if (request != null)
+        {
+            request.Message = newMessage;
+            _context.Requests.Update(request);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Game", new { id = request.GameId });
+        }
+        return NotFound();
+    }
+
+    [HttpPost]
     public async Task<IActionResult> CancelRequest(int requestId)
     {
         var user = await _userManager.GetUserAsync(User);

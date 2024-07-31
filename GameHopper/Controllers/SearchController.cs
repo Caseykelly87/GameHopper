@@ -68,7 +68,7 @@ public class SearchController : Controller
 
 
         // Calculate match counts
-        var sortededResults = results.Select(g => new
+        var sortedResults = results.Select(g => new
     {
         Game = g,
         CategoryMatch = search.CategoryId.HasValue && search.CategoryId.Value > 0 && g.CategoryId == search.CategoryId.Value ? 1 : 0,
@@ -86,7 +86,7 @@ public class SearchController : Controller
 
         var viewModel = new SearchViewModel
         {
-            Results = sortededResults,
+            Results = sortedResults,
             CurrentUser = userId ?? string.Empty,
             SearchTerm = search.SearchTerm ?? string.Empty,
             CategoryId = search.CategoryId ?? 0,
