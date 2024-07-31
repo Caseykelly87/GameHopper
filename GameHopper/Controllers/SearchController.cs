@@ -59,20 +59,51 @@ public class SearchController : Controller
                 query = query.Where(g => g.CategoryId == search.CategoryId.Value);
         }          
 
-        // if (search.Tags != null)
-        // {
-        //     query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
-        // }
-    
-        List<string> searchTerm = new List<string>();
-        if (!string.IsNullOrEmpty(search.SearchTerm))
+        if (search.Tags != null && search.Tags.Any())
         {
-            searchTerm = search.SearchTerm.ToLower().Split(' ').ToList();
-            query = query.Where(g => searchTerm.Any(term => g.Title.ToLower().Contains(term) || g.Description.ToLower().Contains(term)));
+            query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
         }
+    
+        var results = await query.ToListAsync();       
 
-        var results = await query.ToListAsync();
-       
+
+        // Calculate match counts
+        var sortededResults = results.Select(g => new
+    {
+        Game = g,
+        CategoryMatch = search.CategoryId.HasValue && search.CategoryId.Value > 0 && g.CategoryId == search.CategoryId.Value ? 1 : 0,
+        TagMatchCount = search.Tags != null ? search.Tags.Count(t => g.Tags.Any(gt => gt.Id == t)) : 0,
+        SearchTermMatchCount = !string.IsNullOrEmpty(search.SearchTerm) 
+            ? (g.Title.ToLower().Contains(search.SearchTerm.ToLower()) ? 1 : 0) +
+              (g.Description.ToLower().Contains(search.SearchTerm.ToLower()) ? 1 : 0)
+            : 0
+    })
+    .OrderByDescending(r => r.CategoryMatch)
+    .ThenByDescending(r => r.TagMatchCount)
+    .ThenByDescending(r => r.SearchTermMatchCount)
+    .Select(r => r.Game) // Project back to Game objects
+    .ToList();
+
+        var viewModel = new SearchViewModel
+        {
+            Results = sortededResults,
+            CurrentUser = userId ?? string.Empty,
+            SearchTerm = search.SearchTerm ?? string.Empty,
+            CategoryId = search.CategoryId ?? 0,
+            Tags = search.Tags ?? new List<int>(),
+        };
+
+        return View("Results", viewModel);
+    }
+        
+}
+        // List<string> searchTerm = new List<string>();
+        // if (!string.IsNullOrEmpty(search.SearchTerm))
+        // {
+        //     searchTerm = search.SearchTerm.ToLower().Split(' ').ToList();
+        //     query = query.Where(g => searchTerm.Any(term => g.Title.ToLower().Contains(term) || g.Description.ToLower().Contains(term)));
+        // }
+
         // Calculate match counts
         // var rankedResults = results.Select(g => new
         // {
@@ -91,23 +122,6 @@ public class SearchController : Controller
         //     .ToList();
 
         // search.Results = rankedResults;
-
-        var viewModel = new SearchViewModel
-        {
-            Results = results ?? new List<Game>(),
-            CurrentUser = userId ?? string.Empty,
-            SearchTerm = search.SearchTerm ?? string.Empty,
-            CategoryId = search.CategoryId ?? 0,
-            Tags = search.Tags ?? new List<int>(),
-        };
-
-        search.Results = results ?? new List<Game>();
-
-        return View("Results", viewModel);
-    }
-        
-}
-
     // [HttpPost]
     // public async Task<IActionResult> Search(SearchViewModel search)
     // {

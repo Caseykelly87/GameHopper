@@ -10,7 +10,7 @@ public class Game
     public int Id { get; set; }
     public string? Title { get; set; }
     public byte[]? GamePicture { get; set; }
-    public ICollection<User>? GamePlayers { get; set; }
+    public ICollection<User> GamePlayers { get; set; } = new List<User>();
 
     public ICollection<Tag>? Tags { get; set; }
     public ICollection<Request>? Requests { get; set; } 

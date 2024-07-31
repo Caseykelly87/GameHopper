@@ -39,95 +39,91 @@ public class RequestController : Controller
         return View(model);
     }
 
-    [HttpPost]
-public async Task<IActionResult> CancelRequest(int requestId)
-{
-    var user = await _userManager.GetUserAsync(User);
-    var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId && r.PlayerId == user.Id);
-
-    if (request != null)
+        [HttpPost]
+    public async Task<IActionResult> CancelRequest(int requestId)
     {
-        _context.Requests.Remove(request);
-        await _context.SaveChangesAsync();
+        var user = await _userManager.GetUserAsync(User);
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId && r.PlayerId == user.Id);
+
+        if (request != null)
+        {
+            _context.Requests.Remove(request);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Game", new { id = request.GameId });
+        }
+        return NotFound();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ApproveRequest(int requestId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+        
+        if (request != null)
+        {
+            var game = _context.Games.FirstOrDefault(g => g.Id == request.GameId);
+            var player = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.PlayerId);
+
+            if (game != null && player != null)
+            {
+                game.GamePlayers.Add(player);
+                request.IsApproved = true;
+                _context.Requests.Remove(request);
+                await _context.SaveChangesAsync();
+            }
+            
+            return RedirectToAction("Details", "Game", new { id = request.GameId });
+        
+        }
+    
+        return NotFound();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DenyRequest(int requestId)
+    {
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+        
+        if (request != null)
+        {
+            _context.Requests.Remove(request);
+            await _context.SaveChangesAsync();
+        }
+
         return RedirectToAction("Details", "Game", new { id = request.GameId });
     }
-    return NotFound();
-}
-
-[HttpPost]
-public async Task<IActionResult> ApproveRequest(int requestId)
-{
-    var user = await _userManager.GetUserAsync(User);
-    var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
-    
-    if (request != null)
-    {
-        var userGame = new Dictionary<string, object>
-        {
-            { "GameId", request.GameId },
-            { "UserId", request.PlayerId }
-        };
-        
-        _context.Set<Dictionary<string, object>>("UserGames").Add(userGame);
-        request.IsApproved = true;
-        _context.Requests.Remove(request);
-        await _context.SaveChangesAsync();
-    }
-
-    return RedirectToAction("Details", "Game", new { id = request.GameId });
-}
-
-[HttpPost]
-public async Task<IActionResult> DenyRequest(int requestId)
-{
-    var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
-    
-    if (request != null)
-    {
-        _context.Requests.Remove(request);
-        await _context.SaveChangesAsync();
-    }
-
-    return RedirectToAction("Details", "Game", new { id = request.GameId });
-}
 
     [HttpPost]
     public async Task<IActionResult> LeaveGame(int gameId)
     {
         var user = await _userManager.GetUserAsync(User);
-        var userGame = await _context.Set<Dictionary<string, object>>("UserGames")
-                                 .FirstOrDefaultAsync(ug => EF.Property<int>(ug, "GameId") == gameId && 
-                                                            EF.Property<string>(ug, "UserId") == user.Id);
+        var game = await _context.Games.Include(g => g.GamePlayers).FirstOrDefaultAsync(g => g.Id == gameId);
 
-    if (userGame != null)
-    {
-        _context.Remove(userGame);
-        await _context.SaveChangesAsync();
-    }
+        if (game != null && game.GamePlayers.Any(p => p.Id == user.Id))
+        {
+            game.GamePlayers.Remove(user);
+            await _context.SaveChangesAsync();
+        }
 
-    return RedirectToAction("Details", "Game", new { id = gameId });
+        return RedirectToAction("Details", "Game", new { id = gameId });
     }
 
     [HttpPost]
     public async Task<IActionResult> KickPlayer(int gameId, string playerId)
     {
         var user = await _userManager.GetUserAsync(User);
-        var game = await _context.Games
-                             .Include(g => g.GamePlayers)
-                             .FirstOrDefaultAsync(g => g.Id == gameId);
-    
-        if (game != null && game.GameMasterId == user.Id)
-        {
-            var userGame = await _context.Set<Dictionary<string, object>>("UserGames")
-                                        .FirstOrDefaultAsync(ug => EF.Property<int>(ug, "GameId") == gameId && 
-                                                                    EF.Property<string>(ug, "UserId") == playerId);
-            if (userGame != null)
+        var game = await _context.Games.Include(g => g.GamePlayers).FirstOrDefaultAsync(g => g.Id == gameId);
+        var player = await _context.Users.FirstOrDefaultAsync(u => u.Id == playerId);
+
+            if (game != null && game.GameMasterId == user.Id && player != null)
             {
-                _context.Remove(userGame);
+                game.GamePlayers.Remove(player);
                 await _context.SaveChangesAsync();
             }
-        }
+        
 
-    return RedirectToAction("Details", "Game", new { id = gameId });
+        return RedirectToAction("Details", "Game", new { id = gameId });
     }
 }
+    
