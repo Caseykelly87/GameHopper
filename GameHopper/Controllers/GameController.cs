@@ -24,15 +24,24 @@ namespace GameHopper
         //Index
         public async Task<IActionResult> Details(int id)
         {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
             var game = await context.Games
+                .Include(g => g.GamePlayers) // Include related data if necessary
+                .Include(g => g.Requests)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
             if (game == null)
             {
                 return NotFound(); // Handle case where game is not found
             }
+            var viewModel = new GameDetailsViewModel
+        {
+            Game = game,
+            CurrentUser = user?.Id
+        };
 
-            return View(game);
+            return View("Details", viewModel);
         }
 
         public IActionResult Index()

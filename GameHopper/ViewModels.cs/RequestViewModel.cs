@@ -16,8 +16,9 @@ public class RequestViewModel
     public bool IsGameGM { get; set; }
     public bool IsCurrentPlayer { get; set; }
     public bool HasPendingRequest { get; set; }
-    public List<Request>? Requests  { get; set; }
-    public List<User>? CurrentPlayers { get; set; }
+    public List<Request>? Requests  { get; set; } = new List<Request>();
+    public List<User>? CurrentPlayers { get; set; } = new List<User>();
+    public string? CurrentUser { get; set; }
     
 
 }

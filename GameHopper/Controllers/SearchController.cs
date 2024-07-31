@@ -54,15 +54,15 @@ public class SearchController : Controller
                 .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
                 .AsQueryable();
 
-        // if (search.CategoryId.HasValue)
-        // {
-        //         query = query.Where(g => g.CategoryId == search.CategoryId.Value);
-        // }          
-
-        if (search.Tags != null)
+        if (search.CategoryId.HasValue)
         {
-            query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
-        }
+                query = query.Where(g => g.CategoryId == search.CategoryId.Value);
+        }          
+
+        // if (search.Tags != null)
+        // {
+        //     query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
+        // }
     
         List<string> searchTerm = new List<string>();
         if (!string.IsNullOrEmpty(search.SearchTerm))

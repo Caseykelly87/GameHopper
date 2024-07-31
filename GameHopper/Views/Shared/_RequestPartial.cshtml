@@ -1,4 +1,5 @@
-﻿@using GameHopper.Models
+﻿@using GameHopper
+@using GameHopper.Models
 @model RequestViewModel
 
 @if (User.Identity.IsAuthenticated)
@@ -14,7 +15,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var player in Model.CurrentPlayers ?? new List<User>())
+                @foreach (var player in Model.CurrentPlayers)
                 {
                     <tr>
                         <td>@player.UserName</td>
@@ -40,10 +41,10 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var request in Model.Requests ?? new List<Request>())
+                @foreach (var request in Model.Requests)
                 {
                     <tr>
-                        @* <td>@request.Player.Name</td> *@
+                        <td>@request.PlayerId</td>
                         <td>@request.Message</td>
                         <td>
                             <form asp-controller="Request" asp-action="ApproveRequest" method="post" style="display:inline;">
@@ -71,6 +72,10 @@
     else if (Model.HasPendingRequest)
     {
         <p>Your request to join this game is pending.</p>
+        <form asp-controller="Request" asp-action="CancelRequest" method="post">
+        <input type="hidden" name="requestId" value="@Model.Requests.FirstOrDefault(r => r.PlayerId == Model.CurrentUser)?.Id" />
+        <button type="submit" class="btn btn-warning">Cancel Request</button>
+    </form>
     }
     else
     {

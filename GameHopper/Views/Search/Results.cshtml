@@ -11,7 +11,7 @@
             <th>Tags</th>
             <th>Description</th>
             <th>Picture</th>
-            <th>Request</th>
+            <th>Details</th>
         </tr>
     </thead>
     <tbody>
@@ -19,14 +19,16 @@
             <tr>
                 <td>@game.Title</td>
                 <td>@(game.Category != null ? game.Category.Name : "No Category")</td>
-                <td>@if (game.Tags != null && game.Tags.Any())
-                {
-                    @string.Join(", ", game.Tags.Select(t => t.Name))
-                }
-                else
-                {
-                    <span>No Tags</span>
-                }</td>
+                <td>
+                    @if (game.Tags != null && game.Tags.Any())
+                    {
+                        @string.Join(", ", game.Tags.Select(t => t.Name))
+                    }
+                    else
+                    {
+                        <span>No Tags</span>
+                    }
+                </td>
                 <td>@(game.Description ?? "No Description")</td>
                 <td>
                     @if (game.GamePicture != null)
@@ -39,18 +41,27 @@
                         <img src="path/to/placeholder-image.jpg" alt="No Image Available" style="max-width: 100px;" />  
                     }
                 </td>
-            </tr>
-            @* <tr>
-                <td colspan="4">
-                    @await Html.PartialAsync("_RequestPartial", new RequestViewModel
-                    {
-                        GameId = game.Id,
-                        IsGameGM = false,
-                        CurrentPlayers = game.GamePlayers.ToList(),
-                        Requests = game.Requests.ToList()
-                    })
+                <td>
+                    <a href="@Url.Action("Details", "Game", new { id = game.Id })">View Details</a>
                 </td>
-            </tr> *@
+            </tr>
+            <tr>
+            </tr>
         }
     </tbody>
 </table>
+
+                
+               
+                @* <td colspan="4"> 
+                    @await Html.PartialAsync("_RequestPartial", new RequestViewModel
+                    {
+                        GameId = game.Id,
+                        CurrentUser = Model.CurrentUser,
+                        IsGameGM = game.GameMasterId == Model.CurrentUser,
+                        CurrentPlayers = game.GamePlayers?.ToList() ?? new List<User>(),
+                        Requests = game.Requests?.ToList() ?? new List<Request>(),
+                        IsCurrentPlayer = (game.GamePlayers?.Any(p => p.Id == Model.CurrentUser) ?? false),
+                        HasPendingRequest = (game.Requests?.Any(p => p.PlayerId == Model.CurrentUser) ?? false),
+                    }) 
+                </td>*@

@@ -9,8 +9,8 @@ public class SearchViewModel
     public int? CategoryId { get; set; }
     public string? CurrentUser { get; set; }
 
-    public ICollection<int>? Tags { get; set; }
+    public ICollection<int>? Tags { get; set; } = new List<int>();
     public List<int>? TagIds { get; set; }
-    public IEnumerable<Game>? Results { get; set; }
+    public IEnumerable<Game>? Results { get; set; } = new List<Game>();
 
 }
