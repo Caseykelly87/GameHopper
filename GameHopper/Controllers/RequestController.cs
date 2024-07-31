@@ -70,6 +70,7 @@ public async Task<IActionResult> ApproveRequest(int requestId)
         
         _context.Set<Dictionary<string, object>>("UserGames").Add(userGame);
         request.IsApproved = true;
+        _context.Requests.Remove(request);
         await _context.SaveChangesAsync();
     }
 
