@@ -61,7 +61,7 @@ namespace GameHopper
         [HttpPost]
         public async Task<IActionResult> AddGameAsync(GameViewModel game, IFormFile gamePicture)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
 
             {
                 // Retrieve current user's ID
@@ -135,7 +135,7 @@ namespace GameHopper
         [HttpPost]
         public async Task<IActionResult> EditGame(GameViewModel gameViewModel, IFormFile gamePicture)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 if (user == null)

@@ -54,15 +54,15 @@ public class SearchController : Controller
                 .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
                 .AsQueryable();
 
+        if (search.Tags != null && search.Tags.Any())
+        {
+            query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
+        }
         if (search.CategoryId.HasValue)
         {
                 query = query.Where(g => g.CategoryId == search.CategoryId.Value);
         }          
 
-        if (search.Tags != null && search.Tags.Any())
-        {
-            query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
-        }
     
         var results = await query.ToListAsync();       
 
@@ -78,8 +78,8 @@ public class SearchController : Controller
               (g.Description.ToLower().Contains(search.SearchTerm.ToLower()) ? 1 : 0)
             : 0
     })
-    .OrderByDescending(r => r.CategoryMatch)
-    .ThenByDescending(r => r.TagMatchCount)
+    .OrderByDescending(r => r.TagMatchCount)
+    .ThenByDescending(r => r.CategoryMatch)
     .ThenByDescending(r => r.SearchTermMatchCount)
     .Select(r => r.Game) // Project back to Game objects
     .ToList();
@@ -97,68 +97,7 @@ public class SearchController : Controller
     }
         
 }
-        // List<string> searchTerm = new List<string>();
-        // if (!string.IsNullOrEmpty(search.SearchTerm))
-        // {
-        //     searchTerm = search.SearchTerm.ToLower().Split(' ').ToList();
-        //     query = query.Where(g => searchTerm.Any(term => g.Title.ToLower().Contains(term) || g.Description.ToLower().Contains(term)));
-        // }
-
-        // Calculate match counts
-        // var rankedResults = results.Select(g => new
-        // {
-        //     Game = g,
-        //     CategoryMatch = search.CategoryId.HasValue && g.CategoryId == search.CategoryId.Value ? 1 : 0,
-        //     TagMatchCount = search.Tags != null && search.Tags.Count > 0 ? g.Tags.Count(t => search.Tags.Contains(t.Id)) : 0,
-        //     SearchTermMatchCount = searchTerm.Count == 0 ? 0 : searchTerm.Sum(term => (g.Title.ToLower().Contains(term) ? 1 : 0) + (g.Description.ToLower().Contains(term) ? 1 : 0))
-        // });
-
-        // // Sort results
-        // var sortedResults = rankedResults
-        //     .OrderByDescending(r => r.CategoryMatch)
-        //     .ThenByDescending(r => r.SearchTermMatchCount)
-        //     .ThenByDescending(r => r.TagMatchCount)
-        //     .Select(r => r.Game)
-        //     .ToList();
-
-        // search.Results = rankedResults;
-    // [HttpPost]
-    // public async Task<IActionResult> Search(SearchViewModel search)
-    // {
-    //     await PopulateViewData();
-
-    //     var query = _context.Games
-    //         .Include(g => g.Category)
-    //         .Include(g => g.Tags)
-    //         .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
-    //         .AsQueryable();
-
-    //     if (search.CategoryId.HasValue)
-    //     {
-    //         query = query.Where(g => g.CategoryId == search.CategoryId.Value);
-    //     }    
-
-    //     if (!string.IsNullOrEmpty(search.SearchTerm))
-    //     {
-    //         query = query.Where(g => g.Title.Contains(search.SearchTerm) || g.Description.Contains(search.SearchTerm));
-    //     }
-
-    //     if (search.Tags != null)
-    //     {
-    //         query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
-    //     }
-
-    //     var results = await query.ToListAsync();
-    //     // Optionally sort by number of matching tags
-    //     var sortedResults = results.OrderByDescending(g => g.Tags.Count(t => search.Tags.Contains(t.Id)) + 
-    //                             (g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0) +
-    //                             (g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0))
-    //                             .ToList();
-
-    //     search.Results = await query.ToListAsync();
-    //     return View("Results", search.Results);
-    // }
-
+        
     
 
 

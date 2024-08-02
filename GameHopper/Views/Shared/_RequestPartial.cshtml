@@ -61,8 +61,7 @@
             </tbody>
         </table>
     }
-
-    @if (Model.IsCurrentPlayer)
+    else if (Model.IsCurrentPlayer)
     {
         <p>You are currently playing this game.</p>
         <form asp-controller="Request" asp-action="LeaveGame" method="post">
