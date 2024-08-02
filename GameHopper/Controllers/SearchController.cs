@@ -23,13 +23,6 @@ public class SearchController : Controller
     }
 
     
-    private async Task PopulateViewData()
-    {
-        var Categories = await _context.Categories.ToListAsync();
-        var Tags = await _context.Tags.ToListAsync();
-        ViewBag.Categories = new SelectList(Categories, "Id", "Name");
-        ViewBag.Tags = new MultiSelectList(Tags, "Id", "Name");
-    }
 
     [HttpGet]
     public async Task<IActionResult> Search()
@@ -96,6 +89,14 @@ public class SearchController : Controller
         return View("Results", viewModel);
     }
         
+    
+    private async Task PopulateViewData()
+    {
+        var Categories = await _context.Categories.ToListAsync();
+        var Tags = await _context.Tags.ToListAsync();
+        ViewBag.Categories = new SelectList(Categories, "Id", "Name");
+        ViewBag.Tags = new MultiSelectList(Tags, "Id", "Name");
+    }
 }
         
     
