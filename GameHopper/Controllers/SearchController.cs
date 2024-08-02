@@ -51,6 +51,7 @@ public class SearchController : Controller
         {
             query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
         }
+        
         if (search.CategoryId.HasValue)
         {
                 query = query.Where(g => g.CategoryId == search.CategoryId.Value);
