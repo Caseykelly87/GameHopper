@@ -18,7 +18,7 @@ public class RequestController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRequest(RequestViewModel model, int gameId)
+    public async Task<IActionResult> CreateRequest(int gameId, string message)
     {
         if (ModelState.IsValid)
         {
@@ -27,7 +27,7 @@ public class RequestController : Controller
             {
                 GameId = gameId,
                 PlayerId = user.Id,
-                Message = model.Message,
+                Message = message,
                 IsApproved = false,
                 HasPendingRequest = true,
             };
@@ -36,7 +36,10 @@ public class RequestController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "Game", new { id = gameId });
         }
-        return View(model);
+        else
+        {
+            return View("Details");
+        }
     }
 
     

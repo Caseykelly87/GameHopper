@@ -2,7 +2,7 @@
 
 namespace GameHopper;
 
-public class Result
+public class SearchResult
 {
     public Game Game { get; set; }
     public int CategoryMatch { get; set; }

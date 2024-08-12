@@ -50,18 +50,3 @@
         }
     </tbody>
 </table>
-
-                
-               
-                @* <td colspan="4"> 
-                    @await Html.PartialAsync("_RequestPartial", new RequestViewModel
-                    {
-                        GameId = game.Id,
-                        CurrentUser = Model.CurrentUser,
-                        IsGameGM = game.GameMasterId == Model.CurrentUser,
-                        CurrentPlayers = game.GamePlayers?.ToList() ?? new List<User>(),
-                        Requests = game.Requests?.ToList() ?? new List<Request>(),
-                        IsCurrentPlayer = (game.GamePlayers?.Any(p => p.Id == Model.CurrentUser) ?? false),
-                        HasPendingRequest = (game.Requests?.Any(p => p.PlayerId == Model.CurrentUser) ?? false),
-                    }) 
-                </td>*@

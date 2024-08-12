@@ -1,6 +1,5 @@
-﻿@using GameHopper
-@using GameHopper.Models
-@model RequestViewModel
+﻿@using GameHopper.ViewModels
+@model GameDetailsViewModel
 
 @if (User.Identity.IsAuthenticated)
 {
@@ -15,21 +14,30 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var player in Model.CurrentPlayers)
+                @if (Model.UserName != null)
                 {
-                    <tr>
-                        <td>@player.UserName</td>
-                        <td>
-                            <form asp-controller="Request" asp-action="KickPlayer" method="post" style="display:inline;">
-                                <input type="hidden" name="gameId" value="@Model.GameId" />
-                                <input type="hidden" name="playerId" value="@player.Id" />
-                                <button type="submit" class="btn btn-danger">Kick</button>
-                            </form>
-                        </td>
-                    </tr>
+                    @foreach (var player in Model.CurrentPlayers)
+                    {
+                        <tr>
+                            <td>@(!string.IsNullOrEmpty(player?.UserName) ? player.UserName : "Unknown")</td>
+                            <td>
+                                <form asp-controller="Request" asp-action="KickPlayer" method="post" style="display:inline;">
+                                    <input type="hidden" name="gameId" value="@Model.GameId" />
+                                    <input type="hidden" name="playerId" value="@player.Id" />
+                                    <button type="submit" class="btn btn-danger">Kick</button>    
+                                </form>
+                            </td>
+                        </tr>
+                    }   
                 }
-            </tbody>
-        </table>
+                else
+                {
+                    <td>"No Players"</td>
+                    <td>"N/A"</td>
+                } 
+
+                </tbody>
+            </table>
 
         <h3>Join Requests</h3>
         <table class="table">
@@ -44,7 +52,7 @@
                 @foreach (var request in Model.Requests)
                 {
                     <tr>
-                        <td>@request.PlayerId</td>
+                        <td>@request.UserName</td>
                         <td>@request.Message</td>
                         <td>
                             <form asp-controller="Request" asp-action="ApproveRequest" method="post" style="display:inline;">
@@ -60,6 +68,7 @@
                 }
             </tbody>
         </table>
+    
     }
     else if (Model.IsCurrentPlayer)
     {
@@ -73,7 +82,7 @@
     {
         <h3>Your request to join this game is pending.</h3>
         <form asp-controller="Request" asp-action="CancelRequest" method="post">
-        <input type="hidden" name="requestId" value= "@Model.Id" />
+        <input type="hidden" name="requestId" value= "@Model.Requests.FirstOrDefault(r => r.PlayerId == Model.CurrentUser)?.Id" />
         <button type="submit" class="btn btn-warning">Cancel Request</button>
     </form>
 

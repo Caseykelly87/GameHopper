@@ -27,21 +27,46 @@ namespace GameHopper
             var user = await userManager.GetUserAsync(HttpContext.User);
 
             var game = await context.Games
-        .Include(g => g.Category) // Include Category
-        .Include(g => g.Tags) // Include Tags
-        .Include(g => g.GamePlayers) // Include related data if necessary
-        .Include(g => g.Requests)
-        .FirstOrDefaultAsync(g => g.Id == id);
+                .Include(g => g.Category) // Include Category
+                .Include(g => g.Tags) // Include Tags
+                .Include(g => g.GamePlayers) // Include related data if necessary
+                .Include(g => g.Requests)
+                .FirstOrDefaultAsync(g => g.Id == id);
 
             if (game == null)
             {
                 return NotFound(); // Handle case where game is not found
             }
-            var viewModel = new GameDetailsViewModel
-        {
-            Game = game,
-            CurrentUser = user?.Id
-        };
+            
+            var requests = await context.Requests
+                .Where(r => r.GameId == id)
+                .Select(r => new RequestViewModel
+                {
+                    Id = r.Id,
+                    GameId = r.GameId,
+                    PlayerId = r.PlayerId,
+                    Message = r.Message,
+                    UserName = context.Users
+                        .Where(u => u.Id == r.PlayerId)
+                        .Select(u => u.UserName)
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
+
+             var viewModel = new GameDetailsViewModel
+            {
+                Game = game,
+                GameId = game.Id,
+                Requests = requests,
+                CurrentPlayers = game.GamePlayers.ToList(),
+                IsGameGM = game.GameMasterId == user.Id,
+                IsCurrentPlayer = game.GamePlayers.Any(p => p.Id == user.Id),
+                HasPendingRequest = game.Requests.Any(p => p.PlayerId == user.Id),
+                CurrentUser = user.Id,
+                UserName = (requests.FirstOrDefault()?.UserName) ?? string.Empty,
+                Message = requests.FirstOrDefault()?.Message ?? "No Message"
+            };
 
             return View("Details", viewModel);
         }
@@ -51,6 +76,7 @@ namespace GameHopper
             List<Game> games = context.Games.ToList();
             return View(games);
         }
+
         // Create
         [HttpGet]
         public IActionResult AddGame()
@@ -227,3 +253,21 @@ namespace GameHopper
         // }
     }
 }
+
+            
+            
+            
+            
+            // var requestViewModel = new RequestViewModel
+            // {
+            //     // Id = request?.Id ?? 0,
+            //     GameId = game.Id,
+            //     PlayerId = requests?.PlayerId ?? string.Empty,
+            //     Message = requests?.Message ?? "No Message",
+            //     UserName = (requests != null && requests.PlayerId != null) 
+            //                 ? (await context.Users.FirstOrDefaultAsync(u => u.Id == requests.PlayerId))?.UserName ?? string.Empty 
+            //                 : string.Empty,
+            //     IsGameGM = game.GameMasterId == user.Id,
+            //     IsCurrentPlayer = game.GamePlayers.Any(p => p.Id == user.Id),
+            //     HasPendingRequest = game.Requests.Any(p => p.PlayerId == user.Id),
+            // };

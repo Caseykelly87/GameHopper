@@ -29,16 +29,7 @@
         <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Game.GamePicture)" alt="Game Picture" style="max-width: 400px;" />
     }
     
-    <div>@await Html.PartialAsync("_RequestPartial", new RequestViewModel
-                    {
-                        GameId = Model.Game.Id,
-                        CurrentUser = Model.CurrentUser,
-                        IsGameGM = Model.Game.GameMasterId == Model.CurrentUser,
-                        CurrentPlayers = Model.Game.GamePlayers?.ToList() ?? new List<User>(),
-                        Requests = Model.Game.Requests?.ToList() ?? new List<Request>(),
-                        IsCurrentPlayer = (Model.Game.GamePlayers?.Any(p => p.Id == Model.CurrentUser) ?? false),
-                        HasPendingRequest = (Model.Game.Requests?.Any(p => p.PlayerId == Model.CurrentUser) ?? false),
-                    })</div>
+    <partial name="_RequestPartial" model="Model" />
 
 }
 else
