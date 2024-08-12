@@ -62,29 +62,31 @@ public class SearchController : Controller
 
 
         // Calculate match counts
-        var sortedResults = results.Select(g => new
+        var sortedResults = results.Select(g => new SearchResult
     {
         Game = g,
         CategoryMatch = search.CategoryId.HasValue && search.CategoryId.Value > 0 && g.CategoryId == search.CategoryId.Value ? 1 : 0,
-        TagMatchCount = search.Tags != null ? search.Tags.Count(t => g.Tags.Any(gt => gt.Id == t)) : 0,
+        TagMatchCount = search.TagIds != null ? search.TagIds.Count(t => g.Tags.Any(gt => gt.Id == t)) : 0,
         SearchTermMatchCount = !string.IsNullOrEmpty(search.SearchTerm) 
             ? (g.Title.ToLower().Contains(search.SearchTerm.ToLower()) ? 1 : 0) +
-              (g.Description.ToLower().Contains(search.SearchTerm.ToLower()) ? 1 : 0)
-            : 0
+              (g.Description.ToLower().Contains(search.SearchTerm.ToLower()) ? 1 : 0) : 0
     })
-    .OrderByDescending(r => r.TagMatchCount)
-    .ThenByDescending(r => r.CategoryMatch)
-    .ThenByDescending(r => r.SearchTermMatchCount)
-    .Select(r => r.Game) // Project back to Game objects
+    .OrderByDescending(r => r.TagMatchCount + r.CategoryMatch + r.SearchTermMatchCount)
     .ToList();
+
+
+//     foreach (var result in sortedResults)
+// {
+//     Console.WriteLine($"Game: {result.Game.Title}, CategoryMatch: {result.CategoryMatch}, TagMatchCount: {result.TagMatchCount}, SearchTermMatchCount: {result.SearchTermMatchCount}, Tags: {string.Join(", ", search.Tags)}");
+// }
 
         var viewModel = new SearchViewModel
         {
-            Results = sortedResults,
+            Results = sortedResults.Select(r => r.Game).ToList(),  // Projecting the Game object
             CurrentUser = userId ?? string.Empty,
             SearchTerm = search.SearchTerm ?? string.Empty,
             CategoryId = search.CategoryId ?? 0,
-            Tags = search.Tags ?? new List<int>(),
+            Tags = search.TagIds ?? new List<int>(),
         };
 
         return View("Results", viewModel);

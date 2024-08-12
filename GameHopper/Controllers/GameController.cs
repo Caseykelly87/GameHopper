@@ -253,21 +253,3 @@ namespace GameHopper
         // }
     }
 }
-
-            
-            
-            
-            
-            // var requestViewModel = new RequestViewModel
-            // {
-            //     // Id = request?.Id ?? 0,
-            //     GameId = game.Id,
-            //     PlayerId = requests?.PlayerId ?? string.Empty,
-            //     Message = requests?.Message ?? "No Message",
-            //     UserName = (requests != null && requests.PlayerId != null) 
-            //                 ? (await context.Users.FirstOrDefaultAsync(u => u.Id == requests.PlayerId))?.UserName ?? string.Empty 
-            //                 : string.Empty,
-            //     IsGameGM = game.GameMasterId == user.Id,
-            //     IsCurrentPlayer = game.GamePlayers.Any(p => p.Id == user.Id),
-            //     HasPendingRequest = game.Requests.Any(p => p.PlayerId == user.Id),
-            // };
