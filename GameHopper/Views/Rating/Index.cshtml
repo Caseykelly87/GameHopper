@@ -1,0 +1,25 @@
+@using GameHopper.Models;
+@model List<GameHopper.Models.Rating>
+
+@{
+    ViewData["Title"] = "Rating";
+    }
+
+
+    <h1>All Ratings</h1>
+
+    <table class="table">
+        <tr>
+            <th>Id
+            <th>StarRating</th>
+        </tr>
+        @foreach (Rating rating in @Model)
+        {
+            <tr>
+                <td>@rating.Id</td>
+                <td>@rating.StarRating</td>
+            </tr>
+        }
+    </table>
+
+    <p><a asp-controller="Rating" asp-action="Delete">Delete Rating</a></p>

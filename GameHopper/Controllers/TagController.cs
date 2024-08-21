@@ -20,7 +20,6 @@ namespace GameHopper.Controllers
         }
 
 
-        //needs to be set for Admin Only
         [HttpGet]
         public IActionResult Add()
         {
@@ -128,5 +127,3 @@ namespace GameHopper.Controllers
         }
         
     }
-
-

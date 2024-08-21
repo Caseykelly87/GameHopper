@@ -1,5 +1,3 @@
-using System;
-
 namespace GameHopper.Models
 {
     public class Tag

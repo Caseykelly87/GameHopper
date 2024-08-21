@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHopper.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20240723225422_initialMigration")]
-    partial class initialMigration
+    [Migration("20240726231428_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,6 +75,34 @@ namespace GameHopper.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("GameHopper.Models.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("varchar(13)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Comment");
+
+                    b.UseTphMappingStrategy();
+                });
+
             modelBuilder.Entity("GameHopper.Models.Game", b =>
                 {
                     b.Property<int>("Id")
@@ -125,6 +153,22 @@ namespace GameHopper.Migrations
                     b.HasIndex("GameMasterId");
 
                     b.ToTable("Games");
+                });
+
+            modelBuilder.Entity("GameHopper.Models.Rating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("StarRating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ratings");
                 });
 
             modelBuilder.Entity("GameHopper.Models.Request", b =>
@@ -460,6 +504,13 @@ namespace GameHopper.Migrations
                     b.ToTable("UserGames");
                 });
 
+            modelBuilder.Entity("GameHopper.Models.SubComment", b =>
+                {
+                    b.HasBaseType("GameHopper.Models.Comment");
+
+                    b.HasDiscriminator().HasValue("SubComment");
+                });
+
             modelBuilder.Entity("GameHopper.GameMaster", b =>
                 {
                     b.HasBaseType("GameHopper.Models.User");
@@ -486,6 +537,15 @@ namespace GameHopper.Migrations
                 {
                     b.HasOne("GameHopper.Models.User", "User")
                         .WithMany("BlogEntries")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("GameHopper.Models.Comment", b =>
+                {
+                    b.HasOne("GameHopper.Models.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
