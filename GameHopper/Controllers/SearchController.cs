@@ -1,76 +1,107 @@
 ﻿using System.Linq;
-using GameHopper.Models;
+using GameHopper.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using GameHopper.Models;
 namespace GameHopper;
 
 
 public class SearchController : Controller
 {
     private readonly GameDbContext _context;
+    private readonly UserManager<User> _userManager;
 
-    public SearchController(GameDbContext context)
+    public SearchController(GameDbContext context, UserManager<User> userManager)
     {
         _context = context;
+        _userManager = userManager;
     }
 
-    // [HttpGet]
-    // public IActionResult Search()
-    // {
-    //     ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
-    //     ViewData["Tags"] = new SelectList(_context.Tags, "Id", "Name");
-    //     return PartialView("_SearchPartial", new Search());
-    // }
+    
+
+    [HttpGet]
+    public async Task<IActionResult> Search()
+    {
+        
+        await PopulateViewData();
+       
+        
+        return View();
+    }
 
     [HttpPost]
-public IActionResult Search(Search search)
-{
-    var query = _context.Games
-        .AsQueryable();
-
-    if (!string.IsNullOrEmpty(search.SearchTerm))
+    public async Task<IActionResult> Search(SearchViewModel search)
     {
-        query = query.Where(g => g.Title.Contains(search.SearchTerm) || g.Description.Contains(search.SearchTerm));
+        var userId = _userManager.GetUserId(User);
+
+        await PopulateViewData();
+
+        var query = _context.Games
+                .Include(g => g.Category)
+                .Include(g => g.Tags)
+                .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
+                .AsQueryable();
+
+        if (search.Tags != null && search.Tags.Any())
+        {
+            query = query.Where(g => g.Tags.Any(t => search.Tags.Contains(t.Id)));
+        }
+        
+        if (search.CategoryId.HasValue)
+        {
+                query = query.Where(g => g.CategoryId == search.CategoryId.Value);
+        }          
+
+    
+        var results = await query.ToListAsync();       
+
+
+        // Calculate match counts
+        var sortedResults = results.Select(g => new SearchResult
+    {
+        Game = g,
+        CategoryMatch = search.CategoryId.HasValue && search.CategoryId.Value > 0 && g.CategoryId == search.CategoryId.Value ? 1 : 0,
+        TagMatchCount = search.TagIds != null ? search.TagIds.Count(t => g.Tags.Any(gt => gt.Id == t)) : 0,
+        SearchTermMatchCount = !string.IsNullOrEmpty(search.SearchTerm) 
+            ? (g.Title.ToLower().Contains(search.SearchTerm.ToLower()) ? 1 : 0) +
+              (g.Description.ToLower().Contains(search.SearchTerm.ToLower()) ? 1 : 0) : 0
+    })
+    .OrderByDescending(r => r.TagMatchCount + r.CategoryMatch + r.SearchTermMatchCount)
+    .ToList();
+
+
+//     foreach (var result in sortedResults)
+// {
+//     Console.WriteLine($"Game: {result.Game.Title}, CategoryMatch: {result.CategoryMatch}, TagMatchCount: {result.TagMatchCount}, SearchTermMatchCount: {result.SearchTermMatchCount}, Tags: {string.Join(", ", search.Tags)}");
+// }
+
+        var viewModel = new SearchViewModel
+        {
+            Results = sortedResults.Select(r => r.Game).ToList(),  // Projecting the Game object
+            CurrentUser = userId ?? string.Empty,
+            SearchTerm = search.SearchTerm ?? string.Empty,
+            CategoryId = search.CategoryId ?? 0,
+            Tags = search.TagIds ?? new List<int>(),
+        };
+
+        return View("Results", viewModel);
     }
-
-    var results = query.ToList();
-    return View("Results", results);
+        
+    
+    private async Task PopulateViewData()
+    {
+        var Categories = await _context.Categories.ToListAsync();
+        var Tags = await _context.Tags.ToListAsync();
+        ViewBag.Categories = new SelectList(Categories, "Id", "Name");
+        ViewBag.Tags = new MultiSelectList(Tags, "Id", "Name");
+    }
 }
+        
+    
 
-    // [HttpPost]
-    // public IActionResult Search(Search search)
-    // {
-    //     ViewData["Categories"] = new SelectList(_context.Categories, "Id", "Name");
-    //     ViewData["Tags"] = new SelectList(_context.Tags, "Id", "Name");
 
-    //      var query = _context.Games
-    //         .Include(g => g.Category)
-    //         .Include(g => g.Tags)
-    //         .AsSplitQuery() // Use AsSplitQuery for better performance in some scenarios
-    //         .AsQueryable();
-
-    //     if (search.CategoryId.HasValue)
-    //     {
-    //         query = query.Where(g => g.CategoryId == search.CategoryId.Value);
-    //     }    
-
-    //     if (!string.IsNullOrEmpty(search.SearchTerm))
-    //     {
-    //         query = query.Where(g => g.Title.Contains(search.SearchTerm) || g.Description.Contains(search.SearchTerm));
-    //     }
-
-    //     if (search.TagIds != null || search.TagIds.Count > 0)
-    //     {
-    //         query = query.Where(g => g.Tags.Any(t => search.TagIds.Contains((int)t.Id)));
-    //     }
-
-    //     var results = query.ToList();
-    //     // Optionally sort by number of matching tags
-    //     var sortedResults = results.OrderByDescending(g => g.Tags.Count(t => search.TagIds.Contains((int)t.Id)) + 
-    //                             (g.Title.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) || g.Description.Contains(search.SearchTerm, StringComparison.OrdinalIgnoreCase) ? 1 : 0)).ToList();
-
-    //     return View("Results", sortedResults);
-    // }
-}

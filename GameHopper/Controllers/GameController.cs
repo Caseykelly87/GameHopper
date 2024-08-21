@@ -36,15 +36,57 @@ namespace GameHopper
         }
         public async Task<IActionResult> Details(int id)
         {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
             var game = await context.Games
+                .Include(g => g.Category) // Include Category
+                .Include(g => g.Tags) // Include Tags
+                .Include(g => g.GamePlayers) // Include related data if necessary
+                .Include(g => g.Requests)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
             if (game == null)
             {
-                return NotFound();
+                return NotFound(); // Handle case where game is not found
             }
+            
+            var requests = await context.Requests
+                .Where(r => r.GameId == id)
+                .Select(r => new RequestViewModel
+                {
+                    Id = r.Id,
+                    GameId = r.GameId,
+                    PlayerId = r.PlayerId,
+                    Message = r.Message,
+                    UserName = context.Users
+                        .Where(u => u.Id == r.PlayerId)
+                        .Select(u => u.UserName)
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
 
-            return View(game);
+
+             var viewModel = new GameDetailsViewModel
+            {
+                Game = game,
+                GameId = game.Id,
+                Requests = requests,
+                CurrentPlayers = game.GamePlayers.ToList(),
+                IsGameGM = game.GameMasterId == user.Id,
+                IsCurrentPlayer = game.GamePlayers.Any(p => p.Id == user.Id),
+                HasPendingRequest = game.Requests.Any(p => p.PlayerId == user.Id),
+                CurrentUser = user.Id,
+                UserName = (requests.FirstOrDefault()?.UserName) ?? string.Empty,
+                Message = requests.FirstOrDefault()?.Message ?? "No Message"
+            };
+
+            return View("Details", viewModel);
+        }
+
+        public IActionResult Index()
+        {
+            List<Game> games = context.Games.ToList();
+            return View(games);
         }
 
         // Create
@@ -63,35 +105,26 @@ namespace GameHopper
         public async Task<IActionResult> AddGameAsync(GameViewModel game, IFormFile gamePicture)
         {
             if (!ModelState.IsValid)
+
             {
-                var categories = context.Categories.ToList();
-                var tags = context.Tags.ToList();
-
-                ViewBag.Categories = new SelectList(categories, "Id", "Name");
-                ViewBag.Tags = new MultiSelectList(tags, "Id", "Name");
-
-                return View(game);
-            }
-
-            var user = await userManager.GetUserAsync(HttpContext.User);
-            if (user == null)
-            {
-                ModelState.AddModelError(string.Empty, "Please Log-In or Register to Add a Game Listing");
-                return View(game);
-            }
-
-            var newGame = new Game
-            {
-                Title = game.Title,
-                Description = game.Description,
-                Address = game.Address,
-                Address2 = game.Address2,
-                State = game.State,
-                Zip = game.Zip,
-                GameMasterId = user.Id,
-                CategoryId = game.CategoryId,
-                Tags = new List<Tag>()
-            };
+                // Retrieve current user's ID
+                var user = await userManager.GetUserAsync(HttpContext.User);
+                if (user == null)
+                {
+                    // Handle case where user is not found 
+                    return BadRequest("Please Log-In or Register to Add a Game Listing");
+                }
+                var newGame = new Game
+                {
+                    Title = game.Title,
+                    Description = game.Description,
+                    Address = game.Address,
+                    Address2 = game.Address2,
+                    State = game.State,
+                    Zip = game.Zip,
+                    GameMasterId = user.Id,
+                    CategoryId = game.CategoryId
+                };
 
             if (gamePicture != null && gamePicture.Length > 0)
             {
@@ -154,7 +187,7 @@ namespace GameHopper
         [HttpPost]
         public async Task<IActionResult> EditGame(GameViewModel gameViewModel, IFormFile gamePicture)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var user = await userManager.GetUserAsync(HttpContext.User);
                 if (user == null)
@@ -245,6 +278,31 @@ namespace GameHopper
 
             return RedirectToAction("Index");
         }
+        // [HttpPost]
+        // public IActionResult Delete(int[] gameIds)
+        // {
+        //     string answer;
+        //     Console.WriteLine("Are you sure you want to delete your account?");
+        //     answer = Console.ReadLine();
 
+        //     if (answer.ToLower().Equals("yes") || answer.ToLower().Equals("y"))
+        //     {
+
+        //         foreach (int gameId in gameIds)
+        //         {
+        //             Game theGame = context.Games.Find(gameId);
+        //             context.Games.Remove(theGame);
+        //         }
+
+        //         context.SaveChanges();
+
+        //         return View("/Home");
+        //     }
+
+        //     else
+        //     {
+        //         return View("/Game");
+        //     }
+        // }
     }
 }

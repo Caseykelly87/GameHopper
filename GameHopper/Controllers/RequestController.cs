@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace GameHopper;
 
@@ -17,7 +18,7 @@ public class RequestController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateRequest(RequestViewModel model, int gameId)
+    public async Task<IActionResult> CreateRequest(int gameId, string message)
     {
         if (ModelState.IsValid)
         {
@@ -26,15 +27,91 @@ public class RequestController : Controller
             {
                 GameId = gameId,
                 PlayerId = user.Id,
-                Message = model.Message,
-                IsApproved = false
+                Message = message,
+                IsApproved = false,
+                HasPendingRequest = true,
             };
 
             _context.Requests.Add(request);
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", "Game", new { id = gameId });
         }
-        return View(model);
+        else
+        {
+            return View("Details");
+        }
+    }
+
+    
+    [HttpPost]
+    public async Task<IActionResult> EditRequest(int requestId, string newMessage)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId && r.PlayerId == user.Id);
+
+        if (request != null)
+        {
+            request.Message = newMessage;
+            _context.Requests.Update(request);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Game", new { id = request.GameId });
+        }
+        return NotFound();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CancelRequest(int requestId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId && r.PlayerId == user.Id);
+
+        if (request != null)
+        {
+            _context.Requests.Remove(request);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Game", new { id = request.GameId });
+        }
+        return NotFound();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ApproveRequest(int requestId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+        
+        if (request != null)
+        {
+            var game = _context.Games.FirstOrDefault(g => g.Id == request.GameId);
+            var player = await _context.Users.FirstOrDefaultAsync(u => u.Id == request.PlayerId);
+
+            if (game != null && player != null)
+            {
+                game.GamePlayers.Add(player);
+                request.IsApproved = true;
+                _context.Requests.Remove(request);
+                await _context.SaveChangesAsync();
+            }
+            
+            return RedirectToAction("Details", "Game", new { id = request.GameId });
+        
+        }
+    
+        return NotFound();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DenyRequest(int requestId)
+    {
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+        
+        if (request != null)
+        {
+            _context.Requests.Remove(request);
+            await _context.SaveChangesAsync();
+        }
+
+        return RedirectToAction("Details", "Game", new { id = request.GameId });
     }
 
     [HttpPost]
@@ -42,13 +119,13 @@ public class RequestController : Controller
     {
         var user = await _userManager.GetUserAsync(User);
         var game = await _context.Games.Include(g => g.GamePlayers).FirstOrDefaultAsync(g => g.Id == gameId);
+
         if (game != null && game.GamePlayers.Any(p => p.Id == user.Id))
         {
-            var player = game.GamePlayers.First(p => p.Id == user.Id);
-            game.GamePlayers.Remove(player);
-            _context.Update(game);
+            game.GamePlayers.Remove(user);
             await _context.SaveChangesAsync();
         }
+
         return RedirectToAction("Details", "Game", new { id = gameId });
     }
 
@@ -57,16 +134,16 @@ public class RequestController : Controller
     {
         var user = await _userManager.GetUserAsync(User);
         var game = await _context.Games.Include(g => g.GamePlayers).FirstOrDefaultAsync(g => g.Id == gameId);
-        if (game != null && game.GameMasterId == user.Id)
-        {
-            var player = game.GamePlayers.FirstOrDefault(p => p.Id == playerId);
-            if (player != null)
+        var player = await _context.Users.FirstOrDefaultAsync(u => u.Id == playerId);
+
+            if (game != null && game.GameMasterId == user.Id && player != null)
             {
                 game.GamePlayers.Remove(player);
-                _context.Update(game);
                 await _context.SaveChangesAsync();
             }
-        }
+        
+
         return RedirectToAction("Details", "Game", new { id = gameId });
     }
 }
+    
