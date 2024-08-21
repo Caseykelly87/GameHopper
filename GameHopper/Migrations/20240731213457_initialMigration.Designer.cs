@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHopper.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20240723225422_initialMigration")]
+    [Migration("20240731213457_initialMigration")]
     partial class initialMigration
     {
         /// <inheritdoc />
