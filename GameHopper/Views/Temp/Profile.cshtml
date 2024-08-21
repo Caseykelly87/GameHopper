@@ -1,0 +1,278 @@
+@using GameHopper.Models;
+
+<html lang="en">
+  
+<head>
+  <title>Profile Page</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles.css">
+
+<style>
+body {
+  background: white;
+  min-height: 100vh;
+  overflow-x:hidden;
+}
+
+p {
+  margin: auto;
+}
+
+.Content {
+  text-align: center;
+  min-width: 700px;
+  max-width: 1000px;
+  @* row py-5 px-4 *@
+}
+
+.Profile {
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.Cover {
+  background-color: lightgreen;
+  min-height: 250px;
+  max-height: 50vh;
+  overflow: hidden;
+}
+
+.Cover-leftcol {
+  height: 100%;
+  width: 40%;
+  float:left;
+  padding: 10px;
+}
+
+.ProfilePic {
+  border: 10px outset white;
+  border-style: solid;
+  border-radius: 15px;
+  height: 250px;
+}
+
+.Cover-rightcol {
+  height: 100%;
+  width: 60%;
+  float: right;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.Section-games {
+  background-color: lightgray;
+  min-height: 250px;
+  padding: 10px;
+}
+
+.Section-blog {
+  background-color: white;
+  min-height: 250px;
+  padding: 10px;
+}
+
+.Section-comments {
+  background-color: lightgray;
+  min-height: 250px;
+  padding: 10px;
+}
+
+.Comments {
+  background-color: white;
+  min-height: 250px;
+  padding: 15px;
+}
+
+.UserInfo {
+  height: 55px;
+  padding: 5px;
+}
+
+.UserInfo-pic {
+  width: 50px;
+  float: left;
+}
+
+.UserInfo-info {
+  width: 500px;
+  float: left;
+  padding-left: 5px;
+  text-align: left;
+}
+
+#Comment-name {font-size: 14px; font-weight: bold; color: green;}
+#Comment-date {font-size: 11px; color: gray;}
+#Comment-text {font-size: 12px}
+    
+.fs-12 {font-size: 12px}
+    
+.shadow-none {box-shadow: none}
+    
+.name {color: #007bff}
+    
+.cursor:hover {color: blue}
+    
+.cursor {cursor: pointer}
+    
+.textarea {resize: none}
+
+.rating {
+  display: flex;
+  margin-top: -10px;
+  margin-left: -4px;
+  flex-direction: row-reverse;
+  float: left;
+}
+
+.rating>input {
+  display: none
+}
+
+.rating>label {
+  position: relative;
+  width: 19px;
+  font-size: 25px;
+  color: #ffe600;
+  cursor: pointer;
+}
+
+.rating>label::before {
+  content: "\2605";
+  position: absolute;
+  opacity: 0;
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before {
+  opacity: 1 !important
+}
+
+.rating>input:checked~label:before {
+  opacity: 1
+}
+
+.rating:hover>input:checked~label:before {
+  opacity: 0.4
+}
+</style>
+</head>
+
+<body>
+<div class="Content">
+  <div class="Profile">
+    <div class="Cover"> 
+          <div class="Cover-leftcol"> 
+            <img src="https://cdn.dribbble.com/userupload/6181686/file/original-fa57dca1ba81a59e8a1db9c1427acb68.png?" alt="Profile Picture Here" class="ProfilePic">
+          </div>
+          <div class="Cover-rightcol">
+            <h2>User Name</h2>
+            <h4>Preferred Systems</h4>
+            <p><a asp-controller="Category" asp-action="Add">Add categories</a></p>
+            <p>Game 1 | Game 2</p>
+            <h4>Select play styles:</h4>
+            <form>
+  <div>
+
+    <p><a asp-controller="Tag" asp-action="Add">Add tags</a></p>
+    @* <input
+      type="checkbox"
+      id="tagcheckbox"
+      name="tag"
+      value="tags" />
+    <label for="tagcheckbox">Tag option</label>
+    <input
+      type="checkbox"
+      id="tagcheckbox"
+      name="tag"
+      value="tags" />
+    <label for="tagcheckbox">Tag option</label>
+    <input
+      type="checkbox"
+      id="tagcheckbox"
+      name="tag"
+      value="tags" />
+    <label for="tagcheckbox">Tag option</label> *@
+  </div>
+
+
+  
+</form>
+            <p>Tag 1 | Tag 2 | Tag 3</p>
+          </div>
+    </div>
+    <div class="Section-games">
+          <h4>Active Games</h4>
+          <p>List of active games goes here</p>
+    </div>
+
+    @model GameHopper.ViewModels.AddBlogVM
+    
+@{
+    ViewData["Title"] = "Create Post";
+    }
+
+<link href="~/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/js/froala_editor.pkgd.min.js"></script>
+
+ <h5 class="mb-4">New Blog Post</h5>
+
+<div>
+
+    <form action="BlogCreatorPage" method="POST">
+        <input hidden asp-for=Id/>
+        <textarea asp-for=Content id = "myBlogEditor"></textarea>
+        <br/>
+        <button class="btn btn-secondary">Submit</button>
+    </form>
+
+    <script>
+        var editor = new FroalaEditor('#myBlogEditor')
+    </script>
+
+</div>
+            <p>Two newest blog posts go here</p>
+            <div>
+            <button class="btn btn-primary btn-sm shadow-none" type="button">All Blog Posts</button>
+            </div>
+    </div>
+    <div class="Section-comments">
+          <h4>Comments</h4>
+          <div class="Comments">
+                  <div class="UserInfo">
+                      <div class="UserInfo-pic">
+                        <img class="rounded-circle" src="https://i.redd.it/oq69tph90ad71.jpg" width="40">
+                      </div>
+                      <div class="UserInfo-info">
+                        <p id="Comment-name">Froggy McStabbers</p>
+                        <p id="Comment-date">Shared publicly - Jul 2024</p>
+                      </div>
+                  </div>
+                  <div class="mt-2">
+                      <p id="Comment-text">I love this frog.</p>
+                  </div>
+                  <div class="d-flex flex-row fs-12">
+                        <div class="share p-2 cursor"><i class="fa fa-share"></i><span class="ml-1">Share</span></div>
+                        <div class="rating"> 
+                              <input type="radio" name="rating" value="5" id="5"><label for="5">☆</label>
+                              <input type="radio" name="rating" value="4" id="4"><label for="4">☆</label> 
+                              <input type="radio" name="rating" value="3" id="3"><label for="3">☆</label>
+                              <input type="radio" name="rating" value="2" id="2"><label for="2">☆</label>
+                              <input type="radio" name="rating" value="1" id="1"><label for="1">☆</label>
+                        </div>
+                  </div>
+                  <div class="d-flex flex-row align-items-start">
+                        <img class="rounded-circle" src="https://i.redd.it/oq69tph90ad71.jpg" width="40" padding="5">
+                        <textarea class="form-control ml-1 shadow-none textarea"></textarea>
+                  </div>
+                  <div class="mt-2 text-right">
+                        <button class="btn btn-primary btn-sm shadow-none" type="button">Post comment</button>
+                        <button class="btn btn-outline-primary btn-sm ml-1 shadow-none" type="button">Cancel</button>
+                  </div>
+          </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

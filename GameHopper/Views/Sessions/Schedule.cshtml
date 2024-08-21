@@ -1,0 +1,42 @@
+@model GameHopper.Models.Session
+@{
+    ViewData["Title"] = "Schedule Session";
+}
+
+<h2>Schedule Session</h2>
+
+<form asp-action="Schedule" method="post">
+    <div>
+        <label for="GameId">Game:</label>
+        <select id="GameId" asp-for="GameId" asp-items="ViewBag.Games"></select>
+    </div>
+    <div>
+        <label for="SessionDateTime">Session Date and Time:</label>
+        <input asp-for="SessionDateTime" type="datetime-local" />
+    </div>
+    <div>
+        <label for="RecurrencePattern">Recurrence Pattern:</label>
+        <select id="RecurrencePattern" asp-for="RecurrencePattern">
+            <option value="weekly">Weekly</option>
+            <option value="biweekly">Biweekly</option>
+            <option value="monthly">Monthly</option>
+        </select>
+    </div>
+    <div>
+        <label for="RecurrenceDayOfWeek">Day of Week:</label>
+        <select id="RecurrenceDayOfWeek" asp-for="RecurrenceDayOfWeek">
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+        </select>
+    </div>
+    <div>
+        <label for="RecurrenceTime">Time:</label>
+        <input asp-for="RecurrenceTime" type="time" />
+    </div>
+    <button type="submit">Schedule</button>
+</form>

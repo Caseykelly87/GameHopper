@@ -1,0 +1,9 @@
+@model GameHopper.ViewModels.AddBlogVM
+
+@{
+    ViewData["Title"] = Model.Id == Guid.Empty ? "Create Post" : "Edit Post";
+}
+
+<h5 class="mb-4">@ViewData["Title"]</h5>
+
+@Html.Partial("_BlogCreatorPartial", Model)

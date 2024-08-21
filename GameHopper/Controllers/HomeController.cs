@@ -4,6 +4,9 @@ using GameHopper.Models;
 
 namespace GameHopper.Controllers;
 
+// first commit
+//:P
+
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -28,4 +31,8 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+    public IActionResult ShareButtonPartial() {
+        return PartialView("_Sharebutton");
+    }
+    
 }
