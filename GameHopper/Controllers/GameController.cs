@@ -26,14 +26,14 @@ namespace GameHopper
 
         //Index
 
-        public IActionResult Index()
-        {
-            List<Game> games = context.Games
-            .Include(g => g.Tags)
-            .Include(g => g.Category)
-            .ToList();
-            return View(games);
-        }
+        // public IActionResult Index()
+        // {
+        //     List<Game> games = context.Games
+        //     .Include(g => g.Tags)
+        //     .Include(g => g.Category)
+        //     .ToList();
+        //     return View(games);
+        // }
         public async Task<IActionResult> Details(int id)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -104,8 +104,7 @@ namespace GameHopper
         [HttpPost]
         public async Task<IActionResult> AddGameAsync(GameViewModel game, IFormFile gamePicture)
         {
-            if (!ModelState.IsValid)
-
+            if (ModelState.IsValid)
             {
                 // Retrieve current user's ID
                 var user = await userManager.GetUserAsync(HttpContext.User);
@@ -126,26 +125,28 @@ namespace GameHopper
                     CategoryId = game.CategoryId
                 };
 
-            if (gamePicture != null && gamePicture.Length > 0)
-            {
-                using (var ms = new MemoryStream())
+                if (gamePicture != null && gamePicture.Length > 0)
                 {
-                    gamePicture.CopyTo(ms);
-                    newGame.GamePicture = ms.ToArray();
+                    using (var ms = new MemoryStream())
+                    {
+                        gamePicture.CopyTo(ms);
+                        newGame.GamePicture = ms.ToArray();
+                    }
                 }
+
+                foreach (var tagId in game.SelectedTagIds)
+                {
+                    var tag = await context.Tags.FindAsync(tagId);
+                    if (tag != null)
+                    {
+                        newGame.Tags.Add(tag);
+                    }
+                }
+
+                context.Games.Add(newGame);
+                await context.SaveChangesAsync();
             }
 
-            foreach (var tagId in game.SelectedTagIds)
-            {
-                var tag = await context.Tags.FindAsync(tagId);
-                if (tag != null)
-                {
-                    newGame.Tags.Add(tag);
-                }
-            }
-
-            context.Games.Add(newGame);
-            await context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -175,7 +176,7 @@ namespace GameHopper
                 State = game.State,
                 Zip = game.Zip,
                 SelectedTagIds = game.Tags.Select(t => t.Id).ToList(),
-                CategoryId = game.CategoryId // Assuming you have CategoryId in the model
+                CategoryId = (int)game.CategoryId // Assuming you have CategoryId in the model
             };
 
             ViewBag.Categories = new SelectList(categories, "Id", "Name", game.CategoryId);
