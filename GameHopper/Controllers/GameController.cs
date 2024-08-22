@@ -104,7 +104,7 @@ namespace GameHopper
         [HttpPost]
         public async Task<IActionResult> AddGameAsync(GameViewModel game, IFormFile gamePicture)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 // Retrieve current user's ID
                 var user = await userManager.GetUserAsync(HttpContext.User);
@@ -122,7 +122,8 @@ namespace GameHopper
                     State = game.State,
                     Zip = game.Zip,
                     GameMasterId = user.Id,
-                    CategoryId = game.CategoryId
+                    CategoryId = game.CategoryId,
+                    Tags = []
                 };
 
                 if (gamePicture != null && gamePicture.Length > 0)
@@ -145,9 +146,10 @@ namespace GameHopper
 
                 context.Games.Add(newGame);
                 await context.SaveChangesAsync();
+            return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Index");
+            return View("Index");
         }
 
 
