@@ -1,0 +1,27 @@
+@using GameHopper.Models;
+@model List<GameHopper.Models.Category>
+
+@{
+    ViewData["Title"] = "Category";
+    }
+
+
+    <h1>All Categories</h1>
+
+    <table class="table">
+        <tr>
+            <th>Id
+            <th>Name</th>
+        </tr>
+        @foreach (Category category in @Model)
+        {
+            <tr>
+                <td>@category.Id</td>
+                <td>@category.Name</td>
+            </tr>
+        }
+    </table>
+
+<p><a asp-controller="Category" asp-action="Add">Add more categories</a></p>
+<p><a asp-controller="Category" asp-action="Edit">Edit a category</a></p>
+<p><a asp-controller="Category" asp-action="Delete">Delete Category</a></p>

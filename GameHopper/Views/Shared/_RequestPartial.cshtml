@@ -1,0 +1,114 @@
+﻿@using GameHopper.ViewModels
+@model GameDetailsViewModel
+
+@if (User.Identity.IsAuthenticated)
+{
+    if (Model.IsGameGM)
+    {
+        <h3>Current Players</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.UserName != null)
+                {
+                    @foreach (var player in Model.CurrentPlayers)
+                    {
+                        <tr>
+                            <td>@(!string.IsNullOrEmpty(player?.UserName) ? player.UserName : "Unknown")</td>
+                            <td>
+                                <form asp-controller="Request" asp-action="KickPlayer" method="post" style="display:inline;">
+                                    <input type="hidden" name="gameId" value="@Model.GameId" />
+                                    <input type="hidden" name="playerId" value="@player.Id" />
+                                    <button type="submit" class="btn btn-danger">Kick</button>    
+                                </form>
+                            </td>
+                        </tr>
+                    }   
+                }
+                else
+                {
+                    <td>"No Players"</td>
+                    <td>"N/A"</td>
+                } 
+
+                </tbody>
+            </table>
+
+        <h3>Join Requests</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Message</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var request in Model.Requests)
+                {
+                    <tr>
+                        <td>@request.UserName</td>
+                        <td>@request.Message</td>
+                        <td>
+                            <form asp-controller="Request" asp-action="ApproveRequest" method="post" style="display:inline;">
+                                <input type="hidden" name="requestId" value="@request.Id" />
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                            <form asp-controller="Request" asp-action="DenyRequest" method="post" style="display:inline;">
+                                <input type="hidden" name="requestId" value="@request.Id" />
+                                <button type="submit" class="btn btn-danger">Deny</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    
+    }
+    else if (Model.IsCurrentPlayer)
+    {
+        <p>You are currently playing this game.</p>
+        <form asp-controller="Request" asp-action="LeaveGame" method="post">
+            <input type="hidden" asp-for="GameId" />
+            <button type="submit" class="btn btn-danger">Leave Game</button>
+        </form>
+    }
+    else if (Model.HasPendingRequest)
+    {
+        <h3>Your request to join this game is pending.</h3>
+        <form asp-controller="Request" asp-action="CancelRequest" method="post">
+        <input type="hidden" name="requestId" value= "@Model.Requests.FirstOrDefault(r => r.PlayerId == Model.CurrentUser)?.Id" />
+        <button type="submit" class="btn btn-warning">Cancel Request</button>
+    </form>
+
+    <form asp-controller="Request" asp-action="EditRequest" method="post">
+        <input type="hidden" name="requestId" value="@Model.Requests.FirstOrDefault(r => r.PlayerId == Model.CurrentUser)?.Id" />
+        <div class="form-group">
+            <label for="newMessage">Edit Message</label>
+            <input type="text" class="form-control" id="newMessage" name="newMessage" value="@Model.Requests.FirstOrDefault(r => r.PlayerId == Model.CurrentUser)?.Message" />
+        </div>
+        <button type="submit" class="btn btn-primary">Save Message</button>
+    </form>
+    }
+    else
+    {
+        <form asp-controller="Request" asp-action="CreateRequest" method="post">
+            <input type="hidden" asp-for="GameId" />
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <textarea asp-for="Message" class="form-control"></textarea>
+                <span asp-validation-for="Message" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary">Request to Join Game</button>
+        </form>
+
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        } 
+    }
+}

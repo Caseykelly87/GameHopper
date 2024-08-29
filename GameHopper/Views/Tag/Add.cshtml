@@ -1,0 +1,23 @@
+@using GameHopper.Models;
+@model GameHopper.ViewModels.AddTagViewModel
+@{
+    ViewData["Title"] = "Create Tag";
+    }
+
+ <h5 class="mb-4">Create New Tag</h5>
+
+<div>
+
+<form asp-controller="Tag" asp-action="Add" method="post">
+
+    <div class="form-group">
+        <label asp-for="TagName">Tag: </label>
+        <input asp-for="TagName" />
+        <span asp-validation-for="TagName"></span>
+    </div>
+
+    <br />
+
+    <input type="submit" value="Add new tag" />
+
+</form>

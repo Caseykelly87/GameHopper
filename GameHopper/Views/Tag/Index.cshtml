@@ -1,0 +1,27 @@
+@using GameHopper.Models;
+@model List<GameHopper.Models.Tag>
+
+@{
+    ViewData["Title"] = "Tag";
+    }
+
+
+    <h1>All Tags</h1>
+
+    <table class="table">
+        <tr>
+            <th>Id
+            <th>Name</th>
+        </tr>
+        @foreach (Tag tag in @Model)
+        {
+            <tr>
+                <td>@tag.Id</td>
+                <td>@tag.Name</td>
+            </tr>
+        }
+    </table>
+
+<p><a asp-controller="Tag" asp-action="Add">Add more tags</a></p>
+<p><a asp-controller="Tag" asp-action="Edit">Edit a tag</a></p>
+<p><a asp-controller="Tag" asp-action="Delete">Delete Tag</a></p>

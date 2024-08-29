@@ -1,0 +1,16 @@
+<h1>Delete Ratings</h1>
+
+<form method="post">
+    @foreach (var rating in ViewBag.ratings)
+    {
+        <div>
+            <label>
+                <span>@rating.StarRating</span>
+                <input type="checkbox" name="ratingIds" value="@rating.Id">
+            </label>
+        </div>
+    }
+
+    <input type="submit" value="Delete Ratings" class="btn btn-danger">
+
+</form>
