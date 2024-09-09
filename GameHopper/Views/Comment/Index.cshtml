@@ -1,0 +1,25 @@
+@using GameHopper.Models;
+@using GameHopper.ViewModels;
+
+
+@model List<GameHopper.Models.Comment>
+
+@{
+    ViewData["Title"] = "Comments";
+    }
+
+<h2>Comments</h2>
+<hr />
+    <div>
+        @foreach(Comment post in @Model){
+            <div class = "card mb-2">
+                <div class = "card-body">
+                    @Html.Raw(@post.Text)
+                </div>
+
+                <div class = "card-footer">
+                    @Html.ActionLink("Edit", "Add", new {Id = @post.Id})
+                </div>
+            </div>
+        }
+    </div> 

@@ -1,5 +1,3 @@
-using System;
-
 namespace GameHopper.Models
 {
     public class Tag
@@ -10,7 +8,6 @@ namespace GameHopper.Models
 
         public ICollection<Game>? Games { get; set; } = new List<Game>();
         public ICollection<Category>? Categories { get; set; } = new List<Category>();
-
         public Tag(string name)
         {
             Name = name;

@@ -1,0 +1,25 @@
+@using GameHopper.Models;
+@model GameHopper.ViewModels.AddCommentViewModel
+@{
+    ViewData["Title"] = "Make Comment";
+    }
+
+<link href="~/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="~/js/froala_editor.pkgd.min.js"></script>
+
+ <h5 class="mb-4">Make Comment</h5>
+
+<div>
+
+    <form action="Add" method="POST">
+        <input hidden asp-for=Id/>
+        <textarea asp-for=Text id = "Edit"></textarea>
+        <br/>
+        <button class="btn btn-secondary">Submit</button>
+    </form>
+
+    <script>
+        var editor = new FroalaEditor('#Edit')
+    </script>
+
+</div>
