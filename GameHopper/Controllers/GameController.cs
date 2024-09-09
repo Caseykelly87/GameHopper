@@ -26,14 +26,14 @@ namespace GameHopper
 
         //Index
 
-        // public IActionResult Index()
-        // {
-        //     List<Game> games = context.Games
-        //     .Include(g => g.Tags)
-        //     .Include(g => g.Category)
-        //     .ToList();
-        //     return View(games);
-        // }
+        public IActionResult Index()
+        {
+            List<Game> games = context.Games
+            .Include(g => g.Tags)
+            .Include(g => g.Category)
+            .ToList();
+            return View(games);
+        }
         public async Task<IActionResult> Details(int id)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
@@ -83,11 +83,11 @@ namespace GameHopper
             return View("Details", viewModel);
         }
 
-        public IActionResult Index()
-        {
-            List<Game> games = context.Games.ToList();
-            return View(games);
-        }
+        // public IActionResult Index()
+        // {
+        //     List<Game> games = context.Games.ToList();
+        //     return View(games);
+        // }
 
         // Create
         [HttpGet]
