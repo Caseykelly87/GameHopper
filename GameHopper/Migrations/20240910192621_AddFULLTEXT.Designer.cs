@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameHopper.Migrations
 {
     [DbContext(typeof(GameDbContext))]
-    [Migration("20240909195548_InitialMigration_AddFULLTEXT")]
-    partial class InitialMigration_AddFULLTEXT
+    [Migration("20240910192621_AddFULLTEXT")]
+    partial class AddFULLTEXT
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -354,10 +354,22 @@ namespace GameHopper.Migrations
 
                     b.HasIndex("TagsId");
 
-                    b.HasIndex("GamesId", "TagsId")
-                        .HasDatabaseName("IX_GameTag_Composite");
-
                     b.ToTable("GameTag");
+                });
+
+            modelBuilder.Entity("GameUser", b =>
+                {
+                    b.Property<int>("CurrentGamesId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GamePlayersId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("CurrentGamesId", "GamePlayersId");
+
+                    b.HasIndex("GamePlayersId");
+
+                    b.ToTable("GameUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -496,21 +508,6 @@ namespace GameHopper.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("UserGames", b =>
-                {
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("GameId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserGames");
-                });
-
             modelBuilder.Entity("GameHopper.Models.SubComment", b =>
                 {
                     b.HasBaseType("GameHopper.Models.Comment");
@@ -633,6 +630,21 @@ namespace GameHopper.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GameUser", b =>
+                {
+                    b.HasOne("GameHopper.Models.Game", null)
+                        .WithMany()
+                        .HasForeignKey("CurrentGamesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GameHopper.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("GamePlayersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -677,21 +689,6 @@ namespace GameHopper.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("GameHopper.Models.User", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("UserGames", b =>
-                {
-                    b.HasOne("GameHopper.Models.Game", null)
-                        .WithMany()
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("GameHopper.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")

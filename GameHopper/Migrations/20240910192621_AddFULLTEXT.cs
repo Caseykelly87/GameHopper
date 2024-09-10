@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace GameHopper.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration_AddFULLTEXT : Migration
+    public partial class AddFULLTEXT : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -384,6 +384,32 @@ namespace GameHopper.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "GameUser",
+                columns: table => new
+                {
+                    CurrentGamesId = table.Column<int>(type: "int", nullable: false),
+                    GamePlayersId = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameUser", x => new { x.CurrentGamesId, x.GamePlayersId });
+                    table.ForeignKey(
+                        name: "FK_GameUser_AspNetUsers_GamePlayersId",
+                        column: x => x.GamePlayersId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GameUser_Games_CurrentGamesId",
+                        column: x => x.CurrentGamesId,
+                        principalTable: "Games",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Requests",
                 columns: table => new
                 {
@@ -443,32 +469,6 @@ namespace GameHopper.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Sessions_Games_GameId",
-                        column: x => x.GameId,
-                        principalTable: "Games",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "UserGames",
-                columns: table => new
-                {
-                    GameId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserGames", x => new { x.GameId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_UserGames_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserGames_Games_GameId",
                         column: x => x.GameId,
                         principalTable: "Games",
                         principalColumn: "Id",
@@ -546,14 +546,14 @@ namespace GameHopper.Migrations
                 column: "GameMasterId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_GameTag_Composite",
-                table: "GameTag",
-                columns: new[] { "GamesId", "TagsId" });
-
-            migrationBuilder.CreateIndex(
                 name: "IX_GameTag_TagsId",
                 table: "GameTag",
                 column: "TagsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GameUser_GamePlayersId",
+                table: "GameUser",
+                column: "GamePlayersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Requests_GameId",
@@ -574,11 +574,6 @@ namespace GameHopper.Migrations
                 name: "IX_Sessions_GameId",
                 table: "Sessions",
                 column: "GameId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserGames_UserId",
-                table: "UserGames",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -609,6 +604,9 @@ namespace GameHopper.Migrations
                 name: "GameTag");
 
             migrationBuilder.DropTable(
+                name: "GameUser");
+
+            migrationBuilder.DropTable(
                 name: "Ratings");
 
             migrationBuilder.DropTable(
@@ -616,9 +614,6 @@ namespace GameHopper.Migrations
 
             migrationBuilder.DropTable(
                 name: "Sessions");
-
-            migrationBuilder.DropTable(
-                name: "UserGames");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
