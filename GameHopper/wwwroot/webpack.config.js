@@ -58,13 +58,14 @@ module.exports = {
     open: true,
     proxy: [
       {
-        context: ['/api'],
+        context: ['/'],
         target: 'http://localhost:5294',
         changeOrigin: true,
         secure: false,
-      },
+        historyApiFallback: true,
+      }
     ],
-    historyApiFallback: true,  
+    
     watchFiles: ['src/**/*', 'wwwroot/**/*'],
   },
 };
