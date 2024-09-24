@@ -7,6 +7,7 @@ namespace GameHopper.Models
         public string? Name { get; set; }
 
         public ICollection<Game>? Games { get; set; } = new List<Game>();
+        public ICollection<Piece>? Pieces { get; set; }
         public ICollection<Category>? Categories { get; set; } = new List<Category>();
         public Tag(string name)
         {
@@ -15,7 +16,7 @@ namespace GameHopper.Models
 
         public Tag()
         {
-        }
+        } 
 
         public override string ToString()
         {

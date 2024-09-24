@@ -11,6 +11,7 @@ namespace GameHopper.Models
 
         public ICollection<Game>? Games { get; set; } = new List<Game>();
         public ICollection<Tag>? Tags { get; set; } = new List<Tag>();
+        public ICollection<Piece>? Pieces { get; set; }
         
 
         public Category(string name)

@@ -10,6 +10,7 @@ public class Game
     public int Id { get; set; }
     public string? Title { get; set; }
     public byte[]? GamePicture { get; set; }
+    public Gallery? Gallery { get; set; }
     public ICollection<User> GamePlayers { get; set; } = new List<User>();
 
     public ICollection<Tag>? Tags { get; set; }
@@ -17,7 +18,7 @@ public class Game
     public Category? Category { get; set; }
     public int? CategoryId { get; set; }
     public GameMaster? GameMaster { get; set; }
-    public string? GameMasterId { get; set; }
+    public string? GameMasterId { get; set; }           ////////////////////  needed?  /////////////////////////////
     public BlogEntry? Blog { get; set; }
 
     public string? Description { get; set; }

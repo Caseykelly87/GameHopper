@@ -20,6 +20,8 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
         public DbSet<Comment>? Comments { get; set; }
         public DbSet<SubComment>? SubComments { get; set; }
         public DbSet<Rating>? Ratings { get; set; }
+        public DbSet<Piece> Pieces { get; set; }
+        public DbSet<Gallery> Galleries { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
