@@ -51,6 +51,9 @@ public class GameDbContext : IdentityDbContext<User, IdentityRole, string>
                     .HasColumnType("LONGBLOB")
                     .IsRequired(false); // Nullable column
 
+                entity.Property(e => e.Description)
+                    .HasColumnType("LONGTEXT");
+
                 // Relationships for the Game entity
                 entity.HasOne(g => g.Category)
                     .WithMany(c => c.Games)

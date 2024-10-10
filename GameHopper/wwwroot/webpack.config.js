@@ -5,16 +5,17 @@ const path = require('path');
 module.exports = {
   // Entry point of your application
 
- // Mode configuration
- mode: 'development',
+  // Mode configuration
+  mode: 'development',
 
-  entry: path.resolve(__dirname, 'src/index.js'),
-
-  
+  entry: {
+    main: path.resolve(__dirname, 'src/index.js'),
+    profile: path.resolve(__dirname, 'src/components/Profile.js'),
+  },
   // Output configuration
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: '[name].bundle.js',
     publicPath: '/dist/',
   },
   

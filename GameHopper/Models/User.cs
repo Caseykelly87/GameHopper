@@ -11,7 +11,7 @@ namespace GameHopper.Models
         public ICollection<Game> CurrentGames { get; set; } = [];
         public ICollection<Request> Requests { get; set; } = [];
         public ICollection<BlogEntry> BlogEntries { get; set; } = [];
-        public Gallery? Gallery{ get; set; }        
+        // public Gallery? Gallery{ get; set; }        
         public User()
         {
         }

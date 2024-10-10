@@ -34,5 +34,11 @@ public class HomeController : Controller
     public IActionResult ShareButtonPartial() {
         return PartialView("_Sharebutton");
     }
+
+    public IActionResult Profile()
+    {
+        return View();
+    }
+
     
 }

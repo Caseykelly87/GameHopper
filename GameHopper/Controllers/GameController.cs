@@ -231,7 +231,7 @@ namespace GameHopper
                         existingGame.Tags.Add(tag);
                     }
                 }
-                Console.WriteLine(existingGame.Tags);
+                // ///////////////////////////////////////////////////Console.WriteLine(existingGame.Tags);
                 // Update game picture
                 if (gamePicture != null && gamePicture.Length > 0)
                 {
