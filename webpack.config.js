@@ -3,22 +3,15 @@
 const path = require('path');
 
 module.exports = {
-  // Entry point of your application
-
-  // Mode configuration
+   // Mode configuration
   mode: 'development',
 
-  entry: {
-    main: path.resolve(__dirname, 'src/index.js'),
-    profile: path.resolve(__dirname, 'src/components/Profile.js'),
-  },
-  // Output configuration
+  entry: './GameHopper/wwwroot/src/index.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'GameHopper/wwwroot/dist'),
+    filename: 'index.bundle.js',
     publicPath: '/dist/',
   },
-  
   // Module and rules configuration
   module: {
     rules: [
@@ -64,6 +57,12 @@ module.exports = {
         changeOrigin: true,
         secure: false,
         historyApiFallback: true,
+        // bypass: function (req) {
+        //   // Exclude requests for static files in '/dist'
+        //   if (req.url.includes('/dist')) {
+        //       return req.url; // Don't proxy, serve directly
+        //   }
+        // },  
       }
     ],
     

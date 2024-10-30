@@ -1,26 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/User/Profile')
-      .then(response => setProfile(response.data))
-      .catch(error => console.error(error));
+    fetch('/api/ProfileApi/GetProfile')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setProfile(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching profile:', error);
+        setLoading(false);
+      });
   }, []);
 
-  if (!profile) return <div>Loading...</div>;
+   // Convert the BLOB data to a base64 image source
+   const convertBlobToBase64 = (blob) => {
+    return `data:image/jpeg;base64,${blob}`;
+  };
 
-return (
-  <div className="profile">
-    <h1>{profile.UserName}</h1>
-    <p>Email: {profile.Email}</p>
-    {profile.ProfilePicture && (
-      <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Game.GamePicture)" alt="Game Picture" style="max-width: 400px;" />
-    )}
-  </div>
-);
-}
+  if (loading) {
+    return <p>Loading profile...</p>;
+  }
+
+  return (
+    <div id="profile-root">
+      {profile ? (
+        <div>
+          <h2>Hello, {profile.userName}!</h2>
+          {/* <p>Email: {profile.email}</p> */}
+          <img 
+          src={convertBlobToBase64(profile.profilePicture)} 
+          alt={`${profile.userName}'s profile`} 
+          style={{ width: '300px', height: '300px', borderRadius: '5%' }}
+        />
+        </div>
+      ) : (
+        <p>Profile data not found.</p>
+      )}
+    </div>
+
+  );
+};
 
 export default Profile;

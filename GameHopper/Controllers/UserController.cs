@@ -21,21 +21,21 @@ public class UserController : Controller
     
 
 
-        [HttpGet("/User/Profile")]
-        public async Task<IActionResult> Profile()
-        {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            if (user == null) return NotFound();
+        // [HttpGet("/Profile")]
+        // public async Task<IActionResult> Profile()
+        // {
+        //     var user = await _userManager.GetUserAsync(HttpContext.User);
+        //     if (user == null) return NotFound();
             
-            var profile = new UserProfileViewModel
-            {
-                UserName = user.UserName,
-                Email = user.Email,
-                // ProfilePicture = user.ProfilePicture
-                // Add more fields as needed
-            };
-            return Ok(profile);
-        }
+        //     var profile = new UserProfileViewModel
+        //     {
+        //         UserName = user.UserName,
+        //         Email = user.Email,
+        //          ProfilePicture = user.ProfilePicture != null ? Convert.ToBase64String(user.ProfilePicture) : null
+        //         // Add more fields as needed
+        //     };
+        //     return Ok(profile);
+        // }
 
 
 }
